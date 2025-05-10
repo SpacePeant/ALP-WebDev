@@ -156,39 +156,73 @@
       background-color: #222;
     }
 
-    .scroll-carousel {
-        overflow: hidden;
-        width: 100%;
+    .carousel-wrapper {
         position: relative;
+        width: 100%;
+        overflow: hidden;
+        margin: 2rem 0;
       }
       
-      .scroll-track {
+      .carousel {
         display: flex;
-        transition: transform 0.5s ease-in-out;
-        width: 100%;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        scroll-behavior: smooth;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+      }
+      
+      .carousel::-webkit-scrollbar {
+        display: none;
       }
       
       .carousel-item {
-        flex: 0 0 100%;
-        box-sizing: border-box;
-        padding: 20px;
+        flex: none;
+        width: 100%;
+        scroll-snap-align: center;
         position: relative;
       }
       
       .carousel-item img {
         width: 100%;
         height: auto;
-        border-radius: 12px;
+        object-fit: cover;
       }
       
       .carousel-caption-center {
         position: absolute;
         bottom: 20%;
         left: 10%;
-        max-width: 60%;
-        background-color: rgba(0, 0, 0, 0.4);
-        padding: 20px;
+        right: 10%;
+        text-align: center;
+        background: rgba(255,255,255,0.8);
+        padding: 1rem;
         border-radius: 10px;
-        color: white;
+        font-weight: bold;
       }
-          
+      
+      .carousel-btn {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(255,255,255,0.7);
+        border: none;
+        font-size: 2rem;
+        padding: 0.5rem 1rem;
+        cursor: pointer;
+        z-index: 10;
+        transition: background 0.3s;
+      }
+      
+      .carousel-btn:hover {
+        background: rgba(255,255,255,1);
+      }
+      
+      .prev-btn {
+        left: 10px;
+      }
+      
+      .next-btn {
+        right: 10px;
+      }
+      
