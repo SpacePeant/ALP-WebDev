@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+<<<<<<<<< Temporary merge branch 1
 [2025-04-22 13:17:22] local.ERROR: SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql-245e0a5f-webdev-afl2-feylin.k.aivencloud.com failed: No such host is known (Connection: mysql, SQL: select exists (select 1 from information_schema.tables where table_schema = schema() and table_name = 'migrations' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`) {"exception":"[object] (Illuminate\\Database\\QueryException(code: 2002): SQLSTATE[HY000] [2002] php_network_getaddresses: getaddrinfo for mysql-245e0a5f-webdev-afl2-feylin.k.aivencloud.com failed: No such host is known (Connection: mysql, SQL: select exists (select 1 from information_schema.tables where table_schema = schema() and table_name = 'migrations' and table_type in ('BASE TABLE', 'SYSTEM VERSIONED')) as `exists`) at C:\\Users\\miche\\Herd\\webdev_week9_hw\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:822)
 [stacktrace]
 #0 C:\\Users\\miche\\Herd\\webdev_week9_hw\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php(976): Illuminate\\Database\\Connection->runQueryCallback('select exists (...', Array, Object(Closure))
@@ -1663,5 +1663,5 @@
 #58 C:\\Program Files\\Herd\\resources\\app.asar.unpacked\\resources\\valet\\server.php(139): require('C:\\\\Users\\\\ASUS\\\\H...')
 #59 {main}
 "} 
-=======
->>>>>>> 11d7256959ce70776b50fefc187c01038b6582f8
+=========
+>>>>>>>>> Temporary merge branch 2
