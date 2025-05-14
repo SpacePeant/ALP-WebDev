@@ -3,7 +3,8 @@
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
-    return view('blog');
+    if (!session()->has('user_id')) return redirect('/login');
+    return view('home');
 });
 
 use App\Http\Controllers\AuthController;
@@ -20,3 +21,9 @@ Route::get('/orderadmin', function () {
     if (!session()->has('user_id')) return redirect('/login');
     return view('admin.order');
 });
+
+Route::get('/blog', function () {
+    return view('blog');
+});
+
+
