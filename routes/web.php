@@ -30,4 +30,6 @@ Route::get('/aboutus', function () {
     return view('aboutus');
 });
 
-
+Route::get('/', function () {
+    return view('home');
+});
