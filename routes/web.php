@@ -5,3 +5,18 @@ use Illuminate\Support\Facades\Route;
 Route::get('/', function () {
     return view('blog');
 });
+
+use App\Http\Controllers\AuthController;
+
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+
+Route::get('/home', function () {
+    if (!session()->has('user_id')) return redirect('/login');
+    return view('home');
+});
+
+Route::get('/orderadmin', function () {
+    if (!session()->has('user_id')) return redirect('/login');
+    return view('admin.order');
+});

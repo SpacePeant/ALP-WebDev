@@ -39,14 +39,40 @@ return new class extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
+            $table->enum('gender', ['Men', 'Women', 'Unisex']);
             $table->text('description')->nullable();
-            $table->decimal('price', 10, 2);
-            $table->integer('stock');
-            $table->string('size', 5);
-            $table->text('image_url')->nullable();
-            $table->foreignId('category_id')->nullable()->constrained('categories')->onDelete('set null');
-            $table->date('date_added')->nullable();
+            $table->unsignedInteger('price');
+            $table->enum('status', ['active', 'inactive'])->default('active');
+            $table->foreignId('category_id')->nullable()->constrained('categories');
             $table->timestamps();
+        });
+
+        Schema::create('product_colors', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->string('color_name', 50);
+            $table->boolean('is_primary')->default(false);
+            $table->string('color_code', 7)->nullable(); 
+            $table->string('color_code_bg', 7)->nullable();
+            $table->string('color_font', 7)->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('product_color_images', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('color_id')->constrained('product_colors')->onDelete('cascade');
+            $table->string('image_kiri', 255);
+            $table->string('image_kanan', 255);
+            $table->string('image_atas', 255);
+            $table->string('image_bawah', 255);
+        });
+
+        Schema::create('product_variants', function (Blueprint $table) {
+            $table->id();
+            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('color_id')->constrained('product_colors')->onDelete('cascade');
+            $table->integer('size');
+            $table->unsignedInteger('stock')->default(0);
         });
 
         Schema::create('wishlists', function (Blueprint $table) {
@@ -55,6 +81,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->timestamp('added_at')->nullable();
             $table->timestamps();
+            $table->unique(['customer_id', 'product_id']);
         });
 
         Schema::create('product_reviews', function (Blueprint $table) {
@@ -71,6 +98,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('product_color_id')->constrained('product_colors')->onDelete('cascade');
+            $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
             $table->integer('quantity');
             $table->timestamp('added_at')->nullable();
             $table->timestamps();
@@ -89,6 +118,8 @@ return new class extends Migration
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('product_color_id')->constrained('product_colors')->onDelete('cascade');
+            $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
             $table->timestamps();
@@ -137,9 +168,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::dropIfExists('api_tokens');
-        Schema::dropIfExists('password_resets');
         Schema::dropIfExists('logs');
-        Schema::dropIfExists('discounts');
         Schema::dropIfExists('payments');
         Schema::dropIfExists('shipping');
         Schema::dropIfExists('order_details');
@@ -147,6 +176,9 @@ return new class extends Migration
         Schema::dropIfExists('cart_items');
         Schema::dropIfExists('product_reviews');
         Schema::dropIfExists('wishlists');
+        Schema::dropIfExists('product_colors');
+        Schema::dropIfExists('product_color_images');
+        Schema::dropIfExists('product_variants');
         Schema::dropIfExists('products');
         Schema::dropIfExists('categories');
         Schema::dropIfExists('admins');
