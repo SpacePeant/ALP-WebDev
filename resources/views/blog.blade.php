@@ -49,17 +49,7 @@
   
 
   <main>
-    <article class="highlight">
-      <img src="https://storage.googleapis.com/a1aa/image/befa6ab1-ccbd-4baf-1a1e-4b42b1eaea8a.jpg" alt="Nike sneakers">
-      <div class="text">
-        <p style="font-size: 12px;">Release</p>
-        <h2>Vomero Brings Maximum Cushioning to New Road Running Lineup</h2>
-        <p style="font-size: 12px;">
-          Vomero 18 introduces a new era of maximum cushioning for ultimate comfort,
-          inviting athletes to run longer, go farther, push their limits and love every run.
-        </p>
-      </div>
-    </article>
+    
 
     <section>
       <h3 class="articles-title">All articles</h3>
