@@ -17,6 +17,7 @@
       <a href="#">About</a>
       <a href="#" style="text-decoration: underline;">Blog</a>
       <a href="#">Collection</a>
+      <a href="#">HAI</a>
     </nav>
     <h1>Blog</h1>
     <div class="header-icons">
