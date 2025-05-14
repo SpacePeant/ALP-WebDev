@@ -6,7 +6,7 @@
   <title>Blog</title>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
-  @vite('resources/css/blog.css')
+  @vite(['resources/css/blog.css', 'resources/js/app.js'])
 
 
 </head>
@@ -26,56 +26,30 @@
     </div>
   </header>
 
-  <div class="scroll-carousel">
-    <div class="scroll-track" id="carousel-track">
-      <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/aset_blog1.png') }}" alt="Running">
-        <div class="carousel-caption-center" style="color: #ffffff;">
-          <h2>Vomero Brings Maximum Cushioning</h2>
-          <p>Vomero 18 introduces a new era of comfort.</p>
-          <a href="#" style="color: #5E4E47;">View Collection →</a>
+  <div class="carousel-wrapper">
+    <button class="carousel-btn prev-btn" aria-label="Previous">&#10094;</button>
+  
+    <div class="carousel" id="carousel">
+      @foreach (['aset_blog1.png', 'aset_blog2.png', 'aset_blog3.png'] as $image)
+        <div class="carousel-item">
+          <img src="{{ asset('image/image_carousel/' . $image) }}" alt="Slide">
+          <div class="carousel-caption-center">
+            <h2>Slide Title</h2>
+            <p>Description for {{ $image }}</p>
+            <a href="#">View Collection →</a>
+          </div>
         </div>
-      </div>
-      <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/aset_blog2.png') }}" alt="Basketball">
-        <div class="carousel-caption-center" style="color: #8C1D1D;">
-          <h2>Casual</h2>
-          <p>Nike basketball shoes blend support and innovation.</p>
-          <a href="#" style="color: #8C1D1D;">View Collection →</a>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/aset_blog3.png') }}" alt="Casual">
-        <div class="carousel-caption-center" style="color: #303034;">
-          <h2>Basketball</h2>
-          <p>Nike casual shoes for everyday wear.</p>
-          <a href="#" style="color: #303034;">View Collection →</a>
-        </div>
-      </div>
-      <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/training.png') }}" alt="Training">
-        <div class="carousel-caption-center" style="color: #23AA97;">
-          <h2>Training</h2>
-          <p>Support and flexibility for all workouts.</p>
-          <a href="#" style="color: #23AA97;">View Collection →</a>
-        </div>
-      </div>
+      @endforeach
     </div>
+  
+    <button class="carousel-btn next-btn" aria-label="Next">&#10095;</button>
   </div>
+  
+</div>
   
 
   <main>
-    <article class="highlight">
-      <img src="https://storage.googleapis.com/a1aa/image/befa6ab1-ccbd-4baf-1a1e-4b42b1eaea8a.jpg" alt="Nike sneakers">
-      <div class="text">
-        <p style="font-size: 12px;">Release</p>
-        <h2>Vomero Brings Maximum Cushioning to New Road Running Lineup</h2>
-        <p style="font-size: 12px;">
-          Vomero 18 introduces a new era of maximum cushioning for ultimate comfort,
-          inviting athletes to run longer, go farther, push their limits and love every run.
-        </p>
-      </div>
-    </article>
+    
 
     <section>
       <h3 class="articles-title">All articles</h3>
