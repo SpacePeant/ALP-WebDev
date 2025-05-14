@@ -26,4 +26,8 @@ Route::get('/blog', function () {
     return view('blog');
 });
 
+Route::get('/aboutus', function () {
+    return view('aboutus');
+});
+
 
