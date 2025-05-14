@@ -1,26 +1,12 @@
-<?php
-// if (session_status() === PHP_SESSION_NONE) {
-//   session_start(); // ✅ Aman, hanya jalan jika session belum aktif
-// }
-// $user_id = isset($user_id) ? $user_id : (isset($user_id) ? $user_id : 1);
-// $user_name = isset($_SESSION['user_name']) ? $_SESSION['user_name'] : 'Guest';
-
-// if (isset($_GET['logout'])) {
-//   session_unset();
-//   session_destroy();
-//   header("Location: login.php");
-//   exit;
-// }
-?>
-
 @php
-  use Illuminate\Support\Facades\Session;
-  $user_name = Session::get('user_name', 'Guest');
+    use Illuminate\Support\Facades\Session;
+    $user_name = Session::get('user_name', 'Guest');
 @endphp
 
+@push('styles')
 <style>
     /* HEADER */
-.header {
+    .header {
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -126,71 +112,53 @@
   background-color: #d32f2f;
 }
 </style>
-<!-- Bootstrap CSS -->
-<link
-      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;700&display=swap"
-      rel="stylesheet"
-    />
-    <link
-      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
-      rel="stylesheet"
-    />
-    <script src="https://unpkg.com/feather-icons"></script>
-<!-- Header -->
+@endpush
+
 <header class="header">
-      <div class="logo">
-        <img src="{{ asset('images/logo.png') }}" alt="New Arrivals" />
-      </div>
-      <nav class="navbar">
-        <a href="home.php">Home</a>
-        <a href="about_us.php">About</a>
+    <div class="logo">
+        <img src="{{ asset('images/logo.png') }}" alt="Logo" />
+    </div>
+    <nav class="navbar">
+        <a href="{{ route('home') }}">Home</a>
+        <a href="{{ route('about') }}">About</a>
         <a href="#">Blog</a>
-        <a href="collection.php">Collection</a>
-      </nav>
-      <div class="icons">
-        <a href="wishlist.php"><i data-feather="star"></i></a>
-        <a href="cart.php"><i data-feather="shopping-cart"></i></a>
+        <a href="{{ route('collection') }}">Collection</a>
+    </nav>
+    <div class="icons">
+        <a href="{{ route('wishlist') }}"><i data-feather="star"></i></a>
+        <a href="{{ route('cart') }}"><i data-feather="shopping-cart"></i></a>
         <div class="user-dropdown">
-        <a href="#" id="userIcon"><i data-feather="user"></i></a>
-          <div class="user-dropdown-menu" id="userDropdown">
-            <p id="userName">Hi, <?= htmlspecialchars($user_name) ?>!</p>
-            <button>Help</button>
-            <button>Send Feedback</button>
-            <button>FAQ</button>
-            <button onclick="logout()" class="log">Logout</button>
-          </div>
+            <a href="#" id="userIcon"><i data-feather="user"></i></a>
+            <div class="user-dropdown-menu" id="userDropdown">
+                <p id="userName">Hi, {{ $user_name }}!</p>
+                <button>Help</button>
+                <button>Send Feedback</button>
+                <button>FAQ</button>
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="log">Logout</button>
+                </form>
+            </div>
         </div>
-      </div>
-    </header>
-    <!-- Link FontAwesome buat icon -->
-    <script
-      src="https://kit.fontawesome.com/yourfontawesomekit.js"
-      crossorigin="anonymous"
-    ></script>
+    </div>
+</header>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-      feather.replace();
-    </script>
-
+@push('scripts')
 <script>
-      const userIcon = document.getElementById("userIcon");
-      const userDropdown = document.getElementById("userDropdown");
+feather.replace();
 
-      userIcon.addEventListener("click", function (e) {
-        e.preventDefault();
-        userDropdown.classList.toggle("show");
-      });
+const userIcon = document.getElementById("userIcon");
+const userDropdown = document.getElementById("userDropdown");
 
-      function logout() {
-        window.location.href = "logout.php"; 
-      }
-
-      document.addEventListener("click", function (e) {
-  if (!userIcon.contains(e.target) && !userDropdown.contains(e.target)) {
-    userDropdown.classList.remove("show");
-  }
+userIcon.addEventListener("click", function (e) {
+    e.preventDefault();
+    userDropdown.classList.toggle("show");
 });
-    </script>
+
+document.addEventListener("click", function (e) {
+    if (!userIcon.contains(e.target) && !userDropdown.contains(e.target)) {
+        userDropdown.classList.remove("show");
+    }
+});
+</script>
+@endpush
