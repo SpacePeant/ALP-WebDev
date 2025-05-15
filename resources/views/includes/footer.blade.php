@@ -97,7 +97,7 @@
       <div class="footer-container">
         <div class="footer-about">
           <img
-            src="images/logo.png"
+            src="image/logo.png"
             alt="Logo"
             class="footer-logo"
           />

@@ -8,6 +8,7 @@ Route::get('/', function () {
 });
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CollectionController;
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
@@ -33,3 +34,7 @@ Route::get('/aboutus', function () {
 Route::get('/', function () {
     return view('home');
 });
+
+Route::get('/collection', [CollectionController::class, 'index'])->name('collection.index');
+Route::get('/collection/detail', [CollectionController::class, 'detail'])->name('collection.detail');
+

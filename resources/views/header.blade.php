@@ -139,7 +139,7 @@
 <!-- Header -->
 <header class="header">
       <div class="logo">
-        <img src="{{ asset('images/logo.png') }}" alt="New Arrivals" />
+        <img src="{{ asset('image/logo.png') }}" alt="New Arrivals" />
       </div>
       <nav class="navbar">
         <a href="home.php">Home</a>
