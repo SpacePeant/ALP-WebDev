@@ -1,12 +1,13 @@
-<?php
-    // session_start();
-    // $user_id = $_SESSION['user_id'];
-?>
+@extends('base.base1')
 
-{{-- Laravel Blade syntax --}}
+@section('title', 'Home')
+
+@section('content') 
+
 @php
     $user_id = $user_id ?? null;
 @endphp
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,8 +70,6 @@
     </style>
   </head>
   <body>
-      {{-- Include header --}}
-    @include('header')
     <section class="new-arrivals-banner">
       <img src="{{ asset('images/newarr.png') }}" alt="New Arrivals" />
     </section>
@@ -156,7 +155,6 @@
       </a>
     </section>
 
-    {{-- Include footer --}}
-  @include('footer')
   </body>
 </html>
+@endsection

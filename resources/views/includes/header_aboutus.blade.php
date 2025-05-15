@@ -1,3 +1,8 @@
+@php
+    use Illuminate\Support\Facades\Session;
+    $user_name = Session::get('user_name', 'Guest');
+@endphp
+
 <style>
     /* HEADER */
 .header {
@@ -89,11 +94,11 @@
 
       </div>
       <nav class="navbar">
-        <a href="home.php">Home</a>
-        <a href="about_us.php">About</a>
-        <a href="#">Blog</a>
-        <a href="collection.php">Collection</a>
-      </nav>
+      <a href="{{ route('home') }}">Home</a>
+      <a href="{{ route('about') }}">About</a>
+      <a href="{{ route('blog') }}">Blog</a>
+      <a href="{{ route('collection') }}">Collection</a>
+  </nav>
       <div class="icons">
         <a href=""><i data-feather="star"></i></a>
         <a href=""><i data-feather="shopping-cart"></i></a>

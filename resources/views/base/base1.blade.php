@@ -11,13 +11,13 @@
 </head>
 <body>
 
-    @include('header')
+    @include('includes.header')
 
     <main>
         @yield('content')
     </main>
 
-    @include('footer')
+    @include('includes.footer')
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>feather.replace();</script>

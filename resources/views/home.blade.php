@@ -1,8 +1,8 @@
-{{-- @extends('base1.base')
+@extends('base.base1')
 
 @section('title', 'Home')
 
-@section('content') --}}
+@section('content') 
 
 <?php
     // session_start();
@@ -475,4 +475,4 @@
     </script>
   </body>
 </html>
-{{-- @endsection --}}
+@endsection

@@ -1,9 +1,9 @@
+
 @php
     use Illuminate\Support\Facades\Session;
     $user_name = Session::get('user_name', 'Guest');
 @endphp
 
-@push('styles')
 <style>
     /* HEADER */
     .header {
@@ -112,18 +112,18 @@
   background-color: #d32f2f;
 }
 </style>
-@endpush
+
 
 <header class="header">
     <div class="logo">
         <img src="{{ asset('images/logo.png') }}" alt="Logo" />
     </div>
     <nav class="navbar">
-        <a href="{{ route('home') }}">Home</a>
-        <a href="{{ route('about') }}">About</a>
-        <a href="#">Blog</a>
-        <a href="{{ route('collection') }}">Collection</a>
-    </nav>
+      <a href="{{ route('home') }}">Home</a>
+      <a href="{{ route('about') }}">About</a>
+      <a href="{{ route('blog') }}">Blog</a>
+      <a href="{{ route('collection') }}">Collection</a>
+  </nav>
     <div class="icons">
         <a href="{{ route('wishlist') }}"><i data-feather="star"></i></a>
         <a href="{{ route('cart') }}"><i data-feather="shopping-cart"></i></a>
