@@ -8,6 +8,7 @@ Route::get('/', function () {
 });
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BlogController;
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
@@ -29,5 +30,6 @@ Route::get('/blog', function () {
 Route::get('/aboutus', function () {
     return view('aboutus');
 });
+
 
 

@@ -54,7 +54,7 @@
 
     <section>
       <h3 class="articles-title">All articles</h3>
-      <div class="grid">
+      <div class="grid" id="blogGrid">
         <!-- Repeat this article block for each blog item -->
         <article>
           <img src="https://storage.googleapis.com/a1aa/image/5dd66e70-9a04-419d-1de0-6239ab683fe5.jpg" alt="Man with hat">
@@ -79,7 +79,7 @@
       </div>
 
       <div class="load-button">
-        <button>Loading more ...</button>
+        <button id="loadMoreBtn" data-offset="3">Load more ...</button>
       </div>
     </section>
   </main>
