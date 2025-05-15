@@ -8,53 +8,67 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
   <?php echo app('Illuminate\Foundation\Vite')(['resources/css/blog.css', 'resources/js/app.js']); ?>
 
-
+  <!-- Bootstrap CSS -->
+<link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
-<body>
-  <header>
-    <nav>
-      <a href="#">Home</a>
-      <a href="#">About</a>
-      <a href="#" style="text-decoration: underline;">Blog</a>
-      <a href="#">Collection</a>
-      <a href="#">HAI</a>
-    </nav>
-    <h1>Blog</h1>
-    <div class="header-icons">
-      <button><i class="fas fa-sync-alt"></i></button>
-      <button><i class="fas fa-shopping-cart"></i></button>
-      <button><i class="fas fa-user"></i></button>
-    </div>
-  </header>
 
-  <div class="carousel-wrapper">
-    <button class="carousel-btn prev-btn" aria-label="Previous">&#10094;</button>
+<body>
   
-    <div class="carousel" id="carousel">
-      <?php $__currentLoopData = ['aset_blog1.png', 'aset_blog2.png', 'aset_blog3.png']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <div class="carousel-item">
-          <img src="<?php echo e(asset('image/image_carousel/' . $image)); ?>" alt="Slide">
-          <div class="carousel-caption-center">
-            <h2>Slide Title</h2>
-            <p>Description for <?php echo e($image); ?></p>
-            <a href="#">View Collection →</a>
-          </div>
-        </div>
-      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    </div>
-  
-    <button class="carousel-btn next-btn" aria-label="Next">&#10095;</button>
+
+  <!-- Header -->
+<header class="header">
+      <div class="logo">
+
+      </div>
+      <nav class="navbar">
+        <a href="home.php">Home</a>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="collection.php">Collection</a>
+      </nav>
+      <div class="icons">
+        <a href=""><i data-feather="star"></i></a>
+        <a href=""><i data-feather="shopping-cart"></i></a>
+        <a href=""><i data-feather="user"></i></a>
+      </div>
+    </header>
+
+    <header class="about-section">
+  <div class="about-overlay">
+    <h1>Blog</h1>
   </div>
+</header>
+
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+  <div class="carousel-inner">
+    <?php $__currentLoopData = ['aset_blog1.png', 'aset_blog2.png', 'aset_blog3.png']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+      <div class="carousel-item <?php echo e($index === 0 ? 'active' : ''); ?>">
+        <img src="<?php echo e(asset('image/image_carousel/' . $image)); ?>" class="d-block w-100" alt="Slide">
+      </div>
+    <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
   
 </div>
-  
-
   <main>
-    
-
     <section>
       <h3 class="articles-title">All articles</h3>
-      <div class="grid">
+      <div class="grid" id="blogGrid">
         <!-- Repeat this article block for each blog item -->
         <article>
           <img src="https://storage.googleapis.com/a1aa/image/5dd66e70-9a04-419d-1de0-6239ab683fe5.jpg" alt="Man with hat">
@@ -79,10 +93,22 @@
       </div>
 
       <div class="load-button">
-        <button>Loading more ...</button>
+        <button id="loadMoreBtn" data-offset="3">Load more ...</button>
       </div>
     </section>
   </main>
+
+  <!-- Link FontAwesome buat icon -->
+    <script
+      src="https://kit.fontawesome.com/yourfontawesomekit.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+      feather.replace();
+  </script>
 </body>
 </html>
 <?php /**PATH C:\Users\ASUS\Herd\webdev_week9_hw\resources\views/blog.blade.php ENDPATH**/ ?>

@@ -14,6 +14,10 @@ class PageController extends Controller
         return view('aboutus');
     }
 
+    public function blog() {
+        return view('blog');
+    }
+
     public function collection() {
         return view('collection');
     }

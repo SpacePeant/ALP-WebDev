@@ -8,10 +8,20 @@
   <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
   @vite(['resources/css/blog.css', 'resources/js/app.js'])
 
-
+  <!-- Bootstrap CSS -->
+<link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/feather-icons"></script>
 </head>
+
 <body>
-  <header>
+  {{-- <header>
     <nav>
       <a href="#">Home</a>
       <a href="#">About</a>
@@ -25,33 +35,51 @@
       <button><i class="fas fa-shopping-cart"></i></button>
       <button><i class="fas fa-user"></i></button>
     </div>
-  </header>
+  </header> --}}
 
-  <div class="carousel-wrapper">
-    <button class="carousel-btn prev-btn" aria-label="Previous">&#10094;</button>
-  
-    <div class="carousel" id="carousel">
-      @foreach (['aset_blog1.png', 'aset_blog2.png', 'aset_blog3.png'] as $image)
-        <div class="carousel-item">
-          <img src="{{ asset('image/image_carousel/' . $image) }}" alt="Slide">
-          <div class="carousel-caption-center">
-            <h2>Slide Title</h2>
-            <p>Description for {{ $image }}</p>
-            <a href="#">View Collection →</a>
-          </div>
-        </div>
-      @endforeach
-    </div>
-  
-    <button class="carousel-btn next-btn" aria-label="Next">&#10095;</button>
+  <!-- Header -->
+<header class="header">
+      <div class="logo">
+
+      </div>
+      <nav class="navbar">
+        <a href="home.php">Home</a>
+        <a href="#">About</a>
+        <a href="#">Blog</a>
+        <a href="collection.php">Collection</a>
+      </nav>
+      <div class="icons">
+        <a href=""><i data-feather="star"></i></a>
+        <a href=""><i data-feather="shopping-cart"></i></a>
+        <a href=""><i data-feather="user"></i></a>
+      </div>
+    </header>
+
+    <header class="about-section">
+  <div class="about-overlay">
+    <h1>Blog</h1>
   </div>
+</header>
+
+  <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+  <div class="carousel-inner">
+    @foreach (['aset_blog1.png', 'aset_blog2.png', 'aset_blog3.png'] as $index => $image)
+      <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+        <img src="{{ asset('image/image_carousel/' . $image) }}" class="d-block w-100" alt="Slide">
+      </div>
+    @endforeach
+  </div>
+  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <span class="carousel-control-prev-icon"></span>
+  </button>
+  <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <span class="carousel-control-next-icon"></span>
+  </button>
+</div>
+
   
 </div>
-  
-
   <main>
-    
-
     <section>
       <h3 class="articles-title">All articles</h3>
       <div class="grid" id="blogGrid">
@@ -83,5 +111,17 @@
       </div>
     </section>
   </main>
+
+  <!-- Link FontAwesome buat icon -->
+    <script
+      src="https://kit.fontawesome.com/yourfontawesomekit.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+      feather.replace();
+  </script>
 </body>
 </html>

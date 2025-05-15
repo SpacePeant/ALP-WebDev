@@ -1,234 +1,289 @@
+    /* HEADER */
 @import url('https://fonts.googleapis.com/css2?family=Red+Hat+Text:wght@400;500;700&display=swap');
-    
-    body {
-      font-family: 'Red Hat Text', sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f9fafb;
-      color: #1a1a1a;
-    }
+body {
+  font-family: 'Red Hat Text', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafb;
+  color: #1a1a1a;
+}
 
-    header {
-      background-color: #f9fafb;
-      padding: 20px 0;
-      position: relative;
-    }
 
-    nav {
-      display: flex;
-      justify-content: center;
-      gap: 20px;
-      font-size: 20px;
-      color: #4b5563;
-      margin-bottom: 10px;
-      margin-top: 40px;
-    }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 50px;
+  background: #fff;
 
-    nav a {
-      text-decoration: none;
-      color: inherit;
-    }
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+  background: transparent;
+}
 
-    nav a:hover {
-      text-decoration: underline;
-    }
+.icons a {
+  color: #000;
+  margin-right: 20px;
+}
 
-    h1 {
-      text-align: center;
-      font-family: serif;
-      font-weight: bold;
-      font-size: 24px;
-    }
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
 
-    .header-icons {
-      position: absolute;
-      right: 20px;
-      top: 20px;
-      display: flex;
-      gap: 20px;
-      font-size: 18px;
-    }
+.logo img {
+  height: 30px;
+}
 
-    .header-icons button {
-      background: none;
-      border: none;
-      cursor: pointer;
-      color: #4b5563;
-    }
+.navbar a {
+  margin: 0 15px;
+  text-decoration: none;
+  color: black;
+  font-weight: 500;
+}
 
-    .header-icons button:hover {
-      color: #1a1a1a;
-    }
+.navbar a:hover {
+  border-bottom: 2px solid black;
+}
 
-    main {
-      max-width: 1200px;
-      margin: 40px auto;
-      padding: 0 16px;
-    }
+.navbar {
+    margin-left:150px;
+}
+.icons {
+  display: flex;
+  gap: 20px;
+  font-size: 24px;
+}
 
-    .highlight {
-      position: relative;
-      background-color: #1a1a1a;
-      border-radius: 12px;
-      overflow: hidden;
-      margin-bottom: 40px;
-      color: white;
-    }
+.about-section {
+  width: 100%;
+  max-width: 1450px; /* batasi lebar sesuai gambar */
+  height: 408px;      /* tinggi sesuai gambar */
+  margin: 0 auto;
+  background: url('images/bg_blog.png') no-repeat center center;
+  background-size: cover;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
 
-    .highlight img {
-      width: 100%;
-      height: auto;
-      display: block;
-      border-radius: 12px;
-    }
+.about-overlay h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: 60px;
+  font-weight: 700;
+  color: #000;
+  margin: 0;
+  z-index: 2;
+}
 
-    .highlight .text {
-      position: absolute;
-      bottom: 24px;
-      left: 24px;
-      right: 24px;
-      max-width: 720px;
-    }
 
-    .highlight p,
-    .highlight h2 {
-      margin: 0 0 8px;
-    }
 
-    .highlight h2 {
-      font-size: 20px;
-    }
+/* 
+header {
+  background-color: #f9fafb;
+  padding: 20px 0;
+  position: relative;
+}
+nav {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  font-size: 20px;
+  color: #4b5563;
+  margin-bottom: 10px;
+  margin-top: 40px;
+}
 
-    .articles-title {
-      text-align: center;
-      font-family: serif;
-      font-weight: bold;
-      font-size: 20px;
-      margin-bottom: 32px;
-    }
+nav a {
+  text-decoration: none;
+  color: inherit;
+}
+nav a:hover {
+  text-decoration: underline;
+}
+h1 {
+  text-align: center;
+  font-family: serif;
+  font-weight: bold;
+  font-size: 24px;
+}
+.header-icons {
+  position: absolute;
+  right: 20px;
+  top: 20px;
+  display: flex;
+  gap: 20px;
+  font-size: 18px;
+}
+.header-icons button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: #4b5563;
+}
+.header-icons button:hover {
+  color: #1a1a1a;
+}
+ */
 
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 30px;
-    }
+main {
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 0 16px;
+}
+.highlight {
+  position: relative;
+  background-color: #1a1a1a;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 40px;
+  color: white;
+}
+.highlight img {
+  width: 100%;
+  height: auto;
+  display: block;
+  border-radius: 12px;
+}
+.highlight .text {
+  position: absolute;
+  bottom: 24px;
+  left: 24px;
+  right: 24px;
+  max-width: 720px;
+}
+.highlight p,
+.highlight h2 {
+  margin: 0 0 8px;
+}
+.highlight h2 {
+  font-size: 20px;
+}
+.articles-title {
+  text-align: center;
+  font-family: serif;
+  font-weight: bold;
+  font-size: 20px;
+  margin-bottom: 32px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 30px;
+}
+.grid article {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.grid img {
+  width: 100%;
+  border-radius: 6px;
+}
+.grid h4 {
+  font-weight: bold;
+  font-size: 14px;
+  line-height: 1.2;
+}
+.grid p {
+  font-size: 10px;
+  color: #6b7280;
+  line-height: 1.3;
+}
+.load-button {
+  text-align: center;
+  margin: 40px 0 60px;
+}
+.load-button button {
+  background-color: #000;
+  color: #fff;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.load-button button:hover {
+  background-color: #222;
+}
+  /* Carousel Start */
+.carousel-wrapper {
+    position: relative;
+    width: 100%;
+    overflow: hidden;
+    margin: 2rem 0;
+    min-height: 300px;
+}
+  
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none;
+}
+  
+.carousel::-webkit-scrollbar {
+  display: none;
+}
 
-    .grid article {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-    }
+.carousel-item {
+  flex: none;
+  width: 100%;
+  scroll-snap-align: center;
+  position: relative;
+  /* Add these to center content */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}     
+.carousel-item img {
+  width: 70%;
+  height: auto;
+  object-fit: cover;
+  border-radius: 20px;
+}
 
-    .grid img {
-      width: 100%;
-      border-radius: 6px;
-    }
+.carousel-caption-center {
+  position: absolute;
+  bottom: 20%;
+  left: 15%;
+  right: 10%;
+  text-align: left;
+  background: rgba(255,255,255,0.8);
+  padding: 1rem;
+  border-radius: 10px;
+  font-weight: bold;
+}
 
-    .grid h4 {
-      font-weight: bold;
-      font-size: 14px;
-      line-height: 1.2;
-    }
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255,255,255,0.7);
+  border: none;
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s;
+}
 
-    .grid p {
-      font-size: 10px;
-      color: #6b7280;
-      line-height: 1.3;
-    }
+.carousel-btn:hover {
+  background: rgba(255,255,255,1);
+}
 
-    .load-button {
-      text-align: center;
-      margin: 40px 0 60px;
-    }
+.prev-btn {
+  left: 10px;
+}
 
-    .load-button button {
-      background-color: #000;
-      color: #fff;
-      font-size: 12px;
-      font-weight: bold;
-      padding: 8px 16px;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-    }
-
-    .load-button button:hover {
-      background-color: #222;
-    }
-
-    .carousel-wrapper {
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-        margin: 2rem 0;
-      }
-      
-      .carousel {
-        display: flex;
-        overflow-x: auto;
-        scroll-snap-type: x mandatory;
-        scroll-behavior: smooth;
-        -webkit-overflow-scrolling: touch;
-        scrollbar-width: none;
-      }
-      
-      .carousel::-webkit-scrollbar {
-        display: none;
-      }
-      
-      .carousel-item {
-        flex: none;
-        width: 100%;
-        scroll-snap-align: center;
-        position: relative;
-
-        /* Add these to center content */
-        display: flex;
-        justify-content: center;
-        align-items: center;
-      }     
-
-      .carousel-item img {
-        width: 70%;
-        height: auto;
-        object-fit: cover;
-        border-radius: 20px;
-      }
-      
-      .carousel-caption-center {
-        position: absolute;
-        bottom: 20%;
-        left: 15%;
-        right: 10%;
-        text-align: left;
-        background: rgba(255,255,255,0.8);
-        padding: 1rem;
-        border-radius: 10px;
-        font-weight: bold;
-      }
-      
-      .carousel-btn {
-        position: absolute;
-        top: 50%;
-        transform: translateY(-50%);
-        background: rgba(255,255,255,0.7);
-        border: none;
-        font-size: 2rem;
-        padding: 0.5rem 1rem;
-        cursor: pointer;
-        z-index: 10;
-        transition: background 0.3s;
-      }
-      
-      .carousel-btn:hover {
-        background: rgba(255,255,255,1);
-      }
-      
-      .prev-btn {
-        left: 10px;
-      }
-      
-      .next-btn {
-        right: 10px;
-      }
-      
+.next-btn {
+  right: 10px;
+}
+/* Carousel END */
