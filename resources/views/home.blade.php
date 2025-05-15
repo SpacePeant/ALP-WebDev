@@ -1,0 +1,478 @@
+{{-- @extends('base1.base')
+
+@section('title', 'Home')
+
+@section('content') --}}
+
+<?php
+    // session_start();
+    // $user_id = $_SESSION['user_id'];
+?>
+
+@php
+    $user_id = $user_id ?? null;
+@endphp
+
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Carousel Grid Bootstrap</title>
+    <style>
+      * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* CAROUSEL */
+
+.haha {
+  display: flex;
+  margin: 0px 60px 20px 60px;
+}
+
+.besar {
+  margin-right: 20px;
+}
+
+.kecil {
+  margin-bottom: 20px;
+}
+
+.carousel-image-large {
+  height: 100%;
+  width: 100%;
+  border-radius: 10px;
+}
+
+.carousel-image-small {
+  height: auto;
+  width: 100%;
+  border-radius: 10px;
+}
+
+/* EMAIL ME */
+
+.wrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  margin-bottom: 50px;
+}
+
+.coupon-container {
+  position: relative;
+  background: #f5f5f5;
+  padding: 40px;
+  width: 70%;
+  max-width: 1000px;
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.background-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: "Playfair Display", serif;
+  font-size: 200px;
+  color: #ddd;
+  opacity: 0.3;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+}
+
+.content {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+}
+
+.coupon-text h1 {
+  font-size: 25px;
+  margin: 0;
+  color: #000;
+  font-weight: bold;
+}
+
+.coupon-text p {
+  font-size: 18px;
+  color: #737373;
+  margin-top: 10px;
+}
+
+.playfair {
+  font-family: "Playfair Display", serif;
+}
+
+.email-button {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* NEW */
+
+.newbrand {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  width: 100%;
+}
+
+.product-container {
+  position: relative;
+  background: #f5f5f5;
+  padding: 40px;
+  width: 100%;
+  overflow: hidden;
+  transition: 0.7s;
+}
+
+.product-container:hover {
+  background-color: #6b1c1c;
+  transition: 0.7s;
+}
+
+.product-container:hover .bekatas,
+.product-container:hover .bekbawah {
+  color: #000;
+  transition: 0.7s;
+}
+
+.product-container:hover .product-info h2 {
+  color: #fff;
+  transition: 0.7s;
+}
+
+.bekatas,
+.bekbawah {
+  position: absolute;
+  top: 80%;
+  transform: translate(-50%, -50%);
+  font-family: "Playfair Display", serif;
+  font-size: 160px;
+  color: #ddd;
+  opacity: 0.3;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+  z-index: 0;
+  transition: 0.7s;
+}
+
+.bekatas {
+  position: absolute;
+  top: 65px;
+  margin-left: 250px;
+}
+
+.bekbawah {
+  margin-left: 500px;
+}
+
+.product-content {
+  position: relative;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 1;
+}
+
+.product-image img {
+  width: 600px;
+  height: auto;
+  margin-left: 100px;
+}
+
+.product-info {
+  text-align: right;
+  margin-right: 100px;
+  transition: 0.7s;
+}
+
+.product-info h2 {
+  font-size: 32px;
+  color: #555;
+  font-weight: 700;
+  margin-bottom: 20px;
+  transition: 0.7s;
+}
+
+.shop-button {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 15px 30px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.shop-button:hover {
+  background: #333;
+}
+
+/* KEPO */
+
+.kepo {
+  background-image: url("image/kepo.png");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  position: relative;
+  padding: 20px;
+}
+
+.cta-content {
+  z-index: 2;
+  color: #fff;
+}
+
+.cta-content h1 {
+  font-size: 48px;
+  font-weight: 800;
+  margin: 60px;
+}
+
+.cta-button {
+  background-color: #e26d5c;
+  color: #fff;
+  padding: 12px 30px;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 16px;
+  border-radius: 4px;
+  transition: background 0.3s;
+}
+
+.cta-button:hover {
+  background-color: #cf5a49;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .cta-content h1 {
+    font-size: 32px;
+  }
+
+  .cta-button {
+    padding: 10px 20px;
+    font-size: 14px;
+  }
+}
+
+.color-filter {
+  margin-bottom: 20px;
+}
+
+.color-filter h3 {
+  color: #e26d5c;
+  border-left: 4px solid #e26d5c;
+  padding-left: 8px;
+  margin-bottom: 10px;
+}
+
+.colors {
+  display: grid;
+  grid-template-columns: repeat(6, 30px);
+  gap: 10px;
+}
+
+.color {
+  width: 30px;
+  height: 30px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.color::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  border-radius: 4px;
+  background-color: inherit;
+}
+
+.color {
+  background-color: var(--color, transparent);
+}
+
+.color:hover {
+  transform: scale(1.1);
+}
+
+.background-area {
+  margin-top: 30px;
+  padding: 50px;
+  background-color: #f5f5f5;
+  text-align: center;
+  transition: background-color 0.5s ease;
+  border-radius: 8px;
+}
+
+    </style>
+    <!-- Bootstrap CSS -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <script src="https://unpkg.com/feather-icons"></script>
+  </head>
+  <body>
+
+    <div class="container my-5">
+      <div
+        id="carouselExample"
+        class="carousel slide"
+        data-bs-ride="carousel"
+        data-bs-interval="2000"
+      >
+        <div class="carousel-inner">
+          <div class="carousel-item active">
+            <div class="haha">
+              <div class="besar">
+                <img
+                  src="image/gambar1.png"
+                  alt="Gambar 1"
+                  class="carousel-image-large"
+                />
+              </div>
+              <div class="hihi">
+                <div class="kecil">
+                  <div class="">
+                    <img
+                      src="image/gambar2.png"
+                      alt="Gambar 2"
+                      class="carousel-image-small"
+                    />
+                  </div>
+                </div>
+                <div class="temankecil">
+                  <div class="">
+                    <img
+                      src="image/gambar3.png"
+                      alt="Gambar 3"
+                      class="carousel-image-small"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="haha">
+              <div class="besar">
+                <img
+                  src="image/gambar4.png"
+                  alt="Gambar 1"
+                  class="carousel-image-large"
+                />
+              </div>
+              <div class="hihi">
+                <div class="kecil">
+                  <div class="">
+                    <img
+                      src="image/gambar2.png"
+                      alt="Gambar 2"
+                      class="carousel-image-small"
+                    />
+                  </div>
+                </div>
+                <div class="temankecil">
+                  <div class="">
+                    <img
+                      src="image/gambar3.png"
+                      alt="Gambar 3"
+                      class="carousel-image-small"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="wrapper">
+      <div class="coupon-container">
+        <div class="background-text">10% OFF</div>
+
+        <div class="content">
+          <div class="coupon-text">
+            <h1>10% OFF Discount Coupons</h1>
+            <p>Subscribe us to get 10% OFF on all the purchases</p>
+          </div>
+          <button class="email-button">EMAIL ME</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="newbrand">
+      <div class="product-container">
+        <div class="bekatas">NEW</div>
+        <div class="bekbawah">ITEM</div>
+
+        <div class="product-content">
+          <div class="product-image">
+            <img src="{{ asset('image/new.png') }}" alt="New Shoes" />
+          </div>
+
+          <div class="product-info">
+            <h2>The Air Jordan 1 Low<br />Phantom Night Maroon</h2>
+            <button class="shop-button">SHOP NOW</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <section class="kepo">
+      <div class="cta-content">
+        <h1>KEPO KARO KAMI?</h1>
+        <a href="#" class="cta-button">Jelajahi Saiki</a>
+      </div>
+    </section>
+
+    <!-- Link FontAwesome buat icon -->
+    <script
+      src="https://kit.fontawesome.com/yourfontawesomekit.js"
+      crossorigin="anonymous"
+    ></script>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      feather.replace();
+    </script>
+  </body>
+</html>
+{{-- @endsection --}}
