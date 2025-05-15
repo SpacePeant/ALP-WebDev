@@ -23,9 +23,17 @@ Route::get('/orderadmin', function () {
     return view('admin.order');
 });
 
+Route::get('/', function () {
+    return view('home');
+})->name('home');
+
+Route::get('/about-us', function () {
+    return view('aboutus');
+})->name('about');
+
 Route::get('/blog', function () {
     return view('blog');
-});
+})->name('blog');
 
 Route::get('/aboutus', function () {
     return view('aboutus');

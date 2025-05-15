@@ -1,12 +1,13 @@
-<?php
-    // session_start();
-    // $user_id = $_SESSION['user_id'];
-?>
+@extends('base.base1')
 
-{{-- Laravel Blade syntax --}}
+@section('title', 'Home')
+
+@section('content') 
+
 @php
     $user_id = $user_id ?? null;
 @endphp
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,10 +70,8 @@
     </style>
   </head>
   <body>
-      {{-- Include header --}}
-    @include('header')
     <section class="new-arrivals-banner">
-      <img src="{{ asset('images/newarr.png') }}" alt="New Arrivals" />
+      <img src="{{ asset('image/newarr.png') }}" alt="New Arrivals" />
     </section>
 
     <!-- Product List -->
@@ -101,7 +100,7 @@
     </section>
 
     <section class="new-arrivals-banner">
-      <img src="{{ asset('images/newarr.png') }}" alt="New Arrivals" />
+      <img src="{{ asset('image/newarr.png') }}" alt="New Arrivals" />
     </section>
 
     <!-- Product List -->
@@ -151,12 +150,11 @@
     </section>
 
     <section class="new-arrivals-banner">
-      <a href="collection_detail.php">
-        <img src="{{ asset('images/coll.png') }}" alt="New Arrivals" />
+      <a href="{{ route('collection.detail') }}">
+        <img src="{{ asset('image/coll.png') }}" alt="New Arrivals" />
       </a>
     </section>
 
-    {{-- Include footer --}}
-  @include('footer')
   </body>
 </html>
+@endsection
