@@ -1,3 +1,7 @@
+@php
+    $user_id = $user_id ?? null;
+@endphp
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -529,7 +533,7 @@
 <main id="productResults">
     <div class="product-grid">
         @forelse ($products as $product)
-            <a href="{{ url('detail_sepatu/' . $product->product_id) }}" class="product-link">
+            <a href="{{ route('detail_sepatu.show', $product->product_id) }}" class="product-link">
                 <div class="product-card"
                     style="--bg-color: {{ $product->color_code_bg }}; --font-color: {{ $product->color_font }};">
                     <img src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}"
