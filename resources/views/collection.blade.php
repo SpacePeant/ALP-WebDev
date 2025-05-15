@@ -71,7 +71,7 @@
   </head>
   <body>
     <section class="new-arrivals-banner">
-      <img src="{{ asset('images/newarr.png') }}" alt="New Arrivals" />
+      <img src="{{ asset('image/newarr.png') }}" alt="New Arrivals" />
     </section>
 
     <!-- Product List -->
@@ -100,7 +100,7 @@
     </section>
 
     <section class="new-arrivals-banner">
-      <img src="{{ asset('images/newarr.png') }}" alt="New Arrivals" />
+      <img src="{{ asset('image/newarr.png') }}" alt="New Arrivals" />
     </section>
 
     <!-- Product List -->
@@ -150,8 +150,8 @@
     </section>
 
     <section class="new-arrivals-banner">
-      <a href="collection_detail.php">
-        <img src="{{ asset('images/coll.png') }}" alt="New Arrivals" />
+      <a href="{{ route('collection.detail') }}">
+        <img src="{{ asset('image/coll.png') }}" alt="New Arrivals" />
       </a>
     </section>
 
