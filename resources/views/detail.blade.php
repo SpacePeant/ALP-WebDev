@@ -1,3 +1,9 @@
+@extends('base.base1')
+
+@section('title', 'Home')
+
+@section('content') 
+
 @php
     $user_id = $user_id ?? null;
 @endphp
@@ -269,13 +275,28 @@
     display: flex;
     gap: 20px;
     padding-left: 40px;
+    margin-bottom: 100px;
 }
 
 .filter-sidebar {
     width: 250px;
+    min-width: 250px;      
+    max-width: 250px;
     padding: 20px;
     border-right: 1px solid #ddd;
     background-color: #fafafa;
+}
+
+.filter-bar {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    padding: 10px 40px;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    position: sticky;
+    top: 0;
+    z-index: 10;
 }
 
 .filter-section {
@@ -345,11 +366,13 @@
 }
 
 .color-box {
-    width: 30px;
-    height: 30px;
-    border-radius: 6px;
-    cursor: pointer;
+    display: inline-block;   
+    width: 20px;                   
+    height: 20px;
+    border-radius: 4px;
+    margin-right: 6px;
     border: 1px solid #ccc;
+    vertical-align: middle;    
     box-shadow: 0 0 2px rgba(0, 0, 0, 0.2);
 }
 .product-link {
@@ -357,7 +380,14 @@
   color: inherit;
   display: block;
 }
-
+.filter-group.warna .filter-content {
+    max-height: 0px; /* atau berapa pun yang kamu mau */
+    overflow-y: auto;
+    padding-right: 5px; /* biar gak ketimpa scrollbar */
+}
+.filter-group.warna.active .filter-content {
+    max-height: 200px;
+}
   </style>
 </head>
 <body>
@@ -432,224 +462,135 @@
   </button> -->
 </div>
 
-<form method="GET" class="filter-bar" id="filterForm">
-    <input type="text" name="search" placeholder="Search" value="<?= htmlspecialchars($_GET['search'] ?? '') ?>" id="searchInput">
+<form method="GET" id="filterForm">
 
-    <div class="select-wrapper">
-        <select name="sort" id="sortSelect" class="select">
-            <option value="">Sort By</option>
-            <option value="newest" <?= ($_GET['sort'] ?? '') === 'newest' ? 'selected' : '' ?>>Newest</option>
-            <option value="price_asc" <?= ($_GET['sort'] ?? '') === 'price_asc' ? 'selected' : '' ?>>Price: Low to High</option>
-            <option value="price_desc" <?= ($_GET['sort'] ?? '') === 'price_desc' ? 'selected' : '' ?>>Price: High to Low</option>
-        </select>
-    </div>
+    {{-- Filter Bar: Search, Sort, Price Slider --}}
+    <div class="filter-bar">
+        <input type="text" name="search" placeholder="Search" value="{{ request('search') }}" id="searchInput">
 
-    <div class="price-filter">
-        <label>Price</label>
-        <div class="slider-values">
-            <span>Rp <span id="minPriceVal"><?= $_GET['min'] ?? 500 ?>k</span></span>
-            <span>Rp <span id="maxPriceVal"><?= $_GET['max'] ?? 8000 ?>k</span></span>
+        <div class="select-wrapper">
+            <select name="sort" id="sortSelect" class="select">
+                <option value="">Sort By</option>
+                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
+                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
+                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
+            </select>
         </div>
-        <input type="range" name="min" id="minPrice" min="500" max="10000" value="<?= $_GET['min'] ?? 500 ?>" step="100">
-        <input type="range" name="max" id="maxPrice" min="500" max="10000" value="<?= $_GET['max'] ?? 8000 ?>" step="100">
-    </div>
 
-    <button type="submit" style="display:none;"></button>
-</form>
-
-<div class="product-container">
-<form method="GET" action="product_list.php" class="filter-bar" id="filterForm">
-    <aside class="filter-sidebar">
-
-        <!-- Kategori -->
-        <div class="filter-group">
-            <div class="filter-title" onclick="toggleFilter(this)">Kategori</div>
-            <div class="filter-content">
-                @foreach ($categories as $cat)
-                    @php
-                        $checked = (request()->has('category') && in_array($cat, request()->get('category'))) ? 'checked' : '';
-                    @endphp
-                    <label>
-                        <input type="checkbox" name="category[]" value="{{ $cat }}" {{ $checked }} onchange="this.form.submit()">
-                        {{ $cat }}
-                    </label><br>
-                @endforeach
+        <div class="price-filter">
+            <label>Price</label>
+            <div class="slider-values">
+                <span>Rp <span id="minPriceVal">{{ request('min', 500) }}k</span></span>
+                <span>Rp <span id="maxPriceVal">{{ request('max', 8000) }}k</span></span>
             </div>
+            <input type="range" name="min" id="minPrice" min="500" max="10000" value="{{ request('min', 500) }}" step="100">
+            <input type="range" name="max" id="maxPrice" min="500" max="10000" value="{{ request('max', 8000) }}" step="100">
         </div>
+    </div>
 
-        <!-- Warna -->
-        <div class="filter-group">
-            <div class="filter-title" onclick="toggleFilter(this)">Warna</div>
-            <div class="filter-content">
-                <div class="color-palette">
-                    @foreach ($colors as $color)
-                        @php
-                            $checked = (request()->has('warna') && in_array($color->color_name, request()->get('warna'))) ? 'checked' : '';
-                        @endphp
+    <div class="product-container">
+        <aside class="filter-sidebar">
+            {{-- Kategori --}}
+            <div class="filter-group">
+                <div class="filter-title" onclick="toggleFilter(this)">Kategori</div>
+                <div class="filter-content">
+                    @foreach ($categories as $cat)
                         <label>
-                            <input type="checkbox" name="warna[]" value="{{ $color->color_name }}" {{ $checked }} onchange="this.form.submit()">
-                            <span class="color-box" style="background-color: {{ $color->color_code }};"></span> 
+                            <input type="checkbox" name="category[]" value="{{ $cat }}"
+                                {{ in_array($cat, request()->input('category', [])) ? 'checked' : '' }}>
+                            {{ $cat }}
+                        </label><br>
+                    @endforeach
+                </div>
+            </div>
+
+            {{-- Warna --}}
+            <div class="filter-group warna">
+                <div class="filter-title" onclick="toggleFilter(this)">Warna</div>
+                <div class="filter-content">
+                    @foreach ($colors as $color)
+                        <label>
+                            <input type="checkbox" name="color[]" value="{{ $color->color_code }}"
+                                {{ in_array($color->color_code, request()->input('color', [])) ? 'checked' : '' }}>
+                            <span class="color-box" style="background-color: {{ $color->color_code }};"></span>
                             {{ $color->color_name }}
                         </label><br>
                     @endforeach
                 </div>
             </div>
-        </div>
 
-        <!-- Ukuran -->
-        <div class="filter-group">
-            <div class="filter-title" onclick="toggleFilter(this)">Ukuran</div>
-            <div class="filter-content">
-                @foreach ($sizes as $size)
-                    @php
-                        $checked = (request()->has('size') && in_array($size->size, request()->get('size'))) ? 'checked' : '';
-                    @endphp
-                    <label>
-                        <input type="checkbox" name="size[]" value="{{ $size->size }}" {{ $checked }} onchange="this.form.submit()"> 
-                        {{ $size->size }}
-                    </label><br>
-                @endforeach
-            </div>
-        </div>
 
-        <!-- Gender -->
-        <div class="filter-group">
-            <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
-            <div class="filter-content">
-                @foreach ($genders as $gender)
-                    @php
-                        $checked = (request()->has('gender') && in_array($gender, request()->get('gender'))) ? 'checked' : '';
-                    @endphp
-                    <label>
-                        <input type="checkbox" name="gender[]" value="{{ $gender }}" {{ $checked }} onchange="this.form.submit()"> 
-                        {{ $gender }}
-                    </label><br>
-                @endforeach
-            </div>
-        </div>
-
-    </aside>
-</form>
-<main id="productResults">
-    <div class="product-grid">
-        @forelse ($products as $product)
-            <a href="{{ route('detail_sepatu.show', $product->product_id) }}" class="product-link">
-                <div class="product-card"
-                    style="--bg-color: {{ $product->color_code_bg }}; --font-color: {{ $product->color_font }};">
-                    <img src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}"
-                         alt="{{ $product->product_name }}">
-                    <h3>{{ $product->product_name }}</h3>
-                    <p>{{ number_format($product->price, 0, ',', '.') }}</p>
+            {{-- Ukuran --}}
+            <div class="filter-group">
+                <div class="filter-title" onclick="toggleFilter(this)">Ukuran</div>
+                <div class="filter-content">
+                    @foreach ($sizes as $size)
+                        <label>
+                            <input type="checkbox" name="size[]" value="{{ $size->size }}"
+                                {{ in_array($size->size, request()->input('size', [])) ? 'checked' : '' }}>
+                            {{ $size->size }}
+                        </label><br>
+                    @endforeach
                 </div>
-            </a>
-        @empty
-            <p>Tidak ada produk tersedia.</p>
-        @endforelse
+            </div>
+
+            {{-- Gender --}}
+            <div class="filter-group">
+                <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
+                <div class="filter-content">
+                    @foreach ($genders as $gender)
+                        <label>
+                            <input type="checkbox" name="gender[]" value="{{ $gender }}"
+                                {{ in_array($gender, request()->input('gender', [])) ? 'checked' : '' }}>
+                            {{ $gender }}
+                        </label><br>
+                    @endforeach
+                </div>
+            </div>
+        </aside>
+
+        {{-- Product results --}}
+        <main id="productResults">
+            @include('partials.product_list', ['products' => $products])
+        </main>
     </div>
-</main>
-</main>
-</div>
+
+    <button type="submit" style="display:none;"></button>
+</form>
     
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-<script>
-const minSlider = document.getElementById("minPrice");
-const maxSlider = document.getElementById("maxPrice");
-const minVal = document.getElementById("minPriceVal");
-const maxVal = document.getElementById("maxPriceVal");
-
-function updateValues() {
-    if (parseInt(minSlider.value) > parseInt(maxSlider.value)) {
-        const temp = minSlider.value;
-        minSlider.value = maxSlider.value;
-        maxSlider.value = temp;
-    }
-    minVal.textContent = minSlider.value + 'k';
-    maxVal.textContent = maxSlider.value + 'k';
-}
-
-minSlider.addEventListener("input", updateValues);
-maxSlider.addEventListener("input", updateValues);
-
-updateValues();
-</script>
-
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
 $(document).ready(function() {
-    $(document).ready(function() {
-    function fetchData() {
-        $.ajax({
-            url: 'product_list.php',
-            method: 'GET',
-            data: $('#filterForm').serialize(),
-            success: function(response) {
-                $('#productResults').html(response);
-            }
-        });
+    const minSlider = document.getElementById("minPrice");
+    const maxSlider = document.getElementById("maxPrice");
+    const minVal = document.getElementById("minPriceVal");
+    const maxVal = document.getElementById("maxPriceVal");
+
+    function updateValues() {
+        if (parseInt(minSlider.value) > parseInt(maxSlider.value)) {
+            [minSlider.value, maxSlider.value] = [maxSlider.value, minSlider.value];
+        }
+        minVal.textContent = minSlider.value + 'k';
+        maxVal.textContent = maxSlider.value + 'k';
     }
 
-    $('#filterForm input, #filterForm select').on('input change', function() {
+    minSlider.addEventListener("input", function() {
+        updateValues();
+        fetchData(); 
+    });
+    maxSlider.addEventListener("input", function() {
+        updateValues();
         fetchData();
     });
 
-    $('#minPrice, #maxPrice').on('input', function() {
-        $('#minPriceVal').text($('#minPrice').val() + 'k');
-        $('#maxPriceVal').text($('#maxPrice').val() + 'k');
-    });
-});
+    updateValues(); 
 
-});
-</script>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script>
-    $(document).ready(function() {
-        // Ketika ada perubahan pada filter, kirim permintaan AJAX
-        $('#filterForm').on('change', 'select, input', function() {
-            let formData = $('#filterForm').serialize(); // Serialize data form filter
-
-            $.ajax({
-                url: 'product_list.php',  // URL tempat pengambilan produk
-                type: 'GET',
-                data: formData,
-                success: function(response) {
-                    // Update konten produk dengan hasil dari server
-                    $('#product-list').html(response);
-                }
-            });
-        });
-    });
-</script>
-
-<script>
-    document.querySelectorAll('.product-card').forEach(card => {
-    card.addEventListener('mouseenter', function() {
-        const bgColor = this.getAttribute('data-bg-color');
-        this.style.backgroundColor = bgColor;  
-    });
-    
-    card.addEventListener('mouseleave', function() {
-        this.style.backgroundColor = ''; 
-    });
-});
-</script>
-<script>
-function toggleFilter(element) {
-    const parent = element.parentElement;
-
-    if (parent.classList.contains('active')) {
-        parent.classList.remove('active');
-    } else {
-        parent.classList.add('active');
-    }
-}
-</script>
-
-<script>
-    $(document).ready(function() {
     function fetchData() {
         $.ajax({
-            url: 'product_list.php',
+            url: '{{ route("product.list") }}', 
             method: 'GET',
             data: $('#filterForm').serialize(),
             success: function(response) {
@@ -658,12 +599,31 @@ function toggleFilter(element) {
         });
     }
 
-    $('#filterForm input, #filterForm select').on('change input', fetchData);
+    $('#filterForm input, #filterForm select').not('#minPrice, #maxPrice').on('input change', fetchData);
 
-    // Panggil saat load
     fetchData();
+
+    document.querySelectorAll('.product-card').forEach(card => {
+        card.addEventListener('mouseenter', function() {
+            const bgColor = this.getAttribute('data-bg-color');
+            this.style.backgroundColor = bgColor;  
+        });
+        card.addEventListener('mouseleave', function() {
+            this.style.backgroundColor = ''; 
+        });
+    });
 });
+
+function toggleFilter(element) {
+    const parent = element.parentElement;
+    parent.classList.toggle('active');
+}
+function toggleFilter(element) {
+    const group = element.parentElement;
+    group.classList.toggle('active');
+}
 </script>
 
 </body>
 </html>
+@endsection

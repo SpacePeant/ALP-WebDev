@@ -1,17 +1,8 @@
-{{-- @extends('base1.base')
+@extends('base.base1')
 
 @section('title', 'Home')
 
-@section('content') --}}
-
-<?php
-    // session_start();
-    // $user_id = $_SESSION['user_id'];
-?>
-
-@php
-    $user_id = $user_id ?? null;
-@endphp
+@section('content') 
 
 <!DOCTYPE html>
 <html lang="id">
@@ -475,4 +466,4 @@
     </script>
   </body>
 </html>
-{{-- @endsection --}}
+@endsection

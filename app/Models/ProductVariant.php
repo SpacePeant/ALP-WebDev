@@ -7,14 +7,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class ProductVariant extends Model
 {
-    //
-     use HasFactory;
+    protected $table = 'product_variant';
 
-     public $timestamps = false;
-
-       protected $table = 'product_variant'; // pakai tabel 'product', bukan 'products'
-
-    protected $fillable = [
+     protected $fillable = [
         'product_id', 'color_id', 'size', 'stock'
     ];
 
@@ -22,6 +17,10 @@ class ProductVariant extends Model
     {
         return $this->belongsTo(Product::class);
     }
+     use HasFactory;
+
+     public $timestamps = false;
+
 
     public function color()
     {

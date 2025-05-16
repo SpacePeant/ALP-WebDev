@@ -39,4 +39,10 @@ class AuthController extends Controller
 
         return back()->withErrors(['email' => 'Email or password incorrect'])->withInput();
     }
+
+    public function logout(Request $request) {
+        Session::flush();
+        return redirect()->route('login');
+    }
+    
 }
