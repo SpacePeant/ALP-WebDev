@@ -39,5 +39,6 @@ Route::get('/aboutus', function () {
     return view('aboutus');
 });
 
+Route::get('/blog', [BlogController::class, 'showBlogPage']);
 Route::get('/load-more-blogs', [BlogController::class, 'loadMore']);
 

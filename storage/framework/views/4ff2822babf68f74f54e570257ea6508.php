@@ -49,12 +49,14 @@
 
   <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
   <div class="carousel-inner">
-    <?php $__currentLoopData = ['aset_blog1.png', 'aset_blog2.png', 'aset_blog3.png']; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-      <div class="carousel-item <?php echo e($index === 0 ? 'active' : ''); ?>">
-        <img src="<?php echo e(asset('image/image_carousel/' . $image)); ?>" class="d-block w-100" alt="Slide">
-      </div>
+    
+    <?php $__currentLoopData = $carouselImages; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $index => $image): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+    <div class="carousel-item <?php echo e($index === 0 ? 'active' : ''); ?>">
+      <img src="<?php echo e(asset('image/image_carousel/' . $image->filename)); ?>" class="d-block w-100" alt="Slide">
+    </div>
     <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
   </div>
+
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
     <span class="carousel-control-prev-icon"></span>
   </button>
