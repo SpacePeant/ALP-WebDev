@@ -13,6 +13,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\BlogController;
 
 // Cart
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -69,11 +70,11 @@ Route::get('/about-us', function () {
     return view('aboutus');
 })->name('about');
 
-Route::get('/blog', function () {
-    return view('blog');
-})->name('blog');
-
 Route::get('/collection', function () {
     return view('collection');
 })->name('collection');
 
+Route::get('/blog', [BlogController::class, 'showBlogPage']);
+// Route::get('/load-more-blogs', [BlogController::class, 'loadMore']);
+
+// Route::get('/load-more-blogs', [BlogController::class, 'loadMoreBlogs']);
