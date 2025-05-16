@@ -131,6 +131,7 @@
             <a href="#" id="userIcon"><i data-feather="user"></i></a>
             <div class="user-dropdown-menu" id="userDropdown">
                 <p id="userName">Hi, {{ $user_name }}!</p>
+                <button onclick="window.location='{{ route('profile.show') }}'" class="btn btn-primary">Account</button>
                 <button>Help</button>
                 <button>Send Feedback</button>
                 <button>FAQ</button>

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
+use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -48,4 +50,60 @@ class OrderController extends Controller
 
         return view('orderadmin', compact('orders', 'orderDetails', 'completedOrders', 'pendingOrders', 'orderId'));
     }
+
+    public function index(Request $request)
+{
+    // $userId = $request->session()->get('user_id', $request->query('user_id', 1));
+    // $customer = Customer::find($userId);
+
+    //  $orders = Order::with([
+    //     'details.product',
+    //     'details.variant',
+    //     'details.color',
+    //     'details.colorImage'
+    // ])
+    // ->where('customer_id', $userId)
+    // ->orderByDesc('id')
+    // ->get();
+
+    //  $orderDetails = [];
+
+    //     foreach ($orders as $order) {
+    //         $orderId = $order->id;
+
+    //         $details = DB::table('order_details as od')
+    //             ->join('product as p', 'od.product_id', '=', 'p.id')
+    //             ->join('product_variant as pv', 'od.product_variant_id', '=', 'pv.id')
+    //             ->join('product_color as pc', 'od.product_color_id', '=', 'pc.id')
+    //             ->join('product_color_image as pci', 'pci.color_id', '=', 'pc.id')
+    //             ->select('p.name', 'pci.image_kiri', 'pc.color_name', 'pv.size', 'od.quantity', 'p.price')
+    //             ->where('od.order_id', $orderId)
+    //             ->get();
+
+    //         $orderDetails[$orderId] = $details;
+    //     }
+
+
+    //     // Stat count
+    //     // $completedOrders = DB::table('orders')->where('status', 'Completed')->count();
+    //     // $pendingOrders = DB::table('orders')->where('status', 'Pending')->count();
+
+    // return view('order', compact('orders', 'customer', 'orderDetails'));
+
+    $userId = $request->session()->get('user_id', $request->query('user_id', 1));
+    $customer = Customer::find($userId);
+
+    $orders = Order::with([
+        'details.product',
+        'details.variant',
+        'details.color',
+        'details.colorImage' // relasi ke tabel yang menyimpan image_kiri
+    ])
+    ->where('customer_id', $userId)
+    ->orderByDesc('id')
+    ->get();
+
+    return view('order', compact('orders', 'customer'));
+
+}
 }
