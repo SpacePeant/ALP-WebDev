@@ -4,6 +4,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const loadMoreBtn = document.getElementById('loadMoreBtn');
   const blogGrid = document.getElementById('blogGrid');
 
+  if (!loadMoreBtn || !blogGrid) return;
+
   loadMoreBtn.addEventListener('click', () => {
     const offset = parseInt(loadMoreBtn.getAttribute('data-offset'));
 
@@ -11,7 +13,7 @@ document.addEventListener('DOMContentLoaded', () => {
       .then(res => res.json())
       .then(blogs => {
         if (blogs.length === 0) {
-          loadMoreBtn.textContent = "No more blogs";
+          loadMoreBtn.textContent = "No more articles";
           loadMoreBtn.disabled = true;
           return;
         }
@@ -33,3 +35,4 @@ document.addEventListener('DOMContentLoaded', () => {
       });
   });
 });
+

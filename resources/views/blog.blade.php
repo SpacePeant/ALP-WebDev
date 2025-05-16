@@ -81,23 +81,24 @@
 
   
   <main>
-  <section>
-    <h3 class="articles-title">All articles</h3>
-    <div class="grid" id="blogGrid">
-      @foreach ($articles as $article)
-        <article>
-          <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}">
-          <h4>{{ $article->title }}</h4>
-          <p>{{ $article->description }}</p>
-        </article>
-      @endforeach
-    </div>
+    <section>
+      <h3 class="articles-title">All articles</h3>
+      <div class="grid" id="blogGrid">
+        @foreach ($articles->take(6) as $article)
+          <article>
+            <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}">
+            <h4>{{ $article->title }}</h4>
+            <p>{{ $article->description }}</p>
+          </article>
+        @endforeach
+      </div>
+    
+      <div class="load-button">
+        <button id="loadMoreBtn" data-offset="6">Load more</button>
+      </div>
+    </section>
+  </main>
 
-    <div class="load-button">
-      <button id="loadMoreBtn" data-offset="{{ $articles->count() }}">Load more</button>
-    </div>
-  </section>
-</main>
 
   <!-- Link FontAwesome buat icon -->
     <script

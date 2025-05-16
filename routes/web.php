@@ -42,4 +42,4 @@ Route::get('/aboutus', function () {
 Route::get('/blog', [BlogController::class, 'showBlogPage']);
 Route::get('/load-more-blogs', [BlogController::class, 'loadMore']);
 
-// Route::get('/blog', [BlogController::class, 'showArticlePage']);
+Route::get('/load-more-blogs', [BlogController::class, 'loadMoreBlogs']);

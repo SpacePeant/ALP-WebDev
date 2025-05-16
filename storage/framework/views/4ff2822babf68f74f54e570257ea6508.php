@@ -67,23 +67,24 @@
 
   
   <main>
-  <section>
-    <h3 class="articles-title">All articles</h3>
-    <div class="grid" id="blogGrid">
-      <?php $__currentLoopData = $articles; $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $article): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
-        <article>
-          <img src="<?php echo e(asset('image/image_article/' . $article->filename)); ?>" alt="<?php echo e($article->title); ?>">
-          <h4><?php echo e($article->title); ?></h4>
-          <p><?php echo e($article->description); ?></p>
-        </article>
-      <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
-    </div>
+    <section>
+      <h3 class="articles-title">All articles</h3>
+      <div class="grid" id="blogGrid">
+        <?php $__currentLoopData = $articles->take(6); $__env->addLoop($__currentLoopData); foreach($__currentLoopData as $article): $__env->incrementLoopIndices(); $loop = $__env->getLastLoop(); ?>
+          <article>
+            <img src="<?php echo e(asset('image/image_article/' . $article->filename)); ?>" alt="<?php echo e($article->title); ?>">
+            <h4><?php echo e($article->title); ?></h4>
+            <p><?php echo e($article->description); ?></p>
+          </article>
+        <?php endforeach; $__env->popLoop(); $loop = $__env->getLastLoop(); ?>
+      </div>
+    
+      <div class="load-button">
+        <button id="loadMoreBtn" data-offset="6">Load more</button>
+      </div>
+    </section>
+  </main>
 
-    <div class="load-button">
-      <button id="loadMoreBtn" data-offset="<?php echo e($articles->count()); ?>">Load more</button>
-    </div>
-  </section>
-</main>
 
   <!-- Link FontAwesome buat icon -->
     <script
