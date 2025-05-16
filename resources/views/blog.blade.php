@@ -56,20 +56,20 @@
     </header>
 
     <header class="about-section">
-  <div class="about-overlay">
-    <h1>Blog</h1>
-  </div>
-</header>
+      <div class="about-overlay">
+        <h1>Blog</h1>
+      </div>
+    </header>
 
   <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-  <div class="carousel-inner">
-    
-    @foreach ($carouselImages as $index => $image)
-    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
-      <img src="{{ asset('image/image_carousel/' . $image->filename) }}" class="d-block w-100" alt="Slide">
+    <div class="carousel-inner">
+
+      @foreach ($carouselImages as $index => $image)
+      <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+        <img src="{{ asset('image/image_carousel/' . $image->filename) }}" class="d-block w-100" alt="Slide">
+      </div>
+      @endforeach
     </div>
-    @endforeach
-  </div>
 
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
     <span class="carousel-control-prev-icon"></span>
@@ -80,39 +80,24 @@
 </div>
 
   
-</div>
   <main>
-    <section>
-      <h3 class="articles-title">All articles</h3>
-      <div class="grid" id="blogGrid">
-        <!-- Repeat this article block for each blog item -->
+  <section>
+    <h3 class="articles-title">All articles</h3>
+    <div class="grid" id="blogGrid">
+      @foreach ($articles as $article)
         <article>
-          <img src="https://storage.googleapis.com/a1aa/image/5dd66e70-9a04-419d-1de0-6239ab683fe5.jpg" alt="Man with hat">
-          <h4>Alexis Hanquinquant Wins Back-to-Back Gold in Paratriathlon</h4>
-          <p>Alexis Hanquinquant has won his second consecutive gold in the Men's PTS4 race.</p>
+          <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}">
+          <h4>{{ $article->title }}</h4>
+          <p>{{ $article->description }}</p>
         </article>
+      @endforeach
+    </div>
 
-        <article>
-          <img src="https://storage.googleapis.com/a1aa/image/b2a7179e-33ac-4305-7b1b-78b0fce3d0bb.jpg" alt="Basketball player">
-          <h4>The LeBron XXII Applies the Pressure</h4>
-          <p>The LeBron XXII features lockdown support for powerful movement in an agile design.</p>
-        </article>
-
-        <article>
-          <img src="https://storage.googleapis.com/a1aa/image/b3ce2935-aa19-4f9a-7acc-1b901ee2c734.jpg" alt="Jordan shoes">
-          <h4>Air Jordan V El Grito Pays Homage to Mexican Culture</h4>
-          <p>Jordan Brand's latest release represents a shared identity and pride in Mexico.</p>
-        </article>
-
-        <!-- Add remaining articles as needed using the same format -->
-
-      </div>
-
-      <div class="load-button">
-        <button id="loadMoreBtn" data-offset="3">Load more ...</button>
-      </div>
-    </section>
-  </main>
+    <div class="load-button">
+      <button id="loadMoreBtn" data-offset="{{ $articles->count() }}">Load more</button>
+    </div>
+  </section>
+</main>
 
   <!-- Link FontAwesome buat icon -->
     <script
@@ -124,6 +109,6 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
   <script>
       feather.replace();
-  </script>
+  </script>
 </body>
 </html>

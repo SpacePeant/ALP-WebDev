@@ -7,8 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class Blog extends Model
 {
-    use HasFactory;
-
+    public function showBlog()
+    {
+        $articles = ArticleImage::all(); // This fetches the article data
+    
+        return view('blog', compact('articles'));
+    }
     // Optional: If your table name isn't 'blogs', specify it:
     // protected $table = 'your_table_name';
 }

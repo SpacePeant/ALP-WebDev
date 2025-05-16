@@ -20,12 +20,27 @@ class BlogController extends Controller
     return response()->json($blogs);
     }
 
-    
 
-    public function showBlog()
-    {
-        $carouselImages = DB::table('carousel_image')->get(); // Fetch all images
-        return view('blog', compact('carouselImages'));
-    }
+    // public function showBlogPage()
+    // {
+    //     $carouselImages = DB::table('blog_image')->get(); 
+
+    //     return view('blog', compact('carouselImages')); 
+    // }
+
+    // public function showArticlePage()
+    // {
+    //     $articles = DB::table('article_image')->get(); 
+
+    //     return view('blog', compact('articles')); 
+    // }
+
+    public function showBlogPage()
+{
+    $articles = DB::table('article_image')->get(); 
+    $carouselImages = DB::table('blog_image')->get(); // Adjust table name if needed
+
+    return view('blog', compact('articles', 'carouselImages'));
+}
 
 }
