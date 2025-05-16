@@ -99,5 +99,7 @@ Route::post('/profile/update', [ProfileController::class, 'update'])->name('prof
 
 Route::get('/order', [OrderController::class, 'index'])->name('order');
 
+Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+
 
 

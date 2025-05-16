@@ -164,7 +164,11 @@
 
   <div class="main-container">
   <div class="form-container">
-    <form method="post" action="" enctype="multipart/form-data">
+    <form method="POST" action="{{ route('product.update', $id) }}" enctype="multipart/form-data">
+      @csrf
+      @method('PUT')
+      <input type="hidden" name="color_id" value="{{ $color_id }}">
+
       <input type="hidden" name="ukuran" id="selectedSize" value="{{ $product->size }}">
 
       <div class="form-group">
@@ -233,10 +237,6 @@
         </div>
     </div>
 
-
-      <!-- Tambahkan input upload image jika ingin edit -->
-      <!-- <input type="file" name="image"> -->
-
       <button type="submit" class="save-btn">Save</button>
     </form>
   </div>
@@ -280,12 +280,6 @@
 <a href="{{ route('productadmin') }}" class="btn btn-outline-secondary position-absolute top-0 end-0 m-3 p-2">
   <i class="bi bi-arrow-left"></i>
 </a>
-
-<form action="{{ route('product.update', $product->id) }}" method="POST">
-    @csrf
-    @method('PUT')
-    <!-- input fields -->
-</form>
 
 
   <script>
