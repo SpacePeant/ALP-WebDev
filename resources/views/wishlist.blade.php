@@ -26,6 +26,9 @@
       border-bottom: 1px solid #ccc;
       align-items: center;
     }
+    .wishlist-item i{
+      color:red;
+    }
     .wishlist-img {
       width: 100px;
       /* Anda bisa tambahkan gambar produk di sini */
