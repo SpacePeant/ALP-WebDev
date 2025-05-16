@@ -41,4 +41,21 @@ class OrderDetail extends Model
     {
         return $this->belongsTo(ProductVariant::class);
     }
+    
+    public function variant()
+    {
+        return $this->belongsTo(\App\Models\ProductVariant::class, 'product_variant_id');
+    }
+    
+    public function color()
+    {
+        return $this->belongsTo(\App\Models\ProductColor::class, 'product_color_id');
+    }
+    
+    public function colorImage()
+    {
+        return $this->hasOne(\App\Models\ProductColorImage::class, 'color_id', 'product_color_id');
+    }
+    
+
 }
