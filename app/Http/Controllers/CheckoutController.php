@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Midtrans\Snap;
+use Midtrans\Config;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\CartItem;
@@ -9,6 +11,7 @@ use App\Models\Customer;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -87,37 +90,66 @@ public function updateQuantity(Request $request)
 
     public function processCheckout(Request $request)
     {
-        $customerId = Auth::id();
+        DB::beginTransaction(); // ✅ pindah ke awal
 
-        $cartItems = CartItem::with('product')
-            ->where('customer_id', $customerId)
-            ->where('is_pilih', 1)
-            ->get();
+    $customerId = Auth::id();
 
-        if ($cartItems->isEmpty()) {
-            return back()->with('error', 'Keranjang kosong.');
-        }
+    $cartItems = CartItem::with('product')
+        ->where('customer_id', $customerId)
+        ->where('is_pilih', 1)
+        ->get();
 
-        $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price);
+    if ($cartItems->isEmpty()) {
+        return back()->with('error', 'Keranjang kosong.');
+    }
 
-        $order = Order::create([
-            'customer_id' => $customerId,
-            'order_date' => now(),
-            'status' => 'Pending',
-            'total_amount' => $totalAmount,
+    $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price);
+
+    $order = Order::create([
+        'customer_id' => $customerId,
+        'order_date' => now(),
+        'status' => 'Pending',
+        'total_amount' => $totalAmount,
+    ]);
+
+    foreach ($cartItems as $item) {
+        OrderDetail::create([
+            'order_id' => $order->id,
+            'product_id' => $item->product_id,
+            'quantity' => $item->quantity,
+            'unit_price' => $item->product->price,
         ]);
+    }
 
-        foreach ($cartItems as $item) {
-            OrderDetail::create([
-                'order_id' => $order->id,
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'unit_price' => $item->product->price,
-            ]);
-        }
+    // Midtrans
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = config('midtrans.is_production');
+    Config::$isSanitized = true;
+    Config::$is3ds = true;
 
-        CartItem::where('customer_id', $customerId)->where('is_pilih', 1)->delete();
+    $params = [
+        'transaction_details' => [
+            'order_id' => $order->id,
+            'gross_amount' => $totalAmount,
+        ],
+        'customer_details' => [
+            'first_name' => Auth::user()->name,
+            'email' => Auth::user()->email,
+        ],
+        'callbacks' => [
+            'finish' => route('collection'),
+        ]
+    ];
 
-        return redirect()->route('checkout')->with('success', 'Order berhasil diproses!');
+    $snapUrl = Snap::createTransaction($params)->redirect_url;
+    $order->payment_url = $snapUrl;
+    $order->save();
+
+    DB::commit();
+
+    session()->forget('cart');
+    CartItem::where('customer_id', $customerId)->where('is_pilih', 1)->delete();
+
+    return redirect()->away($snapUrl); // ⬅️ ini harus jadi baris terakhir
     }
 }

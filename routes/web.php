@@ -49,6 +49,9 @@ Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
 Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
 
+// Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
+// ->name('payment.return');
+
 // Munculin form login
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
 // Proses login

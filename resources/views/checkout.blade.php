@@ -86,9 +86,7 @@
                         <button type="button" class="btn btn-outline-dark payment-btn active" data-method="cash">Cash</button>
                         <button type="button" class="btn btn-outline-dark payment-btn" data-method="transfer">Transfer</button>
                     </div>
-
                     <input type="hidden" name="payment_method" id="payment_method_input" value="cash">
-
                     <button type="submit" name="pay_now" class="btn btn-dark w-100">Pay Now</button>
                 </div>
             </form>
