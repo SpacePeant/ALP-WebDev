@@ -2,9 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
+use App\Models\Category;
+use App\Models\ProductColor;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
+use App\Models\ProductVariant;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ProductController extends Controller
 {
@@ -90,4 +94,158 @@ class ProductController extends Controller
             'user_id' => $user_id,
         ]);
     }
+
+    public function index()
+    {
+        $products = DB::table('product as p')
+            ->join('product_color as pc', 'p.id', '=', 'pc.product_id')
+            ->join('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
+            ->select('p.id', 'pc.id as color_id', 'p.name', 'pc.color_name', 'pci.image_kiri')
+            ->where('p.status', 'active')
+            ->groupBy('p.id', 'pc.id', 'p.name', 'pc.color_name', 'pci.image_kiri')
+            ->get();
+
+        return view('productadmin', compact('products'));
+    }
+
+    public function delete($id)
+    {
+        DB::table('product')
+            ->where('id', $id)
+            ->update(['status' => 'inactive']);
+
+        return redirect()->route('productadmin');
+    }
+
+    public function create()
+    {
+        $categories = Category::all();
+        // dd($categories);
+        return view('addproduct', compact('categories'));
+    }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'category' => 'required|exists:categories,id',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            'color' => 'required|array',
+            'color.*' => 'required|string',
+            'color_code' => 'required|array',
+            'color_code.*' => 'required|string',
+            'size' => 'nullable|array',
+            'gender' => 'nullable|string'
+        ]);
+
+        $product = Product::create([
+            'name' => $request->name,
+            'gender' => $request->gender ?? 'Unisex',
+            'description' => $request->description,
+            'price' => $request->price,
+            'status' => 1,
+            'category_id' => $request->category,
+        ]);
+
+        foreach ($request->color as $index => $colorName) {
+            $color = ProductColor::create([
+                'product_id' => $product->id,
+                'color_name' => $colorName,
+                'color_code' => $request->color_code[$index],
+                'is_primary' => false,
+            ]);
+
+            if ($request->size) {
+                foreach ($request->size as $size) {
+                    ProductVariant::create([
+                        'product_id' => $product->id,
+                        'color_id' => $color->id,
+                        'size' => $size,
+                        'stock' => 0,
+                    ]);
+                }
+            }
+        }
+
+        return redirect()->route('addproduct')->with('success', 'Product saved successfully!');
+    }
+
+    public function edit($id, $color_id)
+{
+    $product = DB::table('product as p')
+        ->leftJoin('category as c', 'p.category_id', '=', 'c.id')
+        ->leftJoin('product_color as pc', 'pc.product_id', '=', 'p.id')
+        ->leftJoin('product_color_image as pci', 'pci.color_id', '=', 'pc.id')
+        ->leftJoin('product_variant as pv', function ($join) {
+            $join->on('pv.product_id', '=', 'p.id')
+                 ->on('pv.color_id', '=', 'pc.id');
+        })
+        ->where('p.id', $id)
+        ->where('pc.id', $color_id)
+        ->select(
+            'p.*',
+            'c.name as category_name',
+            'pc.id as color_id',
+            'pc.color_name',
+            'pci.image_kiri',
+            'pci.image_kanan',
+            'pci.image_atas',
+            'pci.image_bawah',
+            'pv.size',
+            'pv.stock'
+        )
+        ->first();
+
+    if (!$product) {
+        return redirect()->back()->with('error', 'Produk tidak ditemukan.');
+    }
+
+    // Ambil semua size-stock
+    $sizeStock = DB::table('product_variant')
+        ->where('product_id', $id)
+        ->where('color_id', $color_id)
+        ->pluck('stock', 'size'); // hasilnya: ['36' => 10, '37' => 5, dst]
+
+    return view('editproduct', compact('product', 'sizeStock', 'color_id', 'id'));
+}
+
+public function update(Request $request, $id)
+{
+    // Validasi data input
+    $validated = $request->validate([
+        'nama_produk' => 'required|string|max:255',
+        'gender' => 'required|in:Men,Women,Unisex',
+        'deskripsi' => 'nullable|string',
+        'kategori' => 'required|integer|exists:categories,id',
+        'harga' => 'required|integer',
+        'ukuran' => 'required|integer',
+        'stok' => 'required|integer',
+        'color_id' => 'required|integer',
+    ]);
+
+    // Update product
+    $product = Product::findOrFail($id);
+    $product->name = $validated['nama_produk'];
+    $product->gender = $validated['gender'];
+    $product->description = $validated['deskripsi'];
+    $product->price = $validated['harga'];
+    $product->category_id = $validated['kategori'];
+    $product->updated_at = now();
+    $product->save();
+
+    // Update product variant stock
+    $variant = ProductVariant::where('product_id', $id)
+                ->where('color_id', $validated['color_id'])
+                ->where('size', $validated['ukuran'])
+                ->first();
+
+    if ($variant) {
+        $variant->stock = $validated['stok'];
+        $variant->save();
+    }
+
+    // Redirect kembali dengan pesan sukses
+    return redirect()->route('productadmin')->with('success', 'Produk berhasil diperbarui');
+}
 }
