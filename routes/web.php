@@ -25,8 +25,6 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('addpr
 Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
 
-
-
 // Cart
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
@@ -87,8 +85,6 @@ Route::get('/collection', function () {
 })->name('collection');
 
 Route::get('/blog', [BlogController::class, 'showBlogPage'])->name('blog');
-Route::get('/load-more-blogs', [BlogController::class, 'loadMore']);
-
 Route::get('/load-more-blogs', [BlogController::class, 'loadMoreBlogs']);
 
 Route::get('/signup', [RegisterController::class, 'show'])->name('signup.form');
@@ -100,6 +96,3 @@ Route::post('/profile/update', [ProfileController::class, 'update'])->name('prof
 Route::get('/order', [OrderController::class, 'index'])->name('order');
 
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
-
-
-
