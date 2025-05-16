@@ -116,7 +116,7 @@
 
 <header class="header">
     <div class="logo">
-        <img src="{{ asset('images/logo.png') }}" alt="Logo" />
+        <img src="{{ asset('image/logo.png') }}" alt="Logo" />
     </div>
     <nav class="navbar">
       <a href="{{ route('home') }}">Home</a>
@@ -135,9 +135,9 @@
                 <button>Send Feedback</button>
                 <button>FAQ</button>
                 <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="log">Logout</button>
-                </form>
+                  @csrf
+                  <button type="submit" class="log">Logout</button>
+              </form>
             </div>
         </div>
     </div>

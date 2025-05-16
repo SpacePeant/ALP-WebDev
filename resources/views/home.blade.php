@@ -4,15 +4,6 @@
 
 @section('content') 
 
-<?php
-    // session_start();
-    // $user_id = $_SESSION['user_id'];
-?>
-
-@php
-    $user_id = $user_id ?? null;
-@endphp
-
 <!DOCTYPE html>
 <html lang="id">
   <head>

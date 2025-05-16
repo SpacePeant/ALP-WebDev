@@ -150,7 +150,7 @@
     </section>
 
     <section class="new-arrivals-banner">
-      <a href="{{ route('collection.detail') }}">
+      <a href="{{ route('detail') }}">
         <img src="{{ asset('image/coll.png') }}" alt="New Arrivals" />
       </a>
     </section>
