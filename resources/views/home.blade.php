@@ -15,12 +15,15 @@
 
     <style>
       * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Red Hat Display', sans-serif;
-}
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Red Hat Text", sans-serif;
+    }
 
+#carouselExample{
+  margin-top :100px;
+}
 /* CAROUSEL */
 
 #carouselExample{
@@ -330,9 +333,6 @@
   text-align: center;
   transition: background-color 0.5s ease;
   border-radius: 8px;
-}
-#carouselExample{
-  margin-top :100px;
 }
 
     </style>

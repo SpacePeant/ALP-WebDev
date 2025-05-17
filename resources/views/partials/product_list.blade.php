@@ -6,7 +6,7 @@
                 <img src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}"
                      alt="{{ $product->product_name }}">
                 <h3>{{ $product->product_name }}</h3>
-                <p>Rp. {{ number_format($product->price, 0, ',', '.') }}</p>
+                <p>{{ number_format($product->price, 0, ',', '.') }}</p>
             </div>
         </a>
     @empty

@@ -159,16 +159,16 @@ public function updateQuantity(Request $request)
 
     Log::info('Final email used for Midtrans: ' . $user_email);
     try{
-    $snapUrl = Snap::createTransaction($params)->redirect_url;
-    $order->payment_url = $snapUrl;
-    $order->save();
+        $snapUrl = Snap::createTransaction($params)->redirect_url;
+        $order->payment_url = $snapUrl;
+        $order->save();
 
-    DB::commit();
+        DB::commit();
 
-    session()->forget('cart');
-    CartItem::where('customer_id', $customerId)->where('is_pilih', 1)->delete();
+        session()->forget('cart');
+        CartItem::where('customer_id', $customerId)->where('is_pilih', 1)->delete();
 
-    return redirect()->away($snapUrl);
+        return redirect()->away($snapUrl);
     } 
     
     catch (\Exception $e) {

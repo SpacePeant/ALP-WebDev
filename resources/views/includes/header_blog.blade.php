@@ -234,54 +234,67 @@
   }
 
   /* USER DROPDOWN (untuk keduanya) */
-  .user-dropdown-menu {
-    position: absolute;
-    top: 120%;
-    right: 0;
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    z-index: 100;
-    width: 220px;
-    margin-right: 30px;
-  }
+  .user-dropdown {
+      position: relative;
+    }
 
-  .user-dropdown-menu.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
+    .user-dropdown-menu {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      padding: 15px;
+      z-index: 100;
+      width: 200px;
 
-  .user-dropdown-menu button {
-    display: block;
-    width: 100%;
-    padding: 8px 12px;
-    background: none;
-    border: none;
-    text-align: left;
-    margin-top: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
+      /* Animasi */
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
 
-  .user-dropdown-menu .log {
-    background-color: #f44336;
-    color: white;
-    text-align: center;
-  }
+    .user-dropdown-menu.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
 
-  .user-dropdown-menu button:hover {
-    background-color: #eee;
-  }
+    .user-dropdown-menu p {
+      margin: 0 0 10px 0;
+      font-weight: bold;
+    }
 
-  .user-dropdown-menu .log:hover {
-    background-color: #d32f2f;
-  }
+    .user-dropdown-menu button {
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 12px;
+      width: 100%;
+      cursor: pointer;
+      text-align: left;
+      margin-top: 5px;
+    }
+
+    .user-dropdown-menu .log {
+      background-color: #f44336;
+      color: white;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .user-dropdown-menu button:hover {
+      background-color: #484848;
+      color: white;
+    }
+
+    .user-dropdown-menu .log:hover {
+      background-color: #d32f2f;
+    }
 
   /* RESPONSIVE */
   @media (max-width: 768px) {
@@ -334,7 +347,7 @@
       <a href="{{ route('home') }}">Home</a>
       <a href="{{ route('about') }}">About</a>
       <a href="{{ route('blog') }}">Blog</a>
-      <a href="{{ route('collection') }}">Collection</a>
+      <a href="{{ route('detail') }}">Collection</a>
     </nav>
 
     <div class="icons">
@@ -346,6 +359,7 @@
         <div class="user-dropdown-menu" id="userDropdownDesktop">
           <p>Hi, {{ Session::get('user_name', 'Guest') }}!</p>
           <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+          <button onclick="window.location='{{ route('order') }}'">My Orders</button>
           <button>Help</button>
           <button>Send Feedback</button>
           <button>FAQ</button>
@@ -373,6 +387,7 @@
           <div class="user-dropdown-menu" id="userDropdownMobile">
             <p>Hi, {{ Session::get('user_name', 'Guest') }}!</p>
             <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+            <button onclick="window.location='{{ route('order') }}'">My Orders</button>
             <button>Help</button>
             <button>Send Feedback</button>
             <button>FAQ</button>

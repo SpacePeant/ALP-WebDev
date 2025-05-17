@@ -172,7 +172,7 @@
   <!-- Desktop Layout -->
   <div class="layout-desktop">
     <div class="logo">
-      <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+      <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
     </div>
 
     <nav class="menu">
@@ -191,6 +191,7 @@
         <div class="user-dropdown-menu" id="userDropdownDesktop">
           <p>Hi, {{ $user_name }}!</p>
           <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+          <button onclick="window.location='{{ route('order') }}'">My Orders</button>
           <button>Help</button>
           <button>Send Feedback</button>
           <button>FAQ</button>
@@ -221,6 +222,7 @@
           <div class="user-dropdown-menu" id="userDropdownMobile">
             <p>Hi, {{ $user_name }}!</p>
             <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+            <button onclick="window.location='{{ route('order') }}'">My Orders</button>
             <button>Help</button>
             <button>Send Feedback</button>
             <button>FAQ</button>
