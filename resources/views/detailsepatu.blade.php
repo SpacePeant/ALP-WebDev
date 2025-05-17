@@ -344,7 +344,7 @@ body {
 }
 
     .you-may-also-like-section h2{
-      margin:-50px 80px 20px 90px
+      margin:30px 80px 20px 90px
 }
 
     .product-card {
@@ -594,7 +594,7 @@ body {
 }
 
 .mobile-add-cart {
-  background: #444;
+  background-color: #444;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -605,8 +605,18 @@ body {
 }
 
 .mobile-add-cart:hover {
-  background: black;
+  background-color: black;
 }
+
+
+
+
+
+
+
+
+
+
   /* product-page mobile style */
 .mobile-product-wrapper {
   margin-top:60px;
@@ -778,6 +788,9 @@ body {
 @media screen and (max-width: 768px) {
   .product-wrapper {
     display: none;
+  }
+  .back-to-collection {
+    top:80px;
   }
 
   .mobile-product-wrapper {
