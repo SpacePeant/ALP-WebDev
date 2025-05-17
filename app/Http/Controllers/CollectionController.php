@@ -47,7 +47,7 @@ class CollectionController extends Controller
                  ->where('pc.is_primary', true);
         })
         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
-        ->where('p.status', 'active')
+        ->where('pc.status', 'active')
         ->whereBetween('p.price', [$min, $max]);
 
     if (!empty($search)) {
@@ -138,7 +138,7 @@ public function productList(Request $request)
             'pc.color_code', 'pc.color_name', 'pc.color_code_bg', 'pc.color_font',
             'pci.image_kiri'
         )
-        ->where('p.status', 'active')
+        ->where('pc.status', 'active')
         ->whereBetween('p.price', [$min, $max]);
 
     if ($search) {

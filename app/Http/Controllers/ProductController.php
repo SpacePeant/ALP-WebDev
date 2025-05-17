@@ -40,7 +40,7 @@ class ProductController extends Controller
                  ->where('pc.is_primary', true);
         })
         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
-        ->where('p.status', 'active')
+        ->where('pc.status', 'active')
         ->where('p.id', $id)
         ->first();
 
@@ -52,6 +52,7 @@ class ProductController extends Controller
     $color_options = DB::table('product_color')
         ->leftJoin('product_color_image', 'product_color.id', '=', 'product_color_image.color_id')
         ->where('product_color.product_id', $id)
+        ->where('product_color.status', 'active')
         ->select(
             'product_color.id',
             'product_color.color_name',
@@ -80,7 +81,7 @@ class ProductController extends Controller
         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
         ->where('p.category_id', $product->category_id)
         ->where('p.id', '!=', $id)        
-        ->where('p.status', 'active')
+        ->where('pc.status', 'active')
         ->limit(5)
         ->get();
         
@@ -243,7 +244,7 @@ $averageRating = $totalReviews > 0
             ->leftjoin('product_color as pc', 'p.id', '=', 'pc.product_id')
             ->leftjoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
             ->select('p.id', 'pc.id as color_id', 'p.name', 'pc.color_name', 'pci.image_kiri')
-            ->where('p.status', 'active')
+            ->where('pc.status', 'active')
             ->groupBy('p.id', 'pc.id', 'p.name', 'pc.color_name', 'pci.image_kiri')
             ->get();
 
@@ -251,13 +252,30 @@ $averageRating = $totalReviews > 0
     }
 
     public function delete($id)
-    {
-        DB::table('product')
-            ->where('id', $id)
-            ->update(['status' => 'inactive']);
+{
+    $color = DB::table('product_color')->where('id', $id)->first();
 
-        return redirect()->route('productadmin');
+    DB::table('product_color')
+        ->where('id', $id)
+        ->update(['status' => 'inactive', 'is_primary' => 0]);
+
+    if ($color->is_primary == 1) {
+        $newPrimary = DB::table('product_color')
+            ->where('product_id', $color->product_id)
+            ->where('id', '!=', $id)
+            ->where('status', 'active')
+            ->orderBy('id', 'asc') 
+            ->first();
+
+        if ($newPrimary) {
+            DB::table('product_color')
+                ->where('id', $newPrimary->id)
+                ->update(['is_primary' => 1]);
+        }
     }
+
+    return redirect()->route('productadmin');
+}
 
     public function create()
     {
@@ -369,7 +387,6 @@ $averageRating = $totalReviews > 0
 
 public function update(Request $request, $id)
 {
-    // Validasi input
     $validated = $request->validate([
         'nama_produk' => 'required|string|max:255',
         'gender' => 'required|in:Men,Women,Unisex',
@@ -377,10 +394,9 @@ public function update(Request $request, $id)
         'kategori' => 'required|integer|exists:categories,id',
         'harga' => 'required|integer',
         'color_id' => 'required|integer',
-        'stocks_json' => 'required|json', // validasi JSON
+        'stocks_json' => 'required|json',
     ]);
 
-    // Update data produk utama
     $product = Product::findOrFail($id);
     $product->name = $validated['nama_produk'];
     $product->gender = $validated['gender'];
@@ -390,7 +406,6 @@ public function update(Request $request, $id)
     $product->updated_at = now();
     $product->save();
 
-    // Decode JSON stok per size
     $stocksArray = json_decode($validated['stocks_json'], true);
 
     if (is_array($stocksArray)) {

@@ -14,6 +14,7 @@ class Order extends Model
         'order_date',
         'status',
         'total_amount',
+        'payment_method'
     ];
 
     // Relasi ke Customer

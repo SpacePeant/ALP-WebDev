@@ -19,10 +19,6 @@
 .footer-about {
   max-width: 300px;
 }
-.footer-about img{
-  width:120px;
-  margin-bottom: 20px;
-}
 
 .footer-logo {
   width: 100px;
@@ -32,6 +28,10 @@
 .footer-about p {
   font-size: 16px;
   line-height: 1.6;
+}
+
+.footer-about img {
+    width: 120px;
 }
 
 .footer-links h4,
@@ -100,7 +100,7 @@
 <footer class="footer">
       <div class="footer-container">
         <div class="footer-about">
-          <img src="{{ asset('image/huha.png') }}" alt="Logo" />
+          <img src="{{ asset('image/huha.png') }}" alt="New Arrivals" />
           <p>
             Brrr iku perusahaan sing adol macem-macem sepatu kaca sing bisa
             nggawe sampeyan ayu kaya Cinderella.

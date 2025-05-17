@@ -302,7 +302,7 @@ new Chart(ctx, {
           display: false
         },
         ticks: {
-          color: 'cccccck'  // abu-abu terang untuk label x-axis
+          color: 'cccccc'  // abu-abu terang untuk label x-axis
         }
       }
     },
@@ -321,33 +321,6 @@ new Chart(ctx, {
     }
   }
 });
-
-const ctx = document.getElementById('salesChart').getContext('2d');
-
-  const chart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: @json($labels),
-      datasets: [{
-        label: 'Shoes Sold',
-        data: @json($data),
-        fill: true,
-        backgroundColor: 'rgba(34, 139, 84, 0.15)',
-        borderColor: '#228b54',
-        tension: 0.3,
-        pointRadius: 5,
-        pointBackgroundColor: '#228b54',
-        borderWidth: 3,
-      }]
-    },
-    options: {
-      responsive: true,
-      scales: {
-        y: { beginAtZero: true },
-        x: { grid: { display: false } }
-      }
-    }
-  });
   </script>
 </body>
 </html>

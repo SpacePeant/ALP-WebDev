@@ -2,8 +2,10 @@
 
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
-<div class="container py-5">
-    <a href="{{ route('cart') }}" class="back-btn">&larr; Back to Cart</a>
+<div class="container py-5" id="HAH">
+    <a href="{{ route('cart') }}" class="back-to-collection" title="Back to cart">
+        <i data-feather="corner-down-left"></i>
+      </a>
     <h1 class="text-center mb-5">Checkout</h1>
 
     <div class="row">
@@ -206,7 +208,9 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
-
+#HAH{
+    margin-top:60px;
+}
     h1 {
         font-family: 'Playfair Display', serif;
     }
@@ -308,6 +312,25 @@
 
 .popup-content button:hover {
   background-color: #45a049;
+}
+
+.back-to-collection {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+.back-to-collection:hover {
+    background: #f0f0f0;
 }
 </style>
 @endsection

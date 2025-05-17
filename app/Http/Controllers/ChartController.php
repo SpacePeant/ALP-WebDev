@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
 
 class ChartController extends Controller
@@ -54,33 +53,5 @@ class ChartController extends Controller
 
     return view('dashboard', compact('balance', 'totalSold', 'stockAvailable', 'productStock', 'bestSellers'));
 }
-
-public function chart() {
-    $today = Carbon::today();
-
-    // Ambil data penjualan 7 hari terakhir
-    $sales = DB::table('orders')
-        ->select(DB::raw('DATE(created_at) as date'), DB::raw('SUM(quantity) as total'))
-        ->whereBetween('created_at', [Carbon::now()->subDays(6), $today])
-        ->groupBy('date')
-        ->orderBy('date')
-        ->get();
-
-    // Format ke array untuk Chart.js
-    $labels = [];
-    $data = [];
-
-    foreach ($sales as $sale) {
-        $labels[] = Carbon::parse($sale->date)->format('D'); // Contoh: "Mon", "Tue"
-        $data[] = $sale->total;
-    }
-
-    return view('dashboard', [
-        'labels' => $labels,
-        'data' => $data,
-        // ...data lainnya seperti $balance, $stockAvailable dll
-    ]);
-}
-
 
 }
