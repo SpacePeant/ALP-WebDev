@@ -58,7 +58,7 @@ Route::get('/product-list', [CollectionController::class, 'productList'])->name(
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
 Route::get('detail_sepatu/{id}', [ProductController::class, 'show'])->name('detail_sepatu.show');
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
-
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 // Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
 // Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 
