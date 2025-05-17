@@ -229,6 +229,11 @@ body {
 
 .add-cart {
   background: #444;
+  transition: background-color 0.3s;
+}
+
+.add-cart:hover{
+  background:black;
 }
 
 .wishlist {
@@ -340,7 +345,7 @@ body {
 }
 
     .you-may-also-like-section h2{
-      margin:30px 80px 20px 90px
+      margin:-50px 80px 20px 90px;
 }
 
     .product-card {
@@ -576,7 +581,6 @@ body {
 .mobile-size-btn.disabled {
   cursor: not-allowed;
   opacity: 0.4;
-  pointer-events: none;
 }
 
 /* Untuk menampilkan stock info */
@@ -595,11 +599,11 @@ body {
 }
 
 .mobile-wishlist-btn.active {
-  color: red;
+  color: black;
 }
 
 .mobile-add-cart {
-  background-color: #28a745;
+  background-color: #333;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -610,22 +614,14 @@ body {
 }
 
 .mobile-add-cart:hover {
-  background-color: #218838;
+  background-color: black;
 }
-
-
-
-
-
-
-
-
-
 
   /* product-page mobile style */
 .mobile-product-wrapper {
   padding: 16px;
-  font-family: Arial, sans-serif;
+  margin-top: 60px;
+  margin-bottom: 100px;
 }
 
 .mobile-category {
@@ -756,7 +752,7 @@ body {
 .mobile-add-cart {
   flex: 1;
   padding: 10px;
-  background-color: black;
+  background-color: #444;
   color: white;
   border: none;
   cursor: pointer;
@@ -796,6 +792,10 @@ body {
   .mobile-product-wrapper {
     display: block;
   }
+
+  .back-to-collection {
+    top:80px;
+  }
 }
   </style>
 </head>

@@ -48,7 +48,7 @@
 </head>
 <body style="min-height: 100vh;" class="d-flex align-items-center justify-content-center">
   <div class="signup-form text-center">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" class="logo" alt="Nike Logo">
+    <img src="{{ asset('image/logo.png') }}" class="logo" alt="Nike Logo">
     <h3 class="mb-4 fw-bold">Create Account</h3>
 
     @if ($errors->any())
