@@ -294,7 +294,7 @@
       @method('PUT')
       <input type="hidden" name="color_id" value="{{ $color_id }}">
 
-      {{-- <input type="hidden" name="ukuran" id="selectedSize" value="{{ $product->size }}"> --}}
+      <input type="hidden" name="ukuran" id="selectedSize" value="{{ $product->size }}">
 
       <div class="form-group">
         <label>Name</label>
@@ -318,23 +318,28 @@
         <input type="text" name="deskripsi" value="{{ old('deskripsi', $product->description) }}">
       </div>
 
-    <div class="form-group">
+      <div class="form-group">
         <label>Size</label>
         <div class="size-options">
             @php
                 $selectedSize = old('ukuran', $product->size ?? null);
             @endphp
-
+    
             @for ($i = 36; $i <= 45; $i++)
                 @php
                     $active = ($selectedSize == $i) ? 'active' : '';
                 @endphp
-                <div class="size-btn {{ $active }}" onclick="document.getElementById('selectedSize').value = '{{ $i }}'">EU {{ $i }}</div>
+                <div class="size-btn {{ $active }}" 
+                     onclick="selectSize({{ $i }})"
+                     id="size-btn-{{ $i }}">
+                    EU {{ $i }}
+                </div>
             @endfor
         </div>
     </div>
 
     <input type="hidden" name="ukuran" id="selectedSize" value="{{ $selectedSize }}">
+
 
     <div class="form-group">
         <label>Gender</label>
@@ -361,7 +366,7 @@
             <input type="number" name="stok" value="{{ old('stok', $product->stock) }}">
         </div>
     </div>
-
+    <input type="hidden" name="stocks_json" id="stocks-json">
       <button type="submit" class="save-btn">Save</button>
     </form>
   </div>
@@ -453,6 +458,8 @@ document.querySelectorAll('.size-btn').forEach(btn => {
   });
 });
   </script>
+
+  
 
 </body>
 </html>

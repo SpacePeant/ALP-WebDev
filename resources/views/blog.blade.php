@@ -15,6 +15,7 @@
   </head>
 
   <body>
+
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
         <div class="carousel-inner">
         
@@ -37,15 +38,19 @@
     <main>
       <section>
         <h3 class="articles-title">All articles</h3>
+        
         <div class="grid" id="blogGrid">
           @foreach ($articles->take(6) as $article)
-            <article>
-              <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}">
-              <h4>{{ $article->title }}</h4>
-              <p>{{ $article->description }}</p>
-            </article>
+            <a href="{{ url('/articles/' . $article->id) }}" style="text-decoration: none; color: inherit;">
+              <article>
+                <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}">
+                <h4>{{ $article->title }}</h4>
+                <p>{{ $article->description }}</p>
+              </article>
+            </a>
           @endforeach
         </div>
+
 
         <div class="load-button">
           <button id="loadMoreBtn" data-offset="6">Load more</button>
