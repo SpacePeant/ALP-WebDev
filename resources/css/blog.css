@@ -8,128 +8,6 @@ body {
   color: #1a1a1a;
 }
 
-
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 50px;
-  background: #fff;
-
-  position: absolute;
-  top: 0;
-  width: 100%;
-  z-index: 10;
-  background: transparent;
-}
-
-.icons a {
-  color: #000;
-  margin-right: 20px;
-}
-
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.logo img {
-  height: 30px;
-}
-
-.navbar a {
-  margin: 0 15px;
-  text-decoration: none;
-  color: black;
-  font-weight: 500;
-}
-
-.navbar a:hover {
-  border-bottom: 2px solid black;
-}
-
-.navbar {
-    margin-left:150px;
-}
-.icons {
-  display: flex;
-  gap: 20px;
-  font-size: 24px;
-}
-
-.about-section {
-  width: 100%;
-  max-width: 1450px; /* batasi lebar sesuai gambar */
-  height: 408px;      /* tinggi sesuai gambar */
-  margin: 0 auto;
-  background: url('images/bg_blog.png') no-repeat center center;
-  background-size: cover;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  position: relative;
-}
-
-.about-overlay h1 {
-  font-family: 'Playfair Display', serif;
-  font-size: 60px;
-  font-weight: 700;
-  color: #000;
-  margin: 0;
-  z-index: 2;
-}
-
-
-
-/* 
-header {
-  background-color: #f9fafb;
-  padding: 20px 0;
-  position: relative;
-}
-nav {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-  font-size: 20px;
-  color: #4b5563;
-  margin-bottom: 10px;
-  margin-top: 40px;
-}
-
-nav a {
-  text-decoration: none;
-  color: inherit;
-}
-nav a:hover {
-  text-decoration: underline;
-}
-h1 {
-  text-align: center;
-  font-family: serif;
-  font-weight: bold;
-  font-size: 24px;
-}
-.header-icons {
-  position: absolute;
-  right: 20px;
-  top: 20px;
-  display: flex;
-  gap: 20px;
-  font-size: 18px;
-}
-.header-icons button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #4b5563;
-}
-.header-icons button:hover {
-  color: #1a1a1a;
-}
- */
-
 main {
   max-width: 1200px;
   margin: 40px auto;
@@ -216,8 +94,9 @@ main {
 .load-button button:hover {
   background-color: #222;
 }
+
   /* Carousel Start */
-.carousel-wrapper {
+.carousel-inner {
     position: relative;
     width: 100%;
     overflow: hidden;
@@ -225,7 +104,7 @@ main {
     min-height: 300px;
 }
   
-.carousel {
+.carouselExample {
   display: flex;
   overflow-x: auto;
   scroll-snap-type: x mandatory;
@@ -234,22 +113,20 @@ main {
   scrollbar-width: none;
 }
   
-.carousel::-webkit-scrollbar {
+.carouselExample::-webkit-scrollbar {
   display: none;
 }
 
-.carousel-item {
+.carousel-inner {
   flex: none;
   width: 100%;
   scroll-snap-align: center;
   position: relative;
   /* Add these to center content */
   display: flex;
-  justify-content: center;
-  align-items: center;
 }     
-.carousel-item img {
-  width: 70%;
+.carousel-inner img {
+  max-width: 100%;
   height: auto;
   object-fit: cover;
   border-radius: 20px;
@@ -267,10 +144,10 @@ main {
   font-weight: bold;
 }
 
-.carousel-btn {
+.carousel-control-prev {
   position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
+  top: 80%;
+  transform: translateY(-200%);
   background: rgba(255,255,255,0.7);
   border: none;
   font-size: 2rem;
@@ -280,15 +157,16 @@ main {
   transition: background 0.3s;
 }
 
-.carousel-btn:hover {
-  background: rgba(255,255,255,1);
-}
-
-.prev-btn {
-  left: 10px;
-}
-
-.next-btn {
-  right: 10px;
+.carousel-control-next {
+  position: absolute;
+  top: 80%;
+  transform: translateY(-200%);
+  background: rgba(255,255,255,0.7);
+  border: none;
+  font-size: 2rem;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  z-index: 10;
+  transition: background 0.3s;
 }
 /* Carousel END */
