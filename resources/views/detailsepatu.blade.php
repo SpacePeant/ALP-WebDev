@@ -12,13 +12,13 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     html, body {
     margin: 0;
     padding: 0;
-    overflow: hidden; /* Hilangkan scroll */
-    height: 100vh;     /* Tinggi sesuai viewport */
     font-family: 'Red Hat Text', sans-serif;
 }
 
@@ -29,10 +29,8 @@
     overflow: hidden;
 }
 body {
-  display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
   background: linear-gradient(to bottom, #ffffff, #CFCFCF);
   font-family: 'Red Hat Text', sans-serif;
   margin: 0;
@@ -325,6 +323,111 @@ body {
 #mainShoeImage.fade-out {
     opacity: 0;
 }
+.product-rating i {
+    font-size: 20px;
+    vertical-align: middle;
+}
+.rating-number {
+    font-size: 16px;
+    vertical-align: middle;
+    color: #333;
+}
+
+    .you-may-also-like-section h2{
+      margin:30px 80px 20px 90px
+}
+
+    .product-card {
+        background-color: #fff; 
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        width: 240px;
+        padding: 15px;
+        margin: 0px 10px 0px 10px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s, background-color 0.3s; 
+        position: relative;
+    }
+
+    .product-card img {
+        max-width: 100%;
+        height: auto;
+        transform: rotate(-28deg);
+        border-radius: 4px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .product-card:hover img {
+        transform: rotate(0deg); 
+    }
+
+.product-card:hover {
+    background-color: var(--bg-color);
+    color: var(--font-color);
+}
+
+.product-card:hover h3,
+.product-card:hover p {
+    color: var(--font-color);
+}
+    .product-card:hover {
+        transform: translateY(-10px); 
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+        background-color: var(--bg-color); 
+    }
+
+    .product-card h3 {
+        transition: all 0.3s ease;
+        font-size: 18px;
+        margin: 10px 0;
+        color: inherit; 
+        color: #333;
+    }
+
+    .product-card p {
+        transition: all 0.3s ease;
+        font-size: 16px;
+        color: #333;
+    }
+    .overflow-x-auto::-webkit-scrollbar {
+    display: none;
+}
+
+
+
+
+.horizontal-scroll-wrapper {
+  display: flex;
+  gap: 100px;
+  overflow-x: auto;
+  padding: 1rem 0;
+  scroll-snap-type: x mandatory;
+  margin:0px 80px 0px 80px
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar {
+  display: none; 
+}
+
+.product-link {
+  flex: 0 0 auto;
+  width: 200px; 
+  scroll-snap-align: start;
+  text-decoration:none;
+}
+
+
+.product-review-section {
+  margin-top: 2rem;
+}
+
+.review-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1rem;
+  background-color: #fff;
+}
   </style>
 </head>
 <body>
@@ -349,15 +452,43 @@ body {
             </div>
 
             <div class="right-section">
-                <p class="category">
-                    {{ ucfirst($product->gender) }} {{ $product->category_name }} Shoes
-                </p>
-
-                <h1 class="product-name">
-                    {!! nl2br(e($product->product_name)) !!}
-                </h1>
-
-                <p class="price">Rp. {{ number_format($product->price, 0, ',', '.') }}</p>
+              <p class="category">
+                {{ ucfirst($product->gender) }} {{ $product->category_name }} Shoes
+            </p>
+        
+            {{-- Rating stars di sini --}}
+            <div class="product-rating" title="{{ $product->rating }} out of 5 stars">
+                @php
+                    $fullStars = floor($product->rating);
+                    $halfStar = ($product->rating - $fullStars) >= 0.5;
+                    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+                @endphp
+        
+                {{-- Full stars --}}
+                @for ($i = 0; $i < $fullStars; $i++)
+                    <i class="bi bi-star-fill" style="color: black;"></i>
+                @endfor
+        
+                {{-- Half star --}}
+                @if ($halfStar)
+                    <i class="bi bi-star-half" style="color: black;"></i>
+                @endif
+        
+                {{-- Empty stars --}}
+                @for ($i = 0; $i < $emptyStars; $i++)
+                    <i class="bi bi-star" style="color: black;"></i>
+                @endfor
+        
+                <span class="rating-number" style="margin-left: 8px; font-weight: 600;">
+                    {{ number_format($product->rating, 1) }}/5
+                </span>
+            </div>
+        
+            <h1 class="product-name">
+                {!! nl2br(e($product->product_name)) !!}
+            </h1>
+        
+            <p class="price">Rp. {{ number_format($product->price, 0, ',', '.') }}</p>
 
                 <div class="color-options">
                     @if (!empty($color_options))
@@ -410,6 +541,59 @@ body {
         @endif
     </div>
 </div>
+
+<div class="you-may-also-like-section">
+  <h2>You May Also Like</h2>
+
+  <div class="horizontal-scroll-wrapper">
+    @forelse ($youMayAlsoLike as $related)
+      <a href="{{ url('detail_sepatu/' . $related->product_id) }}" class="product-link">
+        <div class="product-card"
+          style="--bg-color: {{ $related->color_code_bg ?? '#fff' }}; --font-color: {{ $related->color_font ?? '#000' }};">
+          <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
+            alt="{{ $related->product_name }}">
+          <h3>{{ $related->product_name }}</h3>
+          <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+        </div>
+      </a>
+    @empty
+      <p>Tidak ada rekomendasi produk.</p>
+    @endforelse
+  </div>
+</div>
+
+<div class="product-review-section mx-5 mt-10">
+  <h2 class="text-xl font-semibold mb-4">Customer Reviews</h2>
+
+  @forelse ($reviews as $review)
+  @php
+function maskedName($name) {
+    $visible = substr($name, 0, 3);
+    $hiddenLength = strlen($name) - 3;
+    return $visible . str_repeat('*', max(0, $hiddenLength));
+}
+@endphp
+    <div class="review-card mb-4 p-4 border rounded-lg shadow-sm bg-white">
+      <div class="flex items-center mb-2">
+        <div class="font-bold text-gray-800">{{ maskedName($review->customer->name) }}</div>
+        <div class="text-yellow-500">
+          @for ($i = 0; $i < 5; $i++)
+            @if ($i < $review->rating)
+              ★
+            @else
+              ☆
+            @endif
+          @endfor
+        </div>
+      </div>
+      <p class="text-gray-600 italic">"{{ $review->comment }}"</p>
+      <div class="text-sm text-gray-400 mt-1">Reviewed on {{ date('d M Y', strtotime($review->created_at)) }}</div>
+    </div>
+  @empty
+    <p class="text-gray-500">Belum ada review untuk produk ini.</p>
+  @endforelse
+</div>
+
 <div id="popupMessage" class="popup hidden">
   <div class="popup-content">
     <div class="popup-icon" id="popupIcon">✔️</div>

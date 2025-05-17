@@ -7,6 +7,7 @@ use App\Models\Category;
 use App\Models\Wishlist;
 use App\Models\ProductColor;
 use Illuminate\Http\Request;
+use App\Models\ProductReview;
 use App\Models\ProductVariant;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -24,6 +25,7 @@ class ProductController extends Controller
             'p.gender',
             'p.price',
             'c.name as category_name',
+            'p.category_id',
             'pc.color_code',
             'pc.color_name',
             'pc.color_code_bg',
@@ -45,7 +47,7 @@ class ProductController extends Controller
     if (!$product) {
         abort(404, 'Produk tidak ditemukan.');
     }
-
+    $product->rating = 4.6;
     // Data warna, ukuran, stock, dsb.
     $color_options = DB::table('product_color')
         ->leftJoin('product_color_image', 'product_color.id', '=', 'product_color_image.color_id')
@@ -62,6 +64,26 @@ class ProductController extends Controller
         )
         ->get();
 
+        $youMayAlsoLike = DB::table('product as p')
+        ->select(
+            'p.id as product_id',
+            'p.name as product_name',
+            'p.price',
+            'pc.color_code_bg',
+            'pc.color_font',
+            'pci.image_kiri'
+        )
+        ->leftJoin('product_color as pc', function ($join) {
+            $join->on('p.id', '=', 'pc.product_id')
+                 ->where('pc.is_primary', true);
+        })
+        ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
+        ->where('p.category_id', $product->category_id)
+        ->where('p.id', '!=', $id)        
+        ->where('p.status', 'active')
+        ->limit(5)
+        ->get();
+        
     $size_options = DB::table('product_variant as pv')
         ->join('product_color as pc', 'pc.id', '=', 'pv.color_id')
         ->where('pv.product_id', $id)
@@ -97,7 +119,10 @@ class ProductController extends Controller
                                 ->where('product_id', $id)
                                 ->exists();
     }
-
+    $reviews = ProductReview::where('product_id', $id)
+    ->with('customer') // pastikan relasi di model
+    ->latest()
+    ->get();
     // Kirim data ke view
     return view('detailsepatu', [
         'product' => $product,
@@ -105,6 +130,8 @@ class ProductController extends Controller
         'size_options' => $size_options,
         'size_stock' => $size_stock,
         'isWishlisted' => $isWishlisted,
+        'youMayAlsoLike'=>$youMayAlsoLike,
+        'reviews'=>$reviews
     ]);
 }
 // public function show($id, Request $request)
@@ -343,7 +370,6 @@ public function update(Request $request, $id)
     // Redirect kembali dengan pesan sukses
     return redirect()->route('productadmin')->with('success', 'Produk berhasil diperbarui');
 }
-
 }
 
 
