@@ -2,13 +2,15 @@
     use Illuminate\Support\Facades\Session;
     $user_name = Session::get('user_name', 'Guest');
 @endphp
-
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* RESET dan dasar */
   * {
     box-sizing: border-box;
+    font-family: 'Red Hat Text', sans-serif;
   }
-
+  
   /* LAYOUT DESKTOP */
   .layout-desktop {
     display: flex;
@@ -19,7 +21,6 @@
     top: 0;
     left: 0;
     right: 0;
-    background-color: transparent;
     z-index: 30;
   }
 
@@ -29,6 +30,7 @@
   }
   .layout-desktop .logo img{
         height: 30px;
+        transition: background-color 0.5s ease, box-shadow 0.5s ease;
   }
   .layout-desktop nav.menu a {
     margin: 0 15px;
@@ -57,7 +59,6 @@
     padding: 10px 20px;
     background-color: #fff;
     position: relative;
-    z-index: 20;
   }
 
   .layout-mobile .top-bar {
@@ -197,6 +198,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    z-index: 1;
     border-radius: 10px;
     margin-bottom: 30px;
   }
@@ -207,9 +209,49 @@
     font-weight: 700;
     color: black;
   }
+
+  header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.default {
+  background-color: transparent;
+  box-shadow: none;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.scrolled {
+  background-color: white; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+
+header.scrolled .layout-desktop,
+header.scrolled .layout-mobile {
+  background-color: white; 
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.default .layout-desktop,
+header.default .layout-mobile {
+  background-color: transparent; 
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+header.scrolled .layout-desktop .logo {
+  visibility: visible;
+  opacity: 1;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
 </style>
 
-<header>
+<header class="default">
   <!-- Desktop Header -->
   <div class="layout-desktop">
     <div class="logo">
@@ -221,7 +263,7 @@
       <a href="{{ route('home') }}">Home</a>
       <a href="{{ route('about') }}">About</a>
       <a href="{{ route('blog') }}">Blog</a>
-      <a href="{{ route('collection') }}">Collection</a>
+      <a href="{{ route('detail') }}">Collection</a>
     </nav>
 
     <div class="icons">
@@ -328,4 +370,18 @@
       userDropdownMobile.classList.remove('show');
     }
   });
+</script>
+<script>
+  window.addEventListener('scroll', function() {
+  const header = document.querySelector('header');
+  console.log('Scroll Y:', window.scrollY); // debug
+
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+    header.classList.remove('default');
+  } else {
+    header.classList.remove('scrolled');
+    header.classList.add('default');
+  }
+});
 </script>
