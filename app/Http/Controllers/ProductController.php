@@ -369,19 +369,18 @@ $averageRating = $totalReviews > 0
 
 public function update(Request $request, $id)
 {
-    // Validasi data input
+    // Validasi input
     $validated = $request->validate([
         'nama_produk' => 'required|string|max:255',
         'gender' => 'required|in:Men,Women,Unisex',
         'deskripsi' => 'nullable|string',
         'kategori' => 'required|integer|exists:categories,id',
         'harga' => 'required|integer',
-        'ukuran' => 'required|integer',
-        'stok' => 'required|integer',
         'color_id' => 'required|integer',
+        'stocks_json' => 'required|json', // validasi JSON
     ]);
-    // logger()->info('Data Validated:', $validated);
-    // Update product
+
+    // Update data produk utama
     $product = Product::findOrFail($id);
     $product->name = $validated['nama_produk'];
     $product->gender = $validated['gender'];
@@ -391,18 +390,24 @@ public function update(Request $request, $id)
     $product->updated_at = now();
     $product->save();
 
-    // Update product variant stock
-    $variant = ProductVariant::where('product_id', $id)
-                ->where('color_id', $validated['color_id'])
-                ->where('size', $validated['ukuran'])
-                ->first();
+    // Decode JSON stok per size
+    $stocksArray = json_decode($validated['stocks_json'], true);
 
-    if ($variant) {
-        $variant->stock = $validated['stok'];
-        $variant->save();
+    if (is_array($stocksArray)) {
+        foreach ($stocksArray as $size => $stock) {
+            ProductVariant::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'color_id' => $validated['color_id'],
+                    'size' => $size,
+                ],
+                [
+                    'stock' => $stock,
+                ]
+            );
+        }
     }
 
-    // Redirect kembali dengan pesan sukses
     return redirect()->route('productadmin')->with('success', 'Produk berhasil diperbarui');
 }
 }

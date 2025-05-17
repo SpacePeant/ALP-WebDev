@@ -411,6 +411,7 @@
 </a>
 
 
+<<<<<<< HEAD
   <script>
 //     // Handle size button active state
 //     document.querySelectorAll('.size-btn').forEach(btn => {
@@ -503,6 +504,38 @@ stockInput.addEventListener('input', () => {
 });
 
   </script>
+=======
+<script>
+  const sizeStockMap = {!! json_encode($sizeStock) !!}; // misal dari controller
+  let currentSize = document.getElementById('selectedSize').value || null;
+  const stockInput = document.querySelector('input[name="stok"]');
+
+  function selectSize(size) {
+    if (currentSize !== null) {
+      sizeStockMap[currentSize] = parseInt(stockInput.value) || 0;
+    }
+    currentSize = size;
+    document.getElementById('selectedSize').value = size;
+    stockInput.value = sizeStockMap[size] || 0;
+
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('size-btn-' + size).classList.add('active');
+  }
+
+  stockInput.addEventListener('input', () => {
+    if (currentSize !== null) {
+      sizeStockMap[currentSize] = parseInt(stockInput.value) || 0;
+    }
+  });
+
+  document.querySelector('form').addEventListener('submit', function () {
+    if (currentSize !== null) {
+      sizeStockMap[currentSize] = parseInt(stockInput.value) || 0;
+    }
+    document.getElementById('stocks-json').value = JSON.stringify(sizeStockMap);
+  });
+</script>
+>>>>>>> 3ba8af8a62a07ca3d9d6a4200928ca0a203b54a9
 
   
 
