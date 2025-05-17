@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use Midtrans\Snap;
+use Midtrans\Config;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\CartItem;
@@ -9,6 +11,7 @@ use App\Models\Customer;
 use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
 
@@ -87,37 +90,91 @@ public function updateQuantity(Request $request)
 
     public function processCheckout(Request $request)
     {
-        $customerId = Auth::id();
+         $customerId = Session::get('user_id') ?? $request->query('user_id', 1);
+        Log::info('Pay Now clicked by user ID: ' . $customerId);
+        Log::info('Request data:', $request->all());
 
-        $cartItems = CartItem::with('product')
-            ->where('customer_id', $customerId)
-            ->where('is_pilih', 1)
-            ->get();
 
-        if ($cartItems->isEmpty()) {
-            return back()->with('error', 'Keranjang kosong.');
-        }
+    DB::beginTransaction();
 
-        $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price);
 
-        $order = Order::create([
-            'customer_id' => $customerId,
-            'order_date' => now(),
-            'status' => 'Pending',
-            'total_amount' => $totalAmount,
-        ]);
+    $cartItems = CartItem::with('product')
+        ->where('customer_id', $customerId)
+        ->where('is_pilih', 1)
+        ->get();
 
-        foreach ($cartItems as $item) {
-            OrderDetail::create([
-                'order_id' => $order->id,
-                'product_id' => $item->product_id,
-                'quantity' => $item->quantity,
-                'unit_price' => $item->product->price,
-            ]);
-        }
-
-        CartItem::where('customer_id', $customerId)->where('is_pilih', 1)->delete();
-
-        return redirect()->route('checkout')->with('success', 'Order berhasil diproses!');
+    if ($cartItems->isEmpty()) {
+        return back()->with('error', 'Keranjang kosong.');
     }
+
+    $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price);
+
+    $order = Order::create([
+        'customer_id' => $customerId,
+        'order_date' => now(),
+        'status' => 'Pending',
+        'total_amount' => $totalAmount,
+    ]);
+
+    foreach ($cartItems as $item) {
+        OrderDetail::create([
+            'order_id' => $order->id,
+            'product_id' => $item->product_id,
+            'product_variant_id' => $item->product_variant_id,
+            'product_color_id' => $item->product_color_id,
+            'quantity' => $item->quantity,
+            'unit_price' => $item->product->price,
+        ]);
+    }
+
+    // Midtrans
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = config('midtrans.is_production');
+    Config::$isSanitized = true;
+    Config::$is3ds = true;
+
+    $email = trim(Session::get('user_email', 'Guest'));
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        Log::error('Invalid email format: ' . $email);
+        return back()->with('error', 'Email Anda tidak valid. Mohon perbarui profil Anda.');
+    }
+
+    $user_name = Session::get('user_name', 'Guest');
+    $user_email = Session::get('user_email', 'Guest');
+
+    $params = [
+        'transaction_details' => [
+            'order_id' => $order->id,
+            'gross_amount' => $totalAmount,
+        ],
+        'customer_details' => [
+            'first_name' => $user_name,
+            'email' => $email,
+        ],
+        'callbacks' => [
+            'finish' => route('collection'),
+        ]
+    ];
+
+    Log::info('Final email used for Midtrans: ' . $user_email);
+    try{
+    $snapUrl = Snap::createTransaction($params)->redirect_url;
+    $order->payment_url = $snapUrl;
+    $order->save();
+
+    DB::commit();
+
+    session()->forget('cart');
+    CartItem::where('customer_id', $customerId)->where('is_pilih', 1)->delete();
+
+    return redirect()->away($snapUrl);
+    } 
+    
+    catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Midtrans error: ' . $e->getMessage());
+        return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran.');
+    }
+}
 }

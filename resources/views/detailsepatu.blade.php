@@ -432,7 +432,7 @@ body {
 </head>
 <body>
 <a href="javascript:void(0);" onclick="history.back();" class="back-to-collection" title="Kembali ke koleksi">
-  <i data-feather="x"></i>
+  <i data-feather="corner-down-left"></i>
 </a>
 <div class="product-wrapper">
     <div class="product-page">

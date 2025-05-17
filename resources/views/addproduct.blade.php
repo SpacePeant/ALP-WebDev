@@ -44,12 +44,23 @@
   }
 
     .form-container {
-      /* width: 600px; */ 
-      width: 48%;
+        background: #ffffff;
+  border: 1px solid #E1E1E1;
+  border-radius: 10px;
+  padding: 30px;
+  flex: 1 1 500px;
+  max-width: 600px;
     }
 
     .image-container {
-      width: 520px;
+      background: #ffffff;
+  border: 1px solid #E1E1E1;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 30px;
+  flex: 1 1 500px;
+  max-width: 600px;
     }
 
     .form-group {
@@ -79,19 +90,21 @@
       flex-wrap: wrap;
     }
 
-    .gender-options {
-      display: flex;
-      gap: 20px;
-      margin-top: 10px;
-    }
+     .gender-options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap; 
+  }
 
-    .gender-options label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: normal;
-    }
-
+  .gender-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    white-space: nowrap;
+  }
     .price-stock {
       display: flex;
       gap: 20px;
@@ -102,24 +115,29 @@
     }
 
     .main-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+       display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
     }
 
     .thumbnails {
       display: flex;
-      gap: 10px;
+  justify-content: space-between;
+  gap: 0;
+  margin-bottom: 15px;
     }
 
     .thumbnails img {
-      width: 102px;
-      border-radius: 10px;
-      border: 1px solid #E1E1E1;
-      cursor: pointer;
+      width: calc(100% / 4);
+  height: auto;
+  object-fit: cover;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
     }
 
     .thumbnails img.active {
@@ -175,6 +193,40 @@
     margin-right: 5px;
     }
 
+    @media (max-width: 1200px) {
+  .main-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-container,
+  .image-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .price-stock {
+    flex-direction: column;
+  }
+
+  .price-stock input {
+    width: 100%;
+  }
+
+  .thumbnails img {
+    width: 22%;
+  }
+
+  .save-btn {
+    width: 100%;
+    float: none;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+}
+
     /* Responsive adjustments for tablet and phone */
 @media (max-width: 768px) {
   .main-container {
@@ -198,18 +250,6 @@
     width: 100%;
   }
 
-  .gender-options {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-  }
-
-  .size-options {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 8px;
-  }
-
   .save-btn {
     width: 100%;
   }
@@ -226,12 +266,6 @@
 
   .btn.mt-3 {
     width: 100%;
-  }
-
-  .position-absolute.top-0.end-0 {
-    position: static !important;
-    margin: 20px 0 0 auto;
-    display: block;
   }
 }
 
@@ -261,13 +295,6 @@
 
   .btn.mt-3 {
     width: 100%;
-  }
-
-  .position-absolute.top-0.end-0 {
-    position: relative !important;
-    top: auto !important;
-    right: auto !important;
-    margin: 20px 0;
   }
 }
   </style>
@@ -345,9 +372,9 @@
       <div class="form-group">
         <label>Gender</label>
         <div class="gender-options">
-            <input type="radio" name="gender" value="Men" checked> Men
-            <input type="radio" name="gender" value="Women"> Women
-            <input type="radio" name="gender" value="Unisex"> Unisex
+            <label><input type="radio" name="gender" value="Men" checked> Men</label>
+    <label><input type="radio" name="gender" value="Women"> Women</label>
+    <label><input type="radio" name="gender" value="Unisex"> Unisex</label>
         </div>
       </div>
 
@@ -422,11 +449,9 @@
 </div>
 
   </div>
-
 <a href="{{ route('productadmin') }}" class="btn btn-outline-secondary position-absolute top-0 end-0 m-3 p-2">
   <i class="bi bi-arrow-left"></i>
 </a>
-
   <script>
 
   let tabCount = 1;

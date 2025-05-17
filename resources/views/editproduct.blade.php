@@ -35,6 +35,7 @@
       display: flex;
       gap: 40px;
       justify-content: center;
+      align-items: flex-start;
     }
 
     .form-container, .image-container {
@@ -42,6 +43,8 @@
       border: 1px solid #E1E1E1;
       border-radius: 10px;
       padding: 40px;
+      width: 50%;
+      max-width: 100%;
     }
 
     .form-container {
@@ -115,17 +118,20 @@
 
     .main-image {
       width: 100%;
-      border-radius: 12px;
+      border-radius: 10px;
       margin-bottom: 20px;
     }
 
     .thumbnails {
       display: flex;
       gap: 10px;
+      margin-top: 10px;
+      flex-wrap: wrap;
     }
 
     .thumbnails img {
-      width: 120px;
+      /* width: 120px; */
+      width: calc(25% - 7.5px);
       border-radius: 10px;
       border: 1px solid #E1E1E1;
       cursor: pointer;
@@ -156,6 +162,125 @@
     padding-right: 32px;
     }
 
+    .btn-black { 
+    background-color: black !important; 
+    color: white !important; 
+    border-radius: 0; 
+    border: none; 
+  }
+  .btn-black:hover { 
+    background-color: black !important; 
+    color: white !important; 
+  }
+
+    @media (max-width: 1200px) {
+  .main-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-container,
+  .image-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .price-stock {
+    flex-direction: column;
+  }
+
+  .price-stock > div {
+    width: 100%;
+  }
+
+  .save-btn {
+    width: 100%;
+    float: none;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+}
+
+/* <= 768px (tablet & phone) */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+  }
+
+  .form-container,
+  .image-container {
+    width: 100% !important;
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group input[type="color"],
+  .form-group .form-control,
+  select,
+  .save-btn {
+    width: 100%;
+  }
+
+  .price-stock {
+    flex-direction: column;
+  }
+
+  .price-stock > div {
+    width: 100%;
+  }
+
+  .image-container img.main-image {
+    width: 100%;
+    height: auto;
+    border-radius: 6px;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+
+  /* Gender options tetap satu baris dengan gap kecil */
+  .gender-options {
+    flex-wrap: nowrap;
+    gap: 12px;
+  }
+
+  /* Size options grid ke 2 kolom */
+  .size-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* <= 576px (small phones) */
+@media (max-width: 576px) {
+  .size-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .image-container img.main-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+}
   </style>
 </head>
 <body>
@@ -261,7 +386,7 @@
     <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
 
     <!-- Tombol Submit -->
-    <button type="submit" class="btn btn-primary btn-sm">Upload</button>
+    <button type="submit" class="btn btn-black btn-sm">Upload</button>
   </form>
 
   <!-- Preview Utama -->

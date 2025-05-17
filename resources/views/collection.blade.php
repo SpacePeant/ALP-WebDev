@@ -15,10 +15,12 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
+     <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Display:wght@400;500&display=swap" rel="stylesheet">
     <style>
       body {
         margin: 0;
-        font-family: "Segoe UI", sans-serif;
+        font-family: 'Red Hat Display', sans-serif;
         background-color: #ffffff;
         color: #333;
       }
