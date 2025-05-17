@@ -132,6 +132,7 @@ class CartController extends Controller
         ->join('product_color_image as pci', 'pci.color_id', '=', 'ci.product_color_id')
         ->join('product_variant as pv', 'pv.id', '=', 'ci.product_variant_id')
         ->where('ci.customer_id', $user_id)
+        ->where('pc.status', 'active')
         ->select(
             'ci.id',
             'p.price',
