@@ -1,3 +1,9 @@
+@extends('base.base1')
+
+@section('title', 'Home')
+
+@section('content') 
+
 @php
     $user_id = Session::get('user_id',1)
 @endphp
@@ -13,7 +19,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
+  <script src="https://cdn.tailwindcss.com"></script>
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     html, body {
@@ -343,7 +349,6 @@ body {
         border-radius: 8px;
         width: 240px;
         padding: 15px;
-        margin: 0px 10px 0px 10px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         text-align: center;
         transition: transform 0.3s, background-color 0.3s; 
@@ -428,6 +433,15 @@ body {
   padding: 1rem;
   background-color: #fff;
 }
+
+
+  .product-review-section{
+    margin-bottom:100px;
+  }
+
+  #stars{
+    margin-right:40px;
+  }
   </style>
 </head>
 <body>
@@ -459,7 +473,7 @@ body {
             {{-- Rating stars di sini --}}
             <div class="product-rating" title="{{ $product->rating }} out of 5 stars">
                 @php
-                    $fullStars = floor($product->rating);
+                    $fullStars = floor(number_format($averageRating, 1));
                     $halfStar = ($product->rating - $fullStars) >= 0.5;
                     $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
                 @endphp
@@ -480,7 +494,7 @@ body {
                 @endfor
         
                 <span class="rating-number" style="margin-left: 8px; font-weight: 600;">
-                    {{ number_format($product->rating, 1) }}/5
+                    {{ number_format($averageRating, 1) }}/5
                 </span>
             </div>
         
@@ -543,8 +557,7 @@ body {
 </div>
 
 <div class="you-may-also-like-section">
-  <h2>You May Also Like</h2>
-
+  <h2 class="text-xl font-semibold mb-4">You May Also Like</h2>
   <div class="horizontal-scroll-wrapper">
     @forelse ($youMayAlsoLike as $related)
       <a href="{{ url('detail_sepatu/' . $related->product_id) }}" class="product-link">
@@ -562,37 +575,296 @@ body {
   </div>
 </div>
 
-<div class="product-review-section mx-5 mt-10">
-  <h2 class="text-xl font-semibold mb-4">Customer Reviews</h2>
-
-  @forelse ($reviews as $review)
-  @php
-function maskedName($name) {
-    $visible = substr($name, 0, 3);
-    $hiddenLength = strlen($name) - 3;
-    return $visible . str_repeat('*', max(0, $hiddenLength));
-}
-@endphp
-    <div class="review-card mb-4 p-4 border rounded-lg shadow-sm bg-white">
-      <div class="flex items-center mb-2">
-        <div class="font-bold text-gray-800">{{ maskedName($review->customer->name) }}</div>
-        <div class="text-yellow-500">
-          @for ($i = 0; $i < 5; $i++)
-            @if ($i < $review->rating)
-              ★
-            @else
-              ☆
-            @endif
-          @endfor
+<div class="product-review-section mx-5 mt-10 bg-white border border-black rounded-lg p-5">
+  <section>
+    <h2 class="text-2xl font-bold mb-4">
+        Reviews ★★★★★ ({{ $totalReviews }})
+    </h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div class="col-span-2">
+        <div class="space-y-2">
+            @for ($star = 5; $star >= 1; $star--)
+                @php
+                    $count = $ratingCounts[$star] ?? 0;
+                    $widthPercent = $totalReviews > 0 ? ($count / $totalReviews) * 100 : 0;
+                @endphp
+                <div class="flex items-center gap-2">
+                    <div class="w-12 text-left text-m justify-between" id="stars">
+                        {{ $star }} star{{ $star > 1 ? 's' : '' }}
+                    </div>
+    
+                    <div class="flex-1 bg-gray-200 h-3 rounded-full overflow-hidden">
+                        <div class="bg-black h-full" style="width: {{ $widthPercent }}%;"></div>
+                    </div>
+    
+                    <div class="w-6 text-sm text-right">
+                        {{ $count }}
+                    </div>
+                </div>
+            @endfor
         </div>
-      </div>
-      <p class="text-gray-600 italic">"{{ $review->comment }}"</p>
-      <div class="text-sm text-gray-400 mt-1">Reviewed on {{ date('d M Y', strtotime($review->created_at)) }}</div>
     </div>
-  @empty
-    <p class="text-gray-500">Belum ada review untuk produk ini.</p>
-  @endforelse
+
+        <div>
+            <p class="text-lg text-gray-800">Overall Rating</p>
+            <p class="text-5xl font-bold leading-tight">{{ number_format($averageRating, 1) }}</p>
+            <div class="flex items-center gap-1 mb-2">
+                @php
+                    $fullStars = floor($averageRating);
+                    $emptyStars = 5 - $fullStars;
+                @endphp
+                @php
+                $fullStars = floor(number_format($averageRating, 1));
+                $halfStar = ($product->rating - $fullStars) >= 0.5;
+                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+            @endphp
+            
+            <span class="text-yellow-400 text-xl">
+                @for ($i = 0; $i < $fullStars; $i++)
+                    <i class="bi bi-star-fill" style="color: black;"></i>
+                @endfor
+            
+                @if ($halfStar)
+                    <i class="bi bi-star-half" style="color: black;"></i>
+                @endif
+            
+                @for ($i = 0; $i < $emptyStars; $i++)
+                    <i class="bi bi-star" style="color: black;"></i>
+                @endfor
+            </span>
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="flex flex-wrap items-center justify-between mb-4 mt-4 gap-4">
+  <p id="review-count-indicator" class="text-sm text-gray-600 m-0 flex-shrink-0">
+    Showing 1 - {{ min(3, count($reviews)) }} of {{ count($reviews) }} Reviews
+  </p>
+
+  <div class="flex items-center gap-2 flex-shrink-0">
+    <label for="star-filter" class="text-sm text-gray-700">Filter by Stars:</label>
+    <select id="star-filter" class="border border-gray-300 rounded px-2 py-1 text-sm">
+      <option value="all">All Stars</option>
+      <option value="5">5 Stars</option>
+      <option value="4">4 Stars</option>
+      <option value="3">3 Stars</option>
+      <option value="2">2 Stars</option>
+      <option value="1">1 Star</option>
+    </select>
+  </div>
 </div>
+
+  @php
+    function maskedName($name) {
+      $visible = substr($name, 0, 3);
+      $hiddenLength = strlen($name) - 3;
+      return $visible . str_repeat('*', max(0, $hiddenLength));
+    }
+  @endphp
+
+@forelse ($reviews as $index => $review)
+<div
+  class="review-item py-4 border-b last:border-b-0 border-gray-300 {{ $index >= 3 ? 'hidden' : '' }}"
+  data-rating="{{ round($review->rating) }}"
+>
+  <div class="flex items-center justify-between mb-1">
+    <div class="font-semibold text-gray-800">{{ maskedName($review->customer->name) }}</div>
+    <div class="product-rating text-yellow-500 text-sm flex items-center" title="{{ $review->rating }} out of 5 stars ">
+      @php
+        $fullStars = round($review->rating);
+        $fullStars = max(0, min(5, $fullStars));
+        $emptyStars = 5 - $fullStars;
+      @endphp
+
+      @for ($i = 0; $i < $fullStars; $i++)
+        <i class="bi bi-star-fill" style="color: black; font-size:12px;"></i>
+      @endfor
+
+      @for ($i = 0; $i < $emptyStars; $i++)
+        <i class="bi bi-star" style="color: black; font-size:12px;"></i>
+      @endfor
+    </div>
+  </div>
+
+  @if ($review->review_title)
+    <h5 class="text-gray-600 italic">{{ $review->review_title }}</h5>
+  @endif
+
+  <p class="text-gray-700">{{ $review->comment }}</p>
+  <div class="text-sm text-gray-400 mt-1">
+    Reviewed on {{ \Carbon\Carbon::parse($review->created_at)->format('d M Y') }}
+  </div>
+</div>
+@empty
+<p class="text-gray-500">Belum ada review untuk produk ini.</p>
+@endforelse
+
+<div class="flex justify-center space-x-2 mt-4">
+  <button id="show-more-btn" class="px-4 py-2 bg-black text-white rounded hover:bg-gray-800 hidden">
+    Show More
+  </button>
+  <button id="show-less-btn" class="px-4 py-2 bg-gray-600 text-white rounded hover:bg-gray-700 hidden">
+    Show Less
+  </button>
+</div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const btnMore = document.getElementById('show-more-btn');
+    const btnLess = document.getElementById('show-less-btn');
+    const reviews = document.querySelectorAll('.review-item');
+    const starFilter = document.getElementById('star-filter');
+
+    let visibleCount = 3;
+    const increment = 5;
+
+    const showWithSlide = (el) => {
+      el.style.maxHeight = '0px';
+      el.classList.remove('hidden');
+      el.style.overflow = 'hidden';
+      el.style.transition = 'max-height 0.4s ease';
+
+      requestAnimationFrame(() => {
+        el.style.maxHeight = el.scrollHeight + 'px';
+      });
+
+      setTimeout(() => {
+        el.style.maxHeight = '';
+        el.style.overflow = '';
+        el.style.transition = '';
+      }, 400);
+    };
+
+    const hideWithSlide = (el, delay = 0) => {
+      setTimeout(() => {
+        el.style.maxHeight = el.scrollHeight + 'px';
+        el.style.overflow = 'hidden';
+        el.style.transition = 'max-height 0.4s ease';
+
+        requestAnimationFrame(() => {
+          el.style.maxHeight = '0px';
+        });
+
+        setTimeout(() => {
+          el.classList.add('hidden');
+          el.style.maxHeight = '';
+          el.style.overflow = '';
+          el.style.transition = '';
+        }, 400);
+      }, delay);
+    };
+
+    const getFilteredReviews = () => {
+      const selected = starFilter ? starFilter.value : 'all';
+      return Array.from(reviews).filter(review => {
+        const rating = parseInt(review.dataset.rating);
+        return selected === 'all' || rating === parseInt(selected);
+      });
+    };
+
+    const updateReviewIndicator = (filteredTotal) => {
+  const indicator = document.getElementById('review-count-indicator');
+  if (!indicator) return;
+
+  if (filteredTotal === 0) {
+    indicator.textContent = 'No reviews found.';
+  } else {
+    indicator.textContent = `Showing 1 - ${Math.min(visibleCount, filteredTotal)} of ${filteredTotal} Reviews`;
+  }
+};
+
+    const updateVisibleReviews = () => {
+  const filtered = getFilteredReviews();
+  const noReviewMessage = document.getElementById('no-review-message');
+
+  // Reset
+  reviews.forEach(r => r.classList.add('hidden'));
+
+  if (filtered.length === 0) {
+    if (!noReviewMessage) {
+      const p = document.createElement('p');
+      p.id = 'no-review-message';
+      p.className = 'text-gray-500';
+      p.textContent = 'No reviews for this rating.';
+      document.querySelector('.product-review-section').appendChild(p);
+    }
+    btnMore.classList.add('hidden');
+    btnLess.classList.add('hidden');
+    updateReviewIndicator(0);
+    return;
+  }
+
+  // Remove message if previously added
+  if (noReviewMessage) noReviewMessage.remove();
+
+  for (let i = 0; i < Math.min(visibleCount, filtered.length); i++) {
+    showWithSlide(filtered[i]);
+  }
+
+  updateReviewIndicator(filtered.length);
+
+  // Handle buttons
+  if (filtered.length > 3) {
+    btnMore.classList.toggle('hidden', visibleCount >= filtered.length);
+    btnLess.classList.toggle('hidden', visibleCount < filtered.length);
+  } else {
+    btnMore.classList.add('hidden');
+    btnLess.classList.add('hidden');
+  }
+};
+
+    btnMore.addEventListener('click', () => {
+      const filtered = getFilteredReviews();
+      const targetCount = Math.min(visibleCount + increment, filtered.length);
+
+      for (let i = visibleCount; i < targetCount; i++) {
+        showWithSlide(filtered[i]);
+      }
+
+      visibleCount = targetCount;
+      updateReviewIndicator(filtered.length);
+
+      if (visibleCount >= filtered.length) {
+        btnMore.classList.add('hidden');
+        btnLess.classList.remove('hidden');
+      }
+    });
+
+    btnLess.addEventListener('click', () => {
+      const filtered = getFilteredReviews();
+      let delay = 0;
+      const delayIncrement = 80;
+
+      for (let i = visibleCount - 1; i >= 3; i--) {
+        if (filtered[i]) hideWithSlide(filtered[i], delay);
+        delay += delayIncrement;
+      }
+
+      visibleCount = 3;
+      updateReviewIndicator(filtered.length);
+      btnMore.classList.remove('hidden');
+      btnLess.classList.add('hidden');
+
+      setTimeout(() => {
+        document.querySelector('.product-review-section').scrollIntoView({ behavior: 'smooth' });
+      }, delay + 200);
+    });
+
+    if (starFilter) {
+      starFilter.addEventListener('change', () => {
+        visibleCount = 3;
+        updateVisibleReviews();
+      });
+    }
+
+    // Inisialisasi pertama kali
+    updateVisibleReviews();
+  });
+</script>
+
 
 <div id="popupMessage" class="popup hidden">
   <div class="popup-content">
@@ -882,3 +1154,4 @@ document.querySelectorAll('.add-cart').forEach(button => {
 </script>
 </body>
 </html>
+@endsection

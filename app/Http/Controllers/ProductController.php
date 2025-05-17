@@ -123,15 +123,35 @@ class ProductController extends Controller
     ->with('customer') // pastikan relasi di model
     ->latest()
     ->get();
-    // Kirim data ke view
+    
+    $reviewss = ProductReview::select('rating', DB::raw('count(*) as count'))
+    ->where('product_id', $id)
+    ->groupBy('rating')
+    ->get();
+
+$ratingCounts = [1 => 0, 2 => 0, 3 => 0, 4 => 0, 5 => 0];
+
+foreach ($reviewss as $review) {
+    $ratingCounts[$review->rating] = $review->count;
+}
+
+$totalReviews = array_sum($ratingCounts);
+
+$averageRating = $totalReviews > 0 
+    ? round(ProductReview::where('product_id', $id)->avg('rating'), 1) 
+    : 0;
+
     return view('detailsepatu', [
         'product' => $product,
         'color_options' => $color_options,
         'size_options' => $size_options,
         'size_stock' => $size_stock,
         'isWishlisted' => $isWishlisted,
-        'youMayAlsoLike'=>$youMayAlsoLike,
-        'reviews'=>$reviews
+        'youMayAlsoLike' => $youMayAlsoLike,
+        'reviews' => $reviews,
+        'ratingCounts' => $ratingCounts,
+        'totalReviews' => $totalReviews,
+        'averageRating' => $averageRating,
     ]);
 }
 // public function show($id, Request $request)

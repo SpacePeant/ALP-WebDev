@@ -89,11 +89,12 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->tinyInteger('rating');
+            $table->text('review_title');
             $table->text('comment')->nullable();
             $table->date('review_date')->nullable();
             $table->timestamps();
         });
-
+        
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
