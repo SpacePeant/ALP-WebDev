@@ -34,6 +34,9 @@
       border-radius: 10px;
       padding: 10px;
     }
+    h3 {
+      margin-top: -15px;
+    }
     a {
         text-decoration: none;
         color: #000000;
@@ -69,7 +72,7 @@
 </head>
 <body style="min-height: 100vh;" class="d-flex align-items-center justify-content-center">
   <div class="resetpass-form text-center">
-    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a6/Logo_NIKE.svg" class="logo" alt="Nike Logo">
+    <img src="{{ asset('image/logo.png') }}" class="logo" alt="Nike Logo">
     <h3 class="fw-bold">Reset Password</h3>
     <small>We'll email you a link to reset your password</small>
 

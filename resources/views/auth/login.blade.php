@@ -47,6 +47,10 @@
       text-align: center;
       margin-top: 15px;
     }
+
+    h3 {
+      margin-top: -15px;
+    }
     a {
         text-decoration: none;
         color: #000000;
