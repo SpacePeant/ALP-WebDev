@@ -12,7 +12,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
-
+use App\Http\Controllers\PaymentController;
 
 Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
 
@@ -31,7 +31,6 @@ Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('ca
 Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
 Route::post('/cart/update-pilih', [CartController::class, 'updatePilih'])->name('cart.update_pilih');
 
-
 // Wishlist
 Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
 Route::post('/wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
@@ -43,9 +42,16 @@ Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wi
 Route::post('/wishlist/delete', [WishlistController::class, 'removeFromWishlist']);
 Route::get('/product_list', [ProductController::class, 'index'])->name('product.list');
 
+// Payment
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
 Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
+
+Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
+->name('payment.return');
+
+Route::get('/payment/status/{order}', [PaymentController::class, 'checkStatus'])
+->name('payment.status');
 
 // Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
 // ->name('payment.return');

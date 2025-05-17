@@ -120,6 +120,8 @@ public function updateQuantity(Request $request)
         OrderDetail::create([
             'order_id' => $order->id,
             'product_id' => $item->product_id,
+            'product_variant_id' => $item->product_variant_id,
+            'product_color_id' => $item->product_color_id,
             'quantity' => $item->quantity,
             'unit_price' => $item->product->price,
         ]);
@@ -151,7 +153,7 @@ public function updateQuantity(Request $request)
             'email' => $email,
         ],
         'callbacks' => [
-            'finish' => route('collection'),
+            'finish' => route('payment.return', $order->id),
         ]
     ];
 

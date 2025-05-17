@@ -18,17 +18,33 @@
             <p class="mb-1">Order Date: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
             <p class="mb-1">Items: {{ $order->item_count }}</p>
             <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p>
+            <div class="mb-1">
+              Status:
+              @if ($order->status == 'paid')
+                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-success">Paid</a>
+              @elseif ($order->status == 'pending')
+                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-pending">Pending</a>
+              @elseif ($order->status == 'failed' || $order->status == 'cancelled')
+                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-failed">Failed</a>
+              @elseif ($order->status == 'expired')
+                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-failed">Expired</a>
+              @else
+                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-unknown">{{ ucfirst($order->status) }}</a>
+              @endif
+          </div>
           </div>
           <div class="text-end">
             <button class="view-order-toggle" type="button" aria-expanded="false" aria-controls="order-details-{{ $order->id }}">
               View Order <span class="dropdown-icon">▼</span>
             </button>
             <div class="mt-2">
-              @if (strtolower($order->status) == 'delivered')
-                <span class="status-btn status-delivered">Delivered</span>
-              @else
-                <span class="status-btn status-pending">{{ $order->status }}</span>
+            <div class="mt-2 d-flex align-items-center gap-2 flex-wrap justify-content-end">
+              @if ($order->payment_url && $order->status == 'pending')
+                  <a href="{{ $order->payment_url }}" target="_blank" class="status-btn pay-now-btn" style="margin-top: -140px;">
+                      Pay Now
+                  </a>
               @endif
+            </div>
             </div>
           </div>
         </div>
@@ -103,26 +119,51 @@
     flex-wrap: wrap;
   }
 
-  .status-btn {
+    .status-btn {
     font-size: 14px;
     padding: 6px 16px;
     border-radius: 20px;
     border: 1px solid transparent;
     display: inline-block;
     text-align: center;
-  }
+    }
 
-  .status-delivered {
+    .status-success {
     background-color: #d4edda;
     color: #3c763d;
     border-color: #c3e6cb;
-  }
+    }
 
-  .status-pending {
+    .status-pending {
     background-color: #fff3cd;
     color: #856404;
     border-color: #ffeeba;
-  }
+    }
+
+    .status-failed {
+    background-color: #f8d7da;
+    color: #721c24;
+    border-color: #f5c6cb;
+    }
+
+    .status-unknown {
+    background-color: #e2e3e5;
+    color: #383d41;
+    border-color: #d6d8db;
+    }
+
+    .pay-now-btn {
+      text-decoration: none;
+      background-color: #007bff;
+      color: #fff;
+      border-color: #007bff;
+    }
+
+    .pay-now-btn:hover {
+      background-color: #0056b3;
+      border-color: #004a99;
+      color: #fff;
+    }
 
   .view-order-toggle {
     font-weight: 500;
@@ -131,6 +172,7 @@
     border: none;
     padding: 0;
     cursor: pointer;
+    margin-bottom: 90px;
   }
 
   .view-order-toggle .dropdown-icon {
