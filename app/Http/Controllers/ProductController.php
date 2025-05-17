@@ -349,7 +349,13 @@ $averageRating = $totalReviews > 0
         ->where('color_id', $color_id)
         ->pluck('stock', 'size'); // hasilnya: ['36' => 10, '37' => 5, dst]
 
-    return view('editproduct', compact('product', 'sizeStock', 'color_id', 'id'));
+        return view('editproduct', [
+            'product' => $product,
+            'sizeStock' => $sizeStock,
+            'sizeStocksJson' => json_encode($sizeStock), // <--- Tambahkan ini
+            'color_id' => $color_id,
+            'id' => $id
+        ]);
 }
 
 public function update(Request $request, $id)
@@ -365,7 +371,7 @@ public function update(Request $request, $id)
         'stok' => 'required|integer',
         'color_id' => 'required|integer',
     ]);
-
+    // logger()->info('Data Validated:', $validated);
     // Update product
     $product = Product::findOrFail($id);
     $product->name = $validated['nama_produk'];

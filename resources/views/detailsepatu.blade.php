@@ -239,7 +239,7 @@ body {
 }
 .back-to-collection {
     position: fixed;
-    top: 20px;
+    top: 100px;
     right: 20px;
     background: #fff;
     border-radius: 50%;
@@ -442,6 +442,361 @@ body {
   #stars{
     margin-right:40px;
   }
+  
+
+
+
+
+
+  .mobile-thumbnail {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 2px solid transparent;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+  background-color: white;
+  position: relative;
+  z-index: 3;
+}
+
+.mobile-thumbnail.active {
+  border-color: black;
+  opacity: 1;
+}
+
+.mobile-thumbnail:hover {
+  opacity: 1;
+}
+
+.mobile-circle-bg {
+  position: absolute;
+  width: 320px;
+  height: 320px;
+  background-color: #791c24; /* default, bisa diubah dinamis */
+  border-radius: 50%;
+  z-index: 1;
+  top: 0;
+  left: 0;
+}
+
+.mobile-main-image img {
+  width: 110%;
+  z-index: 2;
+  position: relative;
+  transition: transform 0.3s ease;
+}
+
+.mobile-right-section {
+  flex: 1;
+}
+
+.mobile-category {
+  color: #777;
+  margin-bottom: 10px;
+}
+
+.mobile-product-name {
+  font-size: 36px;
+  font-weight: bold;
+  margin: 0;
+}
+
+.mobile-rating {
+  font-size: 18px;
+  color: gold;
+  margin: 8px 0;
+}
+
+.mobile-amount-sold {
+  color: #444;
+  margin-bottom: 10px;
+}
+
+.mobile-price {
+  font-size: 24px;
+  font-weight: 300;
+  color: black;
+  margin-bottom: 20px;
+}
+
+.mobile-color-options {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.mobile-color-circle {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  cursor: pointer;
+  border: 2px solid #ddd;
+  transition: transform 0.2s, border-color 0.2s;
+  position: relative;
+}
+
+.mobile-color-circle:hover {
+  transform: scale(1.1);
+}
+
+.mobile-color-circle.selected {
+  border-color: black;
+}
+
+.mobile-size-title {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.mobile-size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 30px;
+}
+
+.mobile-size-btn {
+  padding: 8px 16px;
+  border: 1px solid black;
+  background: white;
+  cursor: pointer;
+  border-radius: 5px;
+  transition: background 0.3s, color 0.3s;
+  user-select: none;
+}
+
+.mobile-size-btn.selected {
+  background: black;
+  color: white;
+}
+
+.mobile-size-btn.disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+/* Untuk menampilkan stock info */
+#stockInfo {
+  font-weight: 600;
+  margin-top: -15px;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* Contoh styling untuk tombol wishlist & add to cart */
+.mobile-wishlist-btn {
+  cursor: pointer;
+  color: #aaa;
+  transition: color 0.3s;
+}
+
+.mobile-wishlist-btn.active {
+  color: red;
+}
+
+.mobile-add-cart {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 12px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 8px;
+  transition: background-color 0.3s;
+}
+
+.mobile-add-cart:hover {
+  background-color: #218838;
+}
+
+
+
+
+
+
+
+
+
+
+  /* product-page mobile style */
+.mobile-product-wrapper {
+  padding: 16px;
+  font-family: Arial, sans-serif;
+}
+
+.mobile-category {
+  font-size: 14px;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.mobile-product-rating {
+  display: flex;
+  align-items: center;
+}
+
+.mobile-rating-number {
+  margin-left: 8px;
+  font-weight: bold;
+}
+
+.mobile-product-name {
+  font-size: 18px;
+  margin: 8px 0;
+}
+
+.mobile-product-images {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.mobile-thumbnail-list {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.mobile-thumbnail {
+  width: 75px;
+  height: 75px;
+  margin-top:40px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+.mobile-thumbnail.active {
+  border: 2px solid #000;
+}
+
+.mobile-main-image-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 300px;
+}
+
+.mobile-circle-bg {
+  width: 300px;
+  height: 300px;
+  border-radius: 150px;
+  top: 0;
+  z-index: 0;
+}
+
+.mobile-main-image-wrapper img {
+  position: relative;
+  width: 100%;
+  z-index: 1;
+}
+
+.mobile-price {
+  font-size: 20px;
+  font-weight: bold;
+  margin-top: 12px;
+}
+
+.mobile-color-options {
+  display: flex;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.mobile-color-circle {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  border: 2px solid #ddd;
+  cursor: pointer;
+}
+
+.mobile-color-circle.selected {
+  border: 2px solid #000;
+}
+
+.mobile-size-title {
+  font-weight: bold;
+  margin-top: 16px;
+}
+
+.mobile-size-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.mobile-size-btn {
+  padding: 8px 12px;
+  border: 1px solid #ccc;
+  background: white;
+  cursor: pointer;
+}
+
+.mobile-size-btn.selected {
+  background: black;
+  color: white;
+}
+
+.mobile-stock-info {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.mobile-actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.mobile-add-cart {
+  flex: 1;
+  padding: 10px;
+  background-color: black;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.mobile-wishlist-btn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+  color: black;
+}
+
+#mainImage {
+    transition: opacity 0.3s ease;
+    opacity: 1;
+}
+
+#mainImage.fade-out {
+    opacity: 0;
+}
+
+.product-wrapper {
+  display: block;
+  margin:100px 100px 0px 100px
+}
+
+.mobile-product-wrapper {
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .product-wrapper {
+    display: none;
+  }
+
+  .mobile-product-wrapper {
+    display: block;
+  }
+}
   </style>
 </head>
 <body>
@@ -449,112 +804,670 @@ body {
   <i data-feather="corner-down-left"></i>
 </a>
 <div class="product-wrapper">
-    <div class="product-page">
-        @if ($product)
-            <div class="left-section">
-                <div class="thumbnail-list">
-                    <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="thumbnail active" alt="Tampak Atas">
-                    <img src="{{ asset('image/sepatu/bawah/' . $product->image_bawah) }}" class="thumbnail" alt="Tampak Bawah">
-                    <img src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}" class="thumbnail" alt="Tampak Kiri">
-                    <img src="{{ asset('image/sepatu/kanan/' . $product->image_kanan) }}" class="thumbnail" alt="Tampak Kanan">
-                </div>
-            </div>
-
-            <div class="main-image">
-                <div class="circle-bg" style="background-color: {{ $product->color_code_bg }};"></div>
-                <img id="mainShoeImage" src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" alt="{{ $product->product_name }}" />
-            </div>
-
-            <div class="right-section">
-              <p class="category">
-                {{ ucfirst($product->gender) }} {{ $product->category_name }} Shoes
-            </p>
-        
-            {{-- Rating stars di sini --}}
-            <div class="product-rating" title="{{ $product->rating }} out of 5 stars">
-                @php
-                    $fullStars = floor(number_format($averageRating, 1));
-                    $halfStar = ($product->rating - $fullStars) >= 0.5;
-                    $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
-                @endphp
-        
-                {{-- Full stars --}}
-                @for ($i = 0; $i < $fullStars; $i++)
-                    <i class="bi bi-star-fill" style="color: black;"></i>
-                @endfor
-        
-                {{-- Half star --}}
-                @if ($halfStar)
-                    <i class="bi bi-star-half" style="color: black;"></i>
-                @endif
-        
-                {{-- Empty stars --}}
-                @for ($i = 0; $i < $emptyStars; $i++)
-                    <i class="bi bi-star" style="color: black;"></i>
-                @endfor
-        
-                <span class="rating-number" style="margin-left: 8px; font-weight: 600;">
-                    {{ number_format($averageRating, 1) }}/5
-                </span>
-            </div>
-        
-            <h1 class="product-name">
-                {!! nl2br(e($product->product_name)) !!}
-            </h1>
-        
-            <p class="price">Rp. {{ number_format($product->price, 0, ',', '.') }}</p>
-
-                <div class="color-options">
-                    @if (!empty($color_options))
-                    @foreach ($color_options as $index => $color)
-                        <div 
-                            class="color-circle{{ $index === 0 ? ' selected' : '' }}"
-                            data-color-code="{{ $color->color_code }}"
-                            data-color-code-bg="{{ $color->color_code }}"
-                            data-image-atas="{{ asset('image/sepatu/atas/' . $color->image_atas) }}"
-                            data-image-bawah="{{ asset('image/sepatu/bawah/' . $color->image_bawah) }}"
-                            data-image-kiri="{{ asset('image/sepatu/kiri/' . $color->image_kiri) }}"
-                            data-image-kanan="{{ asset('image/sepatu/kanan/' . $color->image_kanan) }}"
-                            style="background-color: {{ $color->color_code }};"
-                        ></div>
-                    @endforeach
-                    @endif
-                </div>
-                <p class="size-title">Select Size</p>
-                <div class="size-options">
-                    @if (!empty($size_options) && count($size_options) > 0)
-                        @foreach ($size_options as $index => $size)
-                            <button class="size-btn{{ $index === 0 ? ' selected' : '' }}" data-size="{{ $size->size }}">
-                                EU {{ $size->size }}
-                            </button>
-                        @endforeach
-                    @else
-                        <p class="no-size">Size not available</p>
-                    @endif
-                </div>
-
-                <p id="stockInfo" class="stock-info">Stock: -</p>
-
-                <div class="actions">
-                  <button class="add-cart"
-                          id="addToCartBtn"
-                          data-product-id="{{ $product->product_id ?? request()->get('id') }}">
-                      Add To Cart
-                  </button>
-
-                  {{-- <p>User ID: {{ $user_id = Session::get('user_id', 'Guest') }}</p>
-                  <p>Product ID: {{ $product->product_id }}</p>
-                  <p>Wishlisted: {{ $isWishlisted ? 'YES' : 'NO' }}</p> --}}
-                <button class="wishlist-btn" id="wishlistBtn" data-product-id="{{ $product->product_id }}">
-                  <i class="bi {{ $isWishlisted ? 'bi-heart-fill' : 'bi-heart' }}"></i>
-                </button>
+  <div class="product-page">
+      @if ($product)
+          <div class="left-section">
+              <div class="thumbnail-list">
+                  <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="thumbnail active" alt="Tampak Atas">
+                  <img src="{{ asset('image/sepatu/bawah/' . $product->image_bawah) }}" class="thumbnail" alt="Tampak Bawah">
+                  <img src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}" class="thumbnail" alt="Tampak Kiri">
+                  <img src="{{ asset('image/sepatu/kanan/' . $product->image_kanan) }}" class="thumbnail" alt="Tampak Kanan">
               </div>
+          </div>
+
+          <div class="main-image">
+              <div class="circle-bg" style="background-color: {{ $product->color_code_bg }};"></div>
+              <img id="mainShoeImage" src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" alt="{{ $product->product_name }}" />
+          </div>
+
+          <div class="right-section">
+            <p class="category">
+              {{ ucfirst($product->gender) }} {{ $product->category_name }} Shoes
+          </p>
+      
+          {{-- Rating stars di sini --}}
+          <div class="product-rating" title="{{ $product->rating }} out of 5 stars">
+            @php
+              $fullStars = floor(number_format($averageRating, 1));
+              $halfStar = ($averageRating - $fullStars) >= 0.5;
+              $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+            @endphp
+            
+            @for ($i = 0; $i < $fullStars; $i++)
+                <i class="bi bi-star-fill" style="color: black;"></i>
+            @endfor
+            
+            @if ($halfStar)
+                <i class="bi bi-star-half" style="color: black;"></i>
+            @endif
+            
+            @for ($i = 0; $i < $emptyStars; $i++)
+                <i class="bi bi-star" style="color: black;"></i>
+            @endfor
+      
+              <span class="rating-number" style="margin-left: 8px; font-weight: 600;">
+                  {{ number_format($averageRating, 1) }}/5
+              </span>
+          </div>
+      
+          <h1 class="product-name">
+              {!! nl2br(e($product->product_name)) !!}
+          </h1>
+      
+          <p class="price">Rp. {{ number_format($product->price, 0, ',', '.') }}</p>
+
+              <div class="color-options">
+                  @if (!empty($color_options))
+                  @foreach ($color_options as $index => $color)
+                      <div 
+                          class="color-circle{{ $index === 0 ? ' selected' : '' }}"
+                          data-color-code="{{ $color->color_code }}"
+                          data-color-code-bg="{{ $color->color_code }}"
+                          data-image-atas="{{ asset('image/sepatu/atas/' . $color->image_atas) }}"
+                          data-image-bawah="{{ asset('image/sepatu/bawah/' . $color->image_bawah) }}"
+                          data-image-kiri="{{ asset('image/sepatu/kiri/' . $color->image_kiri) }}"
+                          data-image-kanan="{{ asset('image/sepatu/kanan/' . $color->image_kanan) }}"
+                          style="background-color: {{ $color->color_code }};"
+                      ></div>
+                  @endforeach
+                  @endif
+              </div>
+              <p class="size-title">Select Size</p>
+              <div class="size-options">
+                  @if (!empty($size_options) && count($size_options) > 0)
+                      @foreach ($size_options as $index => $size)
+                          <button class="size-btn{{ $index === 0 ? ' selected' : '' }}" data-size="{{ $size->size }}">
+                              EU {{ $size->size }}
+                          </button>
+                      @endforeach
+                  @else
+                      <p class="no-size">Size not available</p>
+                  @endif
+              </div>
+
+              <p id="stockInfo" class="stock-info">Stock: -</p>
+
+              <div class="actions">
+                <button class="add-cart"
+                        id="addToCartBtn"
+                        data-product-id="{{ $product->product_id ?? request()->get('id') }}">
+                    Add To Cart
+                </button>
+
+                {{-- <p>User ID: {{ $user_id = Session::get('user_id', 'Guest') }}</p>
+                <p>Product ID: {{ $product->product_id }}</p>
+                <p>Wishlisted: {{ $isWishlisted ? 'YES' : 'NO' }}</p> --}}
+              <button class="wishlist-btn" id="wishlistBtn" data-product-id="{{ $product->product_id }}">
+                <i class="bi {{ $isWishlisted ? 'bi-heart-fill' : 'bi-heart' }}"></i>
+              </button>
             </div>
-        @else
-            <p>Produk tidak ditemukan.</p>
-        @endif
-    </div>
+          </div>
+      @else
+          <p>Produk tidak ditemukan.</p>
+      @endif
+  </div>
 </div>
+
+<div class="mobile-product-wrapper">
+  <div class="mobile-product-page">
+    @if ($product)
+    <div class="mobile-product-header">
+      <p class="mobile-category">
+        {{ ucfirst($product->gender) }} {{ $product->category_name }} Shoes
+      </p>
+
+      <div class="mobile-product-rating" title="{{ $product->rating }} out of 5 stars">
+        @php
+          $fullStars = floor(number_format($averageRating, 1));
+          $halfStar = ($averageRating - $fullStars) >= 0.5;
+          $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+        @endphp
+
+        @for ($i = 0; $i < $fullStars; $i++)
+          <i class="bi bi-star-fill" style="color: black;"></i>
+        @endfor
+
+        @if ($halfStar)
+          <i class="bi bi-star-half" style="color: black;"></i>
+        @endif
+
+        @for ($i = 0; $i < $emptyStars; $i++)
+          <i class="bi bi-star" style="color: black;"></i>
+        @endfor
+
+        <span class="mobile-rating-number">
+          {{ number_format($averageRating, 1) }}/5
+        </span>
+      </div>
+
+      <h1 class="mobile-product-name">{!! nl2br(e($product->product_name)) !!}</h1>
+    </div>
+
+    <div class="mobile-product-images">
+      <div class="mobile-main-image-wrapper">
+        <div class="mobile-circle-bg" style="background-color: {{ $product->color_code_bg }};"></div>
+        <img id="mainImage" src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" alt="{{ $product->product_name }}">
+      </div>
+      <div class="mobile-thumbnail-list">
+        <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="mobile-thumbnail active" alt="Tampak Atas">
+        <img src="{{ asset('image/sepatu/bawah/' . $product->image_bawah) }}" class="mobile-thumbnail" alt="Tampak Bawah">
+        <img src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}" class="mobile-thumbnail" alt="Tampak Kiri">
+        <img src="{{ asset('image/sepatu/kanan/' . $product->image_kanan) }}" class="mobile-thumbnail" alt="Tampak Kanan">
+      </div>
+    </div>
+
+    <p class="mobile-price">Rp. {{ number_format($product->price, 0, ',', '.') }}</p>
+
+    <div class="mobile-color-options">
+      @if (!empty($color_options))
+        @foreach ($color_options as $index => $color)
+        <div class="mobile-color-circle{{ $index === 0 ? ' selected' : '' }}"
+          data-color-code="{{ $color->color_code }}"
+          data-color-code-bg="{{ $color->color_code }}"
+          data-image-atas="{{ asset('image/sepatu/atas/' . $color->image_atas) }}"
+          data-image-bawah="{{ asset('image/sepatu/bawah/' . $color->image_bawah) }}"
+          data-image-kiri="{{ asset('image/sepatu/kiri/' . $color->image_kiri) }}"
+          data-image-kanan="{{ asset('image/sepatu/kanan/' . $color->image_kanan) }}"
+          style="background-color: {{ $color->color_code }};">
+        </div>
+        @endforeach
+      @endif
+    </div>
+
+    <p class="mobile-size-title">Select Size</p>
+    <div class="mobile-size-options">
+      @if (!empty($size_options) && count($size_options) > 0)
+        @foreach ($size_options as $index => $size)
+          <button class="mobile-size-btn{{ $index === 0 ? ' selected' : '' }}" data-size="{{ $size->size }}">
+            EU {{ $size->size }}
+          </button>
+        @endforeach
+      @else
+        <p class="mobile-no-size">Size not available</p>
+      @endif
+    </div>
+
+    <p id="stockIn" class="mobile-stock-info">Stock: -</p>
+
+    <div class="mobile-actions">
+      <button class="mobile-add-cart"
+              id="addToCartBtn"
+              data-product-id="{{ $product->product_id ?? request()->get('id') }}">
+          Add To Cart
+      </button>
+
+      <button class="mobile-wishlist-btn" id="wishlistBtn" data-product-id="{{ $product->product_id }}">
+        <i class="bi {{ $isWishlisted ? 'bi-heart-fill' : 'bi-heart' }}"></i>
+      </button>
+    </div>
+    @else
+    <p>Produk tidak ditemukan.</p>
+    @endif
+  </div>
+</div>
+
+
+<script>
+  document.addEventListener('DOMContentLoaded', function () {
+    // Data stok yang di-push dari backend melalui Blade
+    const stockData = @json($size_stock);
+  
+    // Inisialisasi warna yang terpilih (ambil dari salah satu, mobile atau desktop)
+    let selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode || 
+                            document.querySelector('.mobile-color-circle.selected')?.dataset.colorCode;
+    let selectedColorCodeBg = document.querySelector('.color-circle.selected')?.dataset.colorCodeBg || 
+                              document.querySelector('.mobile-color-circle.selected')?.dataset.colorCodeBg;
+  
+    if (selectedColorCodeBg) {
+      document.querySelector('.circle-bg') && (document.querySelector('.circle-bg').style.backgroundColor = selectedColorCodeBg);
+      document.querySelector('.mobile-circle-bg') && (document.querySelector('.mobile-circle-bg').style.backgroundColor = selectedColorCodeBg);
+    }
+  
+    // Variabel untuk posisi thumbnail aktif: bisa 'atas', 'bawah', 'kiri', atau 'kanan'
+    let activePosition = 'atas';
+  
+    // Fungsi untuk meng-update tombol ukuran di kedua sisi berdasarkan stok dan warna yang dipilih
+    const updateSizeButtons = () => {
+      // Mobile
+      document.querySelectorAll('.mobile-size-btn').forEach(btn => {
+        const size = btn.dataset.size;
+        const match = stockData.find(item =>
+          item.size.toString() === size &&
+          item.color_code.toLowerCase() === selectedColorCode?.toLowerCase() &&
+          parseInt(item.stock) > 0
+        );
+        if (match) {
+          btn.disabled = false;
+          btn.classList.remove('disabled');
+        } else {
+          btn.disabled = true;
+          btn.classList.remove('selected');
+          btn.classList.add('disabled');
+        }
+      });
+      // Desktop
+      document.querySelectorAll('.size-btn').forEach(btn => {
+        const size = btn.dataset.size;
+        const match = stockData.find(item =>
+          item.size.toString() === size &&
+          item.color_code.toLowerCase() === selectedColorCode?.toLowerCase() &&
+          parseInt(item.stock) > 0
+        );
+        if (match) {
+          btn.disabled = false;
+          btn.classList.remove('disabled');
+        } else {
+          btn.disabled = true;
+          btn.classList.remove('selected');
+          btn.classList.add('disabled');
+        }
+      });
+    };
+  
+    // Fungsi untuk menampilkan informasi stok di kedua tampilan
+    const showStockAlert = () => {
+      const selectedSize = document.querySelector('.mobile-size-btn.selected')?.dataset.size || 
+                           document.querySelector('.size-btn.selected')?.dataset.size;
+      if (selectedSize && selectedColorCode) {
+        const match = stockData.find(item =>
+          item.size.toString() === selectedSize.toString() &&
+          item.color_code.toLowerCase() === selectedColorCode.toLowerCase()
+        );
+        const stock = match ? match.stock : 0;
+        document.getElementById('stockIn').textContent = 'Stock: ' + stock;
+        document.getElementById('stockInfo').textContent = 'Stock: ' + stock;
+      } else {
+        document.getElementById('stockIn').textContent = 'Stock: -';
+        document.getElementById('stockInfo').textContent = 'Stock: -';
+      }
+    };
+  
+    // Fungsi fade untuk mengganti gambar utama dengan transisi
+    const changeMainImageWithFade = (imgElement, newSrc) => {
+      imgElement.classList.add('fade-out');
+      setTimeout(() => {
+        imgElement.src = newSrc;
+        imgElement.onload = () => {
+          imgElement.classList.remove('fade-out');
+        };
+      }, 200);
+    };
+  
+    // -------------------------------
+    // Sinkronisasi Warna (Color Selector)
+    // -------------------------------
+    // Fungsi update warna berdasarkan index (karena urutan antara desktop dan mobile diharapkan sama)
+    const updateColorByIndex = (index) => {
+      const mobileCircles = document.querySelectorAll('.mobile-color-circle');
+      const desktopCircles = document.querySelectorAll('.color-circle');
+      if (!mobileCircles[index] && !desktopCircles[index]) return;
+  
+      // Bersihkan kelas 'selected'
+      mobileCircles.forEach(c => c.classList.remove('selected'));
+      desktopCircles.forEach(c => c.classList.remove('selected'));
+  
+      // Tambahkan selected ke kedua sisi
+      if (mobileCircles[index]) mobileCircles[index].classList.add('selected');
+      if (desktopCircles[index]) desktopCircles[index].classList.add('selected');
+  
+      // Ambil data dari salah satu (misalnya desktop)
+      const circle = desktopCircles[index] || mobileCircles[index];
+      selectedColorCode = circle.dataset.colorCode;
+      selectedColorCodeBg = circle.dataset.colorCodeBg;
+  
+      // Update background di kedua sisi
+      document.querySelector('.circle-bg') && (document.querySelector('.circle-bg').style.backgroundColor = selectedColorCodeBg);
+      document.querySelector('.mobile-circle-bg') && (document.querySelector('.mobile-circle-bg').style.backgroundColor = selectedColorCodeBg);
+  
+      updateSizeButtons();
+      showStockAlert();
+  
+      // Update gambar (thumbnail & main image)
+      const selectedImage = stockData.find(item =>
+        item.color_code.toLowerCase() === selectedColorCode.toLowerCase()
+      );
+      if (selectedImage) {
+        const basePathAtas   = "{{ asset('image/sepatu/atas') }}/";
+        const basePathBawah  = "{{ asset('image/sepatu/bawah') }}/";
+        const basePathKiri   = "{{ asset('image/sepatu/kiri') }}/";
+        const basePathKanan  = "{{ asset('image/sepatu/kanan') }}/";
+  
+        // Update thumbnail mobile dan desktop
+        const mobileThumbs = document.querySelectorAll('.mobile-thumbnail');
+        const desktopThumbs = document.querySelectorAll('.thumbnail');
+        if(mobileThumbs.length >= 4) {
+          mobileThumbs[0].src = basePathAtas + selectedImage.image_atas;
+          mobileThumbs[1].src = basePathBawah + selectedImage.image_bawah;
+          mobileThumbs[2].src = basePathKiri + selectedImage.image_kiri;
+          mobileThumbs[3].src = basePathKanan + selectedImage.image_kanan;
+        }
+        if(desktopThumbs.length >= 4) {
+          desktopThumbs[0].src = basePathAtas + selectedImage.image_atas;
+          desktopThumbs[1].src = basePathBawah + selectedImage.image_bawah;
+          desktopThumbs[2].src = basePathKiri + selectedImage.image_kiri;
+          desktopThumbs[3].src = basePathKanan + selectedImage.image_kanan;
+        }
+  
+        // Tentukan sumber gambar baru berdasarkan posisi aktif
+        const imageSrcObj = {
+          atas: mobileThumbs[0].src,
+          bawah: mobileThumbs[1].src,
+          kiri: mobileThumbs[2].src,
+          kanan: mobileThumbs[3].src
+        };
+        const newSrc = imageSrcObj[activePosition] || mobileThumbs[0].src;
+        // Update main image untuk kedua sisi
+        const mobileMainImg = document.getElementById('mainImage');
+        const desktopMainImg = document.getElementById('mainShoeImage');
+        changeMainImageWithFade(mobileMainImg, newSrc);
+        changeMainImageWithFade(desktopMainImg, newSrc);
+      }
+    };
+  
+    // Pasang event listener pada kedua sisi untuk warna
+    document.querySelectorAll('.mobile-color-circle').forEach((el, index) => {
+      el.addEventListener('click', function () {
+        updateColorByIndex(index);
+      });
+    });
+    document.querySelectorAll('.color-circle').forEach((el, index) => {
+      el.addEventListener('click', function () {
+        updateColorByIndex(index);
+      });
+    });
+  
+    // -------------------------------
+    // Sinkronisasi Thumbnail
+    // -------------------------------
+    // Saat klik pada thumbnail mobile
+    document.querySelectorAll('.mobile-thumbnail').forEach((thumb, index) => {
+      thumb.addEventListener('click', function () {
+        document.querySelectorAll('.mobile-thumbnail').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        document.querySelectorAll('.thumbnail')[index].classList.add('active');
+        activePosition = ['atas', 'bawah', 'kiri', 'kanan'][index];
+  
+        const mobileMainImg = document.getElementById('mainImage');
+        const desktopMainImg = document.getElementById('mainShoeImage');
+        mobileMainImg.src = this.src;
+        desktopMainImg.src = this.src;
+  
+        const altText = this.alt.toLowerCase();
+        const angle = altText.includes('kiri') ? '-28deg' : altText.includes('kanan') ? '28deg' : '0deg';
+        mobileMainImg.style.transform = `rotate(${angle})`;
+        desktopMainImg.style.transform = `rotate(${angle})`;
+      });
+    });
+    // Saat klik pada thumbnail desktop
+    document.querySelectorAll('.thumbnail').forEach((thumb, index) => {
+      thumb.addEventListener('click', function () {
+        document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.mobile-thumbnail').forEach(t => t.classList.remove('active'));
+        this.classList.add('active');
+        activePosition = ['atas', 'bawah', 'kiri', 'kanan'][index];
+        document.querySelectorAll('.mobile-thumbnail')[index].classList.add('active');
+        const mobileMainImg = document.getElementById('mainImage');
+        const desktopMainImg = document.getElementById('mainShoeImage');
+        mobileMainImg.src = this.src;
+        desktopMainImg.src = this.src;
+  
+        const altText = this.alt.toLowerCase();
+        const angle = altText.includes('kiri') ? '-28deg' : altText.includes('kanan') ? '28deg' : '0deg';
+        mobileMainImg.style.transform = `rotate(${angle})`;
+        desktopMainImg.style.transform = `rotate(${angle})`;
+      });
+    });
+  
+    // -------------------------------
+    // Sinkronisasi Ukuran
+    // -------------------------------
+    // Fungsi update ukuran berdasarkan index (sama untuk desktop dan mobile)
+    const updateSelectedSize = (index) => {
+      const mobileSizes = document.querySelectorAll('.mobile-size-btn');
+      const desktopSizes = document.querySelectorAll('.size-btn');
+      mobileSizes.forEach(btn => btn.classList.remove('selected'));
+      desktopSizes.forEach(btn => btn.classList.remove('selected'));
+      if (mobileSizes[index]) mobileSizes[index].classList.add('selected');
+      if (desktopSizes[index]) desktopSizes[index].classList.add('selected');
+      showStockAlert();
+    };
+  
+    document.querySelectorAll('.mobile-size-btn').forEach((btn, index) => {
+      btn.addEventListener('click', () => updateSelectedSize(index));
+    });
+    document.querySelectorAll('.size-btn').forEach((btn, index) => {
+      btn.addEventListener('click', () => updateSelectedSize(index));
+    });
+  
+    // Inisialisasi tombol ukuran (update dan klik pertama yang aktif)
+    updateSizeButtons();
+    document.querySelector('.mobile-size-btn:not([disabled])')?.click();
+    document.querySelector('.size-btn:not([disabled])')?.click();
+  
+    // -------------------------------
+    // Wishlist (contoh: untuk mobile saja, implementasi sync opsional)
+    // -------------------------------
+    document.querySelectorAll('.mobile-wishlist-btn').forEach(button => {
+  button.addEventListener('click', function () {
+    const productId = this.dataset.productId;
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const icon = this.querySelector('i');
+    const isWishlisted = icon.classList.contains('bi-heart-fill');
+    const url = isWishlisted ? '/wishlist/remove' : '/wishlist/add';
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': token
+      },
+      body: JSON.stringify({ product_id: productId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Toggle ikon pada mobile
+        this.classList.toggle('active');
+        icon.classList.toggle('bi-heart');
+        icon.classList.toggle('bi-heart-fill');
+
+        const desktopBtn = document.querySelector(`.wishlist-btn[data-product-id="${productId}"]`);
+        if (desktopBtn) {
+          const desktopIcon = desktopBtn.querySelector('i');
+          desktopBtn.classList.toggle('active', icon.classList.contains('bi-heart-fill'));
+          desktopIcon.classList.remove('bi-heart', 'bi-heart-fill');
+          desktopIcon.classList.add(icon.classList.contains('bi-heart-fill') ? 'bi-heart-fill' : 'bi-heart');
+        }
+      } else {
+        alert(data.message || 'Gagal mengubah wishlist.');
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Terjadi kesalahan saat mengubah wishlist.');
+    });
+  });
+});
+
+document.querySelectorAll('.wishlist-btn').forEach(button => {
+  button.addEventListener('click', function () {
+    const productId = this.dataset.productId;
+    const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+    const icon = this.querySelector('i');
+    const isWishlisted = icon.classList.contains('bi-heart-fill');
+    const url = isWishlisted ? '/wishlist/remove' : '/wishlist/add';
+
+    fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'X-CSRF-TOKEN': token
+      },
+      body: JSON.stringify({ product_id: productId })
+    })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        // Toggle ikon pada mobile
+        this.classList.toggle('active');
+        icon.classList.toggle('bi-heart');
+        icon.classList.toggle('bi-heart-fill');
+
+        const desktopBtn = document.querySelector(`.mobile-wishlist-btn[data-product-id="${productId}"]`);
+        if (desktopBtn) {
+          const desktopIcon = desktopBtn.querySelector('i');
+          desktopBtn.classList.toggle('active', icon.classList.contains('bi-heart-fill'));
+          desktopIcon.classList.remove('bi-heart', 'bi-heart-fill');
+          desktopIcon.classList.add(icon.classList.contains('bi-heart-fill') ? 'bi-heart-fill' : 'bi-heart');
+        }
+      } else {
+        alert(data.message || 'Gagal mengubah wishlist.');
+      }
+    })
+    .catch(error => {
+      console.error(error);
+      alert('Terjadi kesalahan saat mengubah wishlist.');
+    });
+  });
+});
+
+  
+    // -------------------------------
+    // Add to Cart (menggunakan mobile sebagai basis)
+    // -------------------------------
+    document.querySelectorAll('.mobile-add-cart').forEach(button => {
+      button.addEventListener('click', function () {
+        const productId = this.dataset.productId;
+        const selectedSize = document.querySelector('.mobile-size-btn.selected')?.dataset.size;
+        const selectedColorCode = document.querySelector('.mobile-color-circle.selected')?.dataset.colorCode;
+  
+        if (!selectedSize || !selectedColorCode) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'Oops!',
+            text: 'Silakan pilih ukuran dan warna terlebih dahulu.',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'OK'
+          });
+          return;
+        }
+  
+        const formData = new FormData();
+        formData.append('product_id', productId);
+        formData.append('size', selectedSize);
+        formData.append('color_code', selectedColorCode);
+  
+        fetch('/cart/add', {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+          },
+          body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+          if (data.success) {
+            Swal.fire({
+              icon: 'success',
+              title: 'Berhasil!',
+              text: 'Produk berhasil ditambahkan ke keranjang!',
+              confirmButtonColor: '#133052',
+              confirmButtonText: 'OK'
+            });
+          } else {
+            Swal.fire({
+              icon: 'error',
+              title: 'Gagal!',
+              text: data.message || 'Gagal menambahkan produk ke keranjang.',
+              confirmButtonColor: '#d33',
+              confirmButtonText: 'OK'
+            });
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Kesalahan',
+            text: 'Terjadi kesalahan saat menambahkan produk ke keranjang.',
+            confirmButtonColor: '#d33',
+            confirmButtonText: 'OK'
+          });
+        });
+      });
+    });
+
+    document.querySelectorAll('.add-cart').forEach(button => {
+    button.addEventListener('click', function () {
+        const productId = this.dataset.productId;
+        const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
+        const selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
+
+        if (!selectedSize || !selectedColorCode) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Oops!',
+                text: 'Silakan pilih ukuran dan warna terlebih dahulu.',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+            return;
+        }
+
+        const formData = new FormData();
+        formData.append('product_id', productId);
+        formData.append('size', selectedSize);
+        formData.append('color_code', selectedColorCode);
+
+        fetch('/cart/add', {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: formData
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Berhasil!',
+                    text: 'Produk berhasil ditambahkan ke keranjang!',
+                    confirmButtonColor: '#133052',
+                    confirmButtonText: 'Lanjut Belanja'
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Gagal!',
+                    text: data.message || 'Terjadi kesalahan saat menambahkan ke keranjang.',
+                    confirmButtonColor: '#d33',
+                    confirmButtonText: 'Coba Lagi'
+                });
+            }
+        })
+        .catch(err => {
+            console.error('Fetch Error:', err);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'Terjadi kesalahan koneksi.',
+                confirmButtonColor: '#d33',
+                confirmButtonText: 'OK'
+            });
+        });
+    });
+});
+  
+    // -------------------------------
+    // Replace Feather Icons (jika digunakan)
+    // -------------------------------
+    if (typeof feather !== 'undefined') {
+      feather.replace();
+    }
+  });
+  </script>
 
 <div class="you-may-also-like-section">
   <h2 class="text-xl font-semibold mb-4">You May Also Like</h2>
@@ -610,28 +1523,23 @@ body {
             <p class="text-lg text-gray-800">Overall Rating</p>
             <p class="text-5xl font-bold leading-tight">{{ number_format($averageRating, 1) }}</p>
             <div class="flex items-center gap-1 mb-2">
-                @php
-                    $fullStars = floor($averageRating);
-                    $emptyStars = 5 - $fullStars;
-                @endphp
-                @php
-                $fullStars = floor(number_format($averageRating, 1));
-                $halfStar = ($product->rating - $fullStars) >= 0.5;
-                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+              @php
+              $fullStars = floor(number_format($averageRating, 1));
+              $halfStar = ($averageRating - $fullStars) >= 0.5;
+              $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
             @endphp
             
-            <span class="text-yellow-400 text-xl">
-                @for ($i = 0; $i < $fullStars; $i++)
-                    <i class="bi bi-star-fill" style="color: black;"></i>
-                @endfor
+            @for ($i = 0; $i < $fullStars; $i++)
+                <i class="bi bi-star-fill" style="color: black;"></i>
+            @endfor
             
-                @if ($halfStar)
-                    <i class="bi bi-star-half" style="color: black;"></i>
-                @endif
+            @if ($halfStar)
+                <i class="bi bi-star-half" style="color: black;"></i>
+            @endif
             
-                @for ($i = 0; $i < $emptyStars; $i++)
-                    <i class="bi bi-star" style="color: black;"></i>
-                @endfor
+            @for ($i = 0; $i < $emptyStars; $i++)
+                <i class="bi bi-star" style="color: black;"></i>
+            @endfor
             </span>
             </div>
         </div>
@@ -877,281 +1785,4 @@ body {
 <script>
   feather.replace();
 </script>
-<script>
-
-document.addEventListener('DOMContentLoaded', function () {
-    const stockData = @json($size_stock);
-    let selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
-    let selectedColorCodeBg = document.querySelector('.color-circle.selected')?.dataset.colorCodeBg;
-
-    if (selectedColorCodeBg) {
-        document.querySelector('.circle-bg').style.backgroundColor = selectedColorCodeBg;
-    }
-
-    const updateSizeButtons = () => {
-        document.querySelectorAll('.size-btn').forEach(btn => {
-            const size = btn.dataset.size;
-            const match = stockData.find(item =>
-    item.size.toString() === size &&
-    item.color_code.toLowerCase() === selectedColorCode.toLowerCase() &&
-    parseInt(item.stock) > 0
-);
-
-            if (match) {
-                btn.disabled = false;
-                btn.classList.remove('disabled');
-            } else {
-                btn.disabled = true;
-                btn.classList.remove('selected');
-                btn.classList.add('disabled');
-            }
-        });
-    };
-
-    const showStockAlert = () => {
-        const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
-
-        if (selectedSize && selectedColorCode) {
-            const match = stockData.find(item =>
-    item.size.toString() === selectedSize.toString() &&
-    item.color_code.toLowerCase() === selectedColorCode.toLowerCase()
-);
-
-            if (match) {
-                document.getElementById('stockInfo').textContent = 'Stock: ' + match.stock;
-            } else {
-                document.getElementById('stockInfo').textContent = 'Stock: 0';
-            }
-        } else {
-            document.getElementById('stockInfo').textContent = 'Stock: -';
-        }
-    };
-
-    // Event listener warna
-    document.querySelectorAll('.color-circle').forEach(el => {
-        el.addEventListener('click', function () {
-            document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
-            this.classList.add('selected');
-            selectedColorCode = this.dataset.colorCode;
-            selectedColorCodeBg = this.dataset.colorCodeBg;
-
-            // Mengubah warna background circle-bg sesuai dengan color_code_bg yang dipilih
-            document.querySelector('.circle-bg').style.backgroundColor = selectedColorCodeBg;
-
-            updateSizeButtons();
-            showStockAlert();
-        });
-    });
-
-    let activePosition = 'atas'; // posisi terakhir dilihat (default "atas")
-
-    // Data gambar (dari PHP)
-    const imageSet = <?= json_encode($size_stock); ?>;
-    const mainImage = document.getElementById('mainShoeImage');
-    const thumbnails = document.querySelectorAll('.thumbnail');
-
-    document.querySelectorAll('.color-circle').forEach(el => {
-        el.addEventListener('click', function () {
-            document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
-            this.classList.add('selected');
-
-            selectedColorCode = this.dataset.colorCode;
-            selectedColorCodeBg = this.dataset.colorCodeBg;
-
-            // Mengubah warna background circle-bg sesuai dengan color_code_bg yang dipilih
-            document.querySelector('.circle-bg').style.backgroundColor = selectedColorCodeBg;
-
-            // Cari gambar yang sesuai dengan warna yang dipilih
-            const selectedImage = imageSet.find(item => item.color_code === selectedColorCode);
-
-            if (selectedImage) {
-              const basePathAtas = "{{ asset('image/sepatu/atas') }}/";
-              const basePathBawah = "{{ asset('image/sepatu/bawah') }}/";
-              const basePathKiri = "{{ asset('image/sepatu/kiri') }}/";
-              const basePathKanan = "{{ asset('image/sepatu/kanan') }}/";
-
-              thumbnails[0].src = basePathAtas + selectedImage.image_atas;
-              thumbnails[1].src = basePathBawah + selectedImage.image_bawah;
-              thumbnails[2].src = basePathKiri + selectedImage.image_kiri;
-              thumbnails[3].src = basePathKanan + selectedImage.image_kanan;
-
-                function changeMainImageWithFade(newSrc) {
-    mainImage.classList.add('fade-out');
-    setTimeout(() => {
-        mainImage.src = newSrc;
-        mainImage.onload = () => {
-            mainImage.classList.remove('fade-out');
-        };
-    }, 200); // beri jeda 200ms untuk efek fade out
-}
-switch (activePosition) {
-    case 'atas':
-        changeMainImageWithFade(thumbnails[0].src);
-        break;
-    case 'bawah':
-        changeMainImageWithFade(thumbnails[1].src);
-        break;
-    case 'kiri':
-        changeMainImageWithFade(thumbnails[2].src);
-        break;
-    case 'kanan':
-        changeMainImageWithFade(thumbnails[3].src);
-        break;
-}
-            }
-        });
-    });
-
-    thumbnails.forEach((thumb, index) => {
-        thumb.addEventListener('click', function () {
-            thumbnails.forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-
-            activePosition = ['atas', 'bawah', 'kiri', 'kanan'][index];
-
-            mainImage.src = this.src;
-        });
-    });
-
-    // Event listener size
-    document.querySelectorAll('.size-btn').forEach(el => {
-        el.addEventListener('click', function () {
-            if (this.disabled) return;
-            document.querySelectorAll('.size-btn').forEach(s => s.classList.remove('selected'));
-            this.classList.add('selected');
-            showStockAlert();
-        });
-    });
-
-    updateSizeButtons();
-    document.querySelector('.size-btn:not([disabled])')?.click();
-
-    // Thumbnail image switch
-    document.querySelectorAll('.thumbnail').forEach(thumbnail => {
-        thumbnail.addEventListener('click', function () {
-            const mainImg = document.getElementById('mainShoeImage');
-            mainImg.src = this.src;
-
-            document.querySelectorAll('.thumbnail').forEach(t => t.classList.remove('active'));
-            this.classList.add('active');
-
-            const altText = this.alt.toLowerCase();
-            if (altText.includes("kiri")) {
-                mainImg.style.transform = "rotate(-28deg)";
-            } else if (altText.includes("kanan")) {
-                mainImg.style.transform = "rotate(28deg)";
-            } else {
-                mainImg.style.transform = "rotate(0deg)";
-            }
-        });
-    });
-
-    // Feather icons replace
-    if (typeof feather !== 'undefined') {
-        feather.replace();
-    }
-});
-
-</script>
-<script>
-document.addEventListener('DOMContentLoaded', function () {
-    document.querySelectorAll('.wishlist-btn').forEach(button => {
-        button.addEventListener('click', function () {
-            const productId = this.dataset.productId;
-            const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            const icon = this.querySelector('i');
-            const isWishlisted = icon.classList.contains('bi-heart-fill');
-            const url = isWishlisted ? '/wishlist/remove' : '/wishlist/add';
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': token
-                },
-                body: JSON.stringify({ product_id: productId })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    this.classList.toggle('active');
-                    icon.classList.toggle('bi-heart');
-                    icon.classList.toggle('bi-heart-fill');
-                } else {
-                    alert(data.message || 'Gagal mengubah wishlist.');
-                }
-            })
-            .catch(error => {
-                console.error(error);
-                alert('Terjadi kesalahan saat mengubah wishlist.');
-            });
-        });
-    });
-});
-</script>
-
-<script>
-document.querySelectorAll('.add-cart').forEach(button => {
-    button.addEventListener('click', function () {
-        const productId = this.dataset.productId;
-        const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
-        const selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
-
-        if (!selectedSize || !selectedColorCode) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops!',
-                text: 'Silakan pilih ukuran dan warna terlebih dahulu.',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('product_id', productId);
-        formData.append('size', selectedSize);
-        formData.append('color_code', selectedColorCode);
-
-        fetch('/cart/add', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Produk berhasil ditambahkan ke keranjang!',
-                    confirmButtonColor: '#133052',
-                    confirmButtonText: 'Lanjut Belanja'
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Gagal!',
-                    text: data.message || 'Terjadi kesalahan saat menambahkan ke keranjang.',
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'Coba Lagi'
-                });
-            }
-        })
-        .catch(err => {
-            console.error('Fetch Error:', err);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'Terjadi kesalahan koneksi.',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-        });
-    });
-});
-</script>
-</body>
-</html>
 @endsection
