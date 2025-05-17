@@ -17,7 +17,7 @@
             <p class="mb-1">Order ID: {{ $order->id }}</p>
             <p class="mb-1">Order Date: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
             <p class="mb-1">Items: {{ $order->item_count }}</p>
-            <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p>
+            <p class="mb-1">Total: Rp. {{ number_format($order->total, 0, ',', '.') }}</p>
             <div class="mb-1">
               Status:
               @if ($order->status == 'paid')
@@ -40,7 +40,7 @@
             <div class="mt-2">
             <div class="mt-2 d-flex align-items-center gap-2 flex-wrap justify-content-end">
               @if ($order->payment_url && $order->status == 'pending')
-                  <a href="{{ $order->payment_url }}" target="_blank" class="status-btn pay-now-btn" style="margin-top: -140px;">
+                  <a href="{{ $order->payment_url }}" target="_blank" class="status-btn pay-now-btn" style="margin-top: -120px;">
                       Pay Now
                   </a>
               @endif
@@ -69,7 +69,7 @@
                 </div>
                 <div class="product-qty-price ms-auto text-end">
                   <small>x {{ $detail->quantity }}</small><br>
-                  Rp. {{ number_format($detail->unit_price, 2, ',', '.') }}
+                  Rp. {{ number_format($detail->unit_price, 0, ',', '.') }}
                 </div>
               </div>
             @endforeach

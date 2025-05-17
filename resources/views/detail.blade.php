@@ -17,6 +17,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
     /* CAROUSEL */
@@ -388,6 +389,49 @@
 .filter-group.warna.active .filter-content {
     max-height: 200px;
 }
+
+#searchToggle {
+    display: none; /* default sembunyi di desktop */
+    background: none;
+    border: none;
+    font-size: 20px;
+    cursor: pointer;
+    padding: 8px;
+    margin-right: 5px;
+}
+
+/* === Mobile only === */
+@media (max-width: 768px) {
+    .filter-bar {
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        overflow-x: auto;
+    }
+
+    #searchToggle {
+        display: inline-block; /* tampilkan hanya saat mobile */
+    }
+
+    #searchInput {
+        display: none;
+        flex-shrink: 0;
+        width: 200px;
+        transition: all 0.3s ease;
+    }
+
+    .filter-bar.show-search #searchInput {
+        display: inline-block;
+        opacity: 1;
+        width: 200px;
+        margin-right: 10px;
+    }
+
+    .select-wrapper {
+    flex-shrink: 0;
+    min-width: 70px; /* atau lebih besar jika perlu */
+}
+}
+
   </style>
 </head>
 <body>
@@ -465,95 +509,170 @@
 <form method="GET" id="filterForm">
 
     {{-- Filter Bar: Search, Sort, Price Slider --}}
-    <div class="filter-bar">
-        <input type="text" name="search" placeholder="Search" value="{{ request('search') }}" id="searchInput">
+<div class="filter-bar">
+    <!-- Tombol toggle hanya akan tampil di mobile -->
+    <button type="button" id="searchToggle" aria-label="Toggle search" class="d-inline-block d-md-none">
+        <i class="bi bi-search"></i>
+    </button>
 
-        <div class="select-wrapper">
-            <select name="sort" id="sortSelect" class="select">
-                <option value="">Sort By</option>
-                <option value="newest" {{ request('sort') == 'newest' ? 'selected' : '' }}>Newest</option>
-                <option value="price_asc" {{ request('sort') == 'price_asc' ? 'selected' : '' }}>Price: Low to High</option>
-                <option value="price_desc" {{ request('sort') == 'price_desc' ? 'selected' : '' }}>Price: High to Low</option>
-            </select>
-        </div>
+    <input type="text" name="search" placeholder="Search" id="searchInput" />
 
-        <div class="price-filter">
-            <label>Price</label>
-            <div class="slider-values">
-                <span>Rp <span id="minPriceVal">{{ request('min', 500) }}k</span></span>
-                <span>Rp <span id="maxPriceVal">{{ request('max', 8000) }}k</span></span>
-            </div>
-            <input type="range" name="min" id="minPrice" min="500" max="10000" value="{{ request('min', 500) }}" step="100">
-            <input type="range" name="max" id="maxPrice" min="500" max="10000" value="{{ request('max', 8000) }}" step="100">
-        </div>
+    <div class="select-wrapper">
+        <select name="sort" id="sortSelect" class="select">
+            <option value="">Sort By</option>
+            <option value="newest">Newest</option>
+            <option value="price_asc">Price: Low to High</option>
+            <option value="price_desc">Price: High to Low</option>
+        </select>
     </div>
 
-    <div class="product-container">
-        <aside class="filter-sidebar">
-            {{-- Kategori --}}
-            <div class="filter-group">
-                <div class="filter-title" onclick="toggleFilter(this)">Kategori</div>
-                <div class="filter-content">
-                    @foreach ($categories as $cat)
-                        <label>
-                            <input type="checkbox" name="category[]" value="{{ $cat }}"
-                                {{ in_array($cat, request()->input('category', [])) ? 'checked' : '' }}>
-                            {{ $cat }}
-                        </label><br>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- Warna --}}
-            <div class="filter-group warna">
-                <div class="filter-title" onclick="toggleFilter(this)">Warna</div>
-                <div class="filter-content">
-                    @foreach ($colors as $color)
-                        <label>
-                            <input type="checkbox" name="color[]" value="{{ $color->color_code }}"
-                                {{ in_array($color->color_code, request()->input('color', [])) ? 'checked' : '' }}>
-                            <span class="color-box" style="background-color: {{ $color->color_code }};"></span>
-                            {{ $color->color_name }}
-                        </label><br>
-                    @endforeach
-                </div>
-            </div>
-
-
-            {{-- Ukuran --}}
-            <div class="filter-group">
-                <div class="filter-title" onclick="toggleFilter(this)">Ukuran</div>
-                <div class="filter-content">
-                    @foreach ($sizes as $size)
-                        <label>
-                            <input type="checkbox" name="size[]" value="{{ $size->size }}"
-                                {{ in_array($size->size, request()->input('size', [])) ? 'checked' : '' }}>
-                            {{ $size->size }}
-                        </label><br>
-                    @endforeach
-                </div>
-            </div>
-
-            {{-- Gender --}}
-            <div class="filter-group">
-                <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
-                <div class="filter-content">
-                    @foreach ($genders as $gender)
-                        <label>
-                            <input type="checkbox" name="gender[]" value="{{ $gender }}"
-                                {{ in_array($gender, request()->input('gender', [])) ? 'checked' : '' }}>
-                            {{ $gender }}
-                        </label><br>
-                    @endforeach
-                </div>
-            </div>
-        </aside>
-
-        {{-- Product results --}}
-        <main id="productResults">
-            @include('partials.product_list', ['products' => $products])
-        </main>
+    <div class="price-filter">
+        <label>Price</label>
+        <div class="slider-values">
+            <span>Rp <span id="minPriceVal">500k</span></span>
+            <span>Rp <span id="maxPriceVal">8000k</span></span>
+        </div>
+        <input type="range" name="min" id="minPrice" min="500" max="10000" value="500" step="100" />
+        <input type="range" name="max" id="maxPrice" min="500" max="10000" value="8000" step="100" />
     </div>
+</div>
+{{-- Filter Icon untuk Mobile --}}
+<div class="d-flex justify-content-end d-md-none mb-3">
+    <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilter">
+        <i class="bi bi-filter"></i>
+    </button>
+</div>
+
+<div class="product-container d-flex">
+    {{-- Sidebar (hanya tampil di desktop) --}}
+    <aside class="filter-sidebar d-none d-md-block me-3">
+        {{-- Kategori --}}
+        <div class="filter-group">
+            <div class="filter-title" onclick="toggleFilter(this)">Kategori</div>
+            <div class="filter-content">
+                @foreach ($categories as $cat)
+                    <label>
+                        <input type="checkbox" name="category[]" value="{{ $cat }}"
+                            {{ in_array($cat, request()->input('category', [])) ? 'checked' : '' }}>
+                        {{ $cat }}
+                    </label><br>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Warna --}}
+        <div class="filter-group warna">
+            <div class="filter-title" onclick="toggleFilter(this)">Warna</div>
+            <div class="filter-content">
+                @foreach ($colors as $color)
+                    <label>
+                        <input type="checkbox" name="color[]" value="{{ $color->color_code }}"
+                            {{ in_array($color->color_code, request()->input('color', [])) ? 'checked' : '' }}>
+                        <span class="color-box" style="background-color: {{ $color->color_code }};"></span>
+                        {{ $color->color_name }}
+                    </label><br>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Ukuran --}}
+        <div class="filter-group">
+            <div class="filter-title" onclick="toggleFilter(this)">Ukuran</div>
+            <div class="filter-content">
+                @foreach ($sizes as $size)
+                    <label>
+                        <input type="checkbox" name="size[]" value="{{ $size->size }}"
+                            {{ in_array($size->size, request()->input('size', [])) ? 'checked' : '' }}>
+                        {{ $size->size }}
+                    </label><br>
+                @endforeach
+            </div>
+        </div>
+
+        {{-- Gender --}}
+        <div class="filter-group">
+            <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
+            <div class="filter-content">
+                @foreach ($genders as $gender)
+                    <label>
+                        <input type="checkbox" name="gender[]" value="{{ $gender }}"
+                            {{ in_array($gender, request()->input('gender', [])) ? 'checked' : '' }}>
+                        {{ $gender }}
+                    </label><br>
+                @endforeach
+            </div>
+        </div>
+    </aside>
+
+    {{-- Product Results --}}
+    <main id="productResults" class="flex-grow-1">
+        @include('partials.product_list', ['products' => $products])
+    </main>
+</div>
+
+{{-- Offcanvas untuk Mobile --}}
+<div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilter">
+    <div class="offcanvas-header">
+        <h5 class="offcanvas-title">Filter</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+        {{-- COPY ISI FILTER DARI SIDEBAR --}}
+        <div class="filter-group">
+            <div class="filter-title" onclick="toggleFilter(this)">Kategori</div>
+            <div class="filter-content">
+                @foreach ($categories as $cat)
+                    <label>
+                        <input type="checkbox" name="category[]" value="{{ $cat }}"
+                            {{ in_array($cat, request()->input('category', [])) ? 'checked' : '' }}>
+                        {{ $cat }}
+                    </label><br>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="filter-group warna">
+            <div class="filter-title" onclick="toggleFilter(this)">Warna</div>
+            <div class="filter-content">
+                @foreach ($colors as $color)
+                    <label>
+                        <input type="checkbox" name="color[]" value="{{ $color->color_code }}"
+                            {{ in_array($color->color_code, request()->input('color', [])) ? 'checked' : '' }}>
+                        <span class="color-box" style="background-color: {{ $color->color_code }};"></span>
+                        {{ $color->color_name }}
+                    </label><br>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <div class="filter-title" onclick="toggleFilter(this)">Ukuran</div>
+            <div class="filter-content">
+                @foreach ($sizes as $size)
+                    <label>
+                        <input type="checkbox" name="size[]" value="{{ $size->size }}"
+                            {{ in_array($size->size, request()->input('size', [])) ? 'checked' : '' }}>
+                        {{ $size->size }}
+                    </label><br>
+                @endforeach
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
+            <div class="filter-content">
+                @foreach ($genders as $gender)
+                    <label>
+                        <input type="checkbox" name="gender[]" value="{{ $gender }}"
+                            {{ in_array($gender, request()->input('gender', [])) ? 'checked' : '' }}>
+                        {{ $gender }}
+                    </label><br>
+                @endforeach
+            </div>
+        </div>
+    </div>
+</div>
+
 
     <button type="submit" style="display:none;"></button>
 </form>
@@ -622,6 +741,18 @@ function toggleFilter(element) {
     const group = element.parentElement;
     group.classList.toggle('active');
 }
+
+const searchToggle = document.getElementById('searchToggle');
+const filterBar = document.querySelector('.filter-bar');
+const searchInput = document.getElementById('searchInput');
+
+searchToggle.addEventListener('click', () => {
+    filterBar.classList.toggle('show-search');
+    if (filterBar.classList.contains('show-search')) {
+        searchInput.focus();
+    }
+});
+
 </script>
 
 </body>

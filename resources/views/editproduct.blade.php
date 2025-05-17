@@ -294,7 +294,7 @@
       @method('PUT')
       <input type="hidden" name="color_id" value="{{ $color_id }}">
 
-      <input type="hidden" name="ukuran" id="selectedSize" value="{{ $product->size }}">
+      {{-- <input type="hidden" name="ukuran" id="selectedSize" value="{{ $product->size }}"> --}}
 
       <div class="form-group">
         <label>Name</label>
