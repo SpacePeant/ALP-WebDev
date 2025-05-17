@@ -2,14 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Order;
-use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
-{
-        public function adminIndex(Request $request)
+{public function adminIndex(Request $request)
         {
         // Ambil semua order (ringkasan)
         $orders = DB::table('orders as o')
@@ -50,60 +48,50 @@ class OrderController extends Controller
 
         return view('orderadmin', compact('orders', 'orderDetails', 'completedOrders', 'pendingOrders', 'orderId'));
     }
-
+    
     public function index(Request $request)
-{
-    // $userId = $request->session()->get('user_id', $request->query('user_id', 1));
-    // $customer = Customer::find($userId);
+    {
+        $customer_id = Session::get('user_id') ?? $request->query('user_id', 1);
 
-    //  $orders = Order::with([
-    //     'details.product',
-    //     'details.variant',
-    //     'details.color',
-    //     'details.colorImage'
-    // ])
-    // ->where('customer_id', $userId)
-    // ->orderByDesc('id')
-    // ->get();
+        // Ambil data customer
+        $customer = DB::table('customers')
+            ->select('name', 'phone_number')
+            ->where('id', $customer_id)
+            ->first();
 
-    //  $orderDetails = [];
+        if (!$customer) {
+            $customer = (object) [
+                'name' => 'N/A',
+                'phone_number' => 'N/A',
+            ];
+        }
 
-    //     foreach ($orders as $order) {
-    //         $orderId = $order->id;
+        // Ambil data orders dan ringkasannya
+        $orders = DB::table('orders as o')
+            ->join('order_details as od', 'o.id', '=', 'od.order_id')
+            ->select('o.*', DB::raw('COUNT(od.product_id) as item_count'), DB::raw('SUM(od.unit_price * od.quantity) as total'))
+            ->where('o.customer_id', $customer_id)
+            ->groupBy('o.id')
+            ->orderByDesc('o.id')
+            ->get();
 
-    //         $details = DB::table('order_details as od')
-    //             ->join('product as p', 'od.product_id', '=', 'p.id')
-    //             ->join('product_variant as pv', 'od.product_variant_id', '=', 'pv.id')
-    //             ->join('product_color as pc', 'od.product_color_id', '=', 'pc.id')
-    //             ->join('product_color_image as pci', 'pci.color_id', '=', 'pc.id')
-    //             ->select('p.name', 'pci.image_kiri', 'pc.color_name', 'pv.size', 'od.quantity', 'p.price')
-    //             ->where('od.order_id', $orderId)
-    //             ->get();
+        // Untuk setiap order, ambil detail produk
+        foreach ($orders as $order) {
+            $order->details = DB::table('order_details as od')
+            ->join('product as p', 'od.product_id', '=', 'p.id')
+            ->join('product_variant as pv', 'od.product_variant_id', '=', 'pv.id')
+            ->join('product_color as pc', 'od.product_color_id', '=', 'pc.id')
+            ->join('product_color_image as pci', 'pci.color_id', '=', 'pc.id')
+            ->select('p.name', 'pci.image_kiri', 'pc.color_name', 'pv.size', 'od.quantity', 'od.unit_price')
+            ->where('od.order_id', $order->id)
+            ->get();
+        }
 
-    //         $orderDetails[$orderId] = $details;
-    //     }
-
-
-    //     // Stat count
-    //     // $completedOrders = DB::table('orders')->where('status', 'Completed')->count();
-    //     // $pendingOrders = DB::table('orders')->where('status', 'Pending')->count();
-
-    // return view('order', compact('orders', 'customer', 'orderDetails'));
-
-    $userId = $request->session()->get('user_id', $request->query('user_id', 1));
-    $customer = Customer::find($userId);
-
-    $orders = Order::with([
-        'details.product',
-        'details.variant',
-        'details.color',
-        'details.colorImage' // relasi ke tabel yang menyimpan image_kiri
-    ])
-    ->where('customer_id', $userId)
-    ->orderByDesc('id')
-    ->get();
-
-    return view('order', compact('orders', 'customer'));
-
-}
+        return view('order', [
+            'customer' => $customer,
+            'orders' => $orders,
+            'customer_address' => Session::get('customer_address', 'N/A'),
+            'payment_method' => Session::get('payment_method', 'N/A'),
+        ]);
+    }
 }

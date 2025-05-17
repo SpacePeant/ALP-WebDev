@@ -12,7 +12,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
-
+use App\Http\Controllers\PaymentController;
 
 Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
 
@@ -31,7 +31,6 @@ Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('ca
 Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
 Route::post('/cart/update-pilih', [CartController::class, 'updatePilih'])->name('cart.update_pilih');
 
-
 // Wishlist
 Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
 Route::post('/wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
@@ -43,9 +42,19 @@ Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wi
 Route::post('/wishlist/delete', [WishlistController::class, 'removeFromWishlist']);
 Route::get('/product_list', [ProductController::class, 'index'])->name('product.list');
 
+// Payment
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
 Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
+
+Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
+->name('payment.return');
+
+Route::get('/payment/status/{order}', [PaymentController::class, 'checkStatus'])
+->name('payment.status');
+
+// Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
+// ->name('payment.return');
 
 // Munculin form login
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -58,7 +67,7 @@ Route::get('/product-list', [CollectionController::class, 'productList'])->name(
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
 Route::get('detail_sepatu/{id}', [ProductController::class, 'show'])->name('detail_sepatu.show');
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
-
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 // Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
 // Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 

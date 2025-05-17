@@ -5,112 +5,177 @@
 @endphp
 
 <style>
-    /* HEADER */
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 20px 50px;
-  background: #fff;
-}
+  /* Reset dan dasar */
+  * {
+    box-sizing: border-box;
+  }
 
-.icons a {
-  color: #000;
-  margin-right: 20px;
-}
+  .navbar a,
+  .menu-mobile a {
+    text-decoration: none;
+    color: black;
+  }
 
-.logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
+  .icons a {
+    color: black;
+  }
 
-.logo img {
-  height: 30px;
-}
+  button {
+    cursor: pointer;
+    border: none;
+    background: none;
+  }
 
-.navbar a {
-  margin: 0 15px;
-  text-decoration: none;
-  color: black;
-  font-weight: 500;
-}
+  /* Layout desktop */
+  .layout-desktop {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 50px;
+    background: #fff;
+  }
 
-.navbar a:hover {
-  border-bottom: 2px solid black;
-}
+  .layout-desktop .logo img {
+    height: 30px;
+  }
 
-.icons {
-  display: flex;
-  gap: 20px;
-  font-size: 15px;
-}
+  .layout-desktop nav.navbar a {
+    margin: 0 15px;
+    font-weight: 500;
+  }
 
-.user-dropdown {
-  position: relative;
-}
+  .layout-desktop nav.navbar a:hover {
+    border-bottom: 2px solid black;
+  }
 
-.user-dropdown-menu {
-  position: absolute;
-  top: 120%;
-  right: 0;
-  background-color: white;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-  padding: 15px;
-  z-index: 100;
-  width: 200px;
+  .layout-desktop .icons {
+    display: flex;
+    gap: 20px;
+    font-size: 15px;
+  }
 
-  /* Animasi */
-  opacity: 0;
-  transform: translateY(-10px);
-  pointer-events: none;
-  transition: opacity 0.3s ease, transform 0.3s ease;
-}
+  /* Layout mobile (default hidden) */
+  .layout-mobile {
+    display: none;
+    flex-direction: column;
+    padding: 10px 20px;
+    background: #fff;
+  }
 
-.user-dropdown-menu.show {
-  opacity: 1;
-  transform: translateY(0);
-  pointer-events: auto;
-}
+  .layout-mobile .top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-.user-dropdown-menu p {
-  margin: 0 0 10px 0;
-  font-weight: bold;
-}
+  .layout-mobile .top-bar .logo img {
+    height: 30px;
+  }
 
-.user-dropdown-menu button {
-  background-color: white;
-  color: black;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 12px;
-  width: 100%;
-  cursor: pointer;
-  text-align: left;
-}
+  .layout-mobile .top-bar .icons {
+    display: flex;
+    gap: 15px;
+    font-size: 15px;
+  }
 
-.user-dropdown-menu .log {
-  background-color: #f44336;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 8px 12px;
-  width: 100%;
-  cursor: pointer;
-  text-align: center;
-  margin-top: 15px;
-}
+  .layout-mobile #burger {
+    font-size: 24px;
+  }
 
-.user-dropdown-menu button:hover {
-  background-color: #484848;
-  color: white;
-}
+  .layout-mobile nav.menu-mobile {
+    margin-top: 15px;
+    flex-direction: column;
+    gap: 10px;
+    display: none;
+  }
 
-.user-dropdown-menu .log:hover {
-  background-color: #d32f2f;
-}
+  .layout-mobile nav.menu-mobile.show {
+    display: flex;
+  }
+
+  .layout-mobile nav.menu-mobile a {
+    font-weight: 500;
+    padding: 8px 0;
+    border-bottom: 1px solid #ddd;
+  }
+
+  .layout-mobile nav.menu-mobile a:last-child {
+    border-bottom: none;
+  }
+
+  /* Responsive trigger */
+  @media (max-width: 768px) {
+    .layout-desktop {
+      display: none;
+    }
+
+    .layout-mobile {
+      display: flex;
+    }
+  }
+
+  /* User dropdown shared styles */
+  .user-dropdown {
+    position: relative;
+  }
+
+  .user-dropdown-menu {
+    position: absolute;
+    top: 120%;
+    right: 0;
+    background-color: white;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    padding: 15px;
+    z-index: 100;
+    width: 200px;
+
+    /* Animasi */
+    opacity: 0;
+    transform: translateY(-10px);
+    pointer-events: none;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+  }
+
+  .user-dropdown-menu.show {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+  }
+
+  .user-dropdown-menu p {
+    margin: 0 0 10px 0;
+    font-weight: bold;
+  }
+
+  .user-dropdown-menu button {
+    background-color: white;
+    color: black;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 12px;
+    width: 100%;
+    cursor: pointer;
+    text-align: left;
+    margin-top: 5px;
+  }
+
+  .user-dropdown-menu .log {
+    background-color: #f44336;
+    color: white;
+    text-align: center;
+    margin-top: 15px;
+  }
+
+  .user-dropdown-menu button:hover {
+    background-color: #484848;
+    color: white;
+  }
+
+  .user-dropdown-menu .log:hover {
+    background-color: #d32f2f;
+  }
 </style>
 <!-- Bootstrap CSS -->
 <link
@@ -122,63 +187,146 @@
       rel="stylesheet"
     />
     <script src="https://unpkg.com/feather-icons"></script>
-<!-- Header -->
-<header class="header">
-      <div class="logo">
-        <img src="image/logo.png" alt="Logo" />
+<header>
+  <!-- Desktop Layout -->
+  <div class="layout-desktop">
+    <div class="logo">
+      <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+    </div>
+
+    <nav class="navbar">
+      <a href="#">Dashboard</a>
+      <a href="{{ route('orderadmin') }}">Order</a>
+      <a href="{{ route('productadmin') }}">Product</a>
+    </nav>
+
+    <div class="icons">
+      <div class="user-dropdown">
+        <a href="#" id="userIconDesktop"><i data-feather="user"></i></a>
+        <div class="user-dropdown-menu" id="userDropdownDesktop">
+          <p>Hi, {{ $user_name }}!</p>
+          <button>Help</button>
+          <button>Send Feedback</button>
+          <button>FAQ</button>
+          <form id="logout-form-desktop" action="{{ route('logout') }}" method="POST">
+            @csrf
+            <button type="submit" class="log">Logout</button>
+          </form>
+        </div>
       </div>
-      <nav class="navbar">
-        <a href="#">Dashboard</a>
-        <a href="{{ route('orderadmin') }}">Order</a>
-        <a href="{{ route('productadmin') }}">Product</a>
-      </nav>
+    </div>
+  </div>
+
+  <!-- Mobile Layout -->
+  <div class="layout-mobile">
+    <div class="top-bar">
+      <button id="burger"><i data-feather="menu"></i></button>
+
+      <div class="logo">
+        <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+      </div>
+
       <div class="icons">
         <div class="user-dropdown">
-        <a href="#" id="userIcon"><i data-feather="user"></i></a>
-          <div class="user-dropdown-menu" id="userDropdown">
-            <p id="userName">Hi, <?= htmlspecialchars($user_name) ?>!</p>
+          <a href="#" id="userIconMobile"><i data-feather="user"></i></a>
+          <div class="user-dropdown-menu" id="userDropdownMobile">
+            <p>Hi, {{ $user_name }}!</p>
             <button>Help</button>
             <button>Send Feedback</button>
             <button>FAQ</button>
-            <button onclick="logout()" class="log">Logout</button>
-
-            <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
-                @csrf
+            <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST">
+              @csrf
+              <button type="submit" class="log">Logout</button>
             </form>
           </div>
         </div>
       </div>
-    </header>
+    </div>
+
+    <nav class="menu-mobile" id="mobileMenu">
+      <a href="#">Dashboard</a>
+      <a href="{{ route('orderadmin') }}">Order</a>
+      <a href="{{ route('productadmin') }}">Product</a>
+    </nav>
+  </div>
+</header>
     <!-- Link FontAwesome buat icon -->
-    <script
-      src="https://kit.fontawesome.com/yourfontawesomekit.js"
-      crossorigin="anonymous"
-    ></script>
+   @push('scripts')
+<!-- Font Awesome Kit -->
+<script src="https://kit.fontawesome.com/yourfontawesomekit.js" crossorigin="anonymous"></script>
 
-    <!-- Bootstrap JS Bundle -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-      feather.replace();
-    </script>
+<!-- Bootstrap JS Bundle -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-      const userIcon = document.getElementById("userIcon");
-      const userDropdown = document.getElementById("userDropdown");
+  feather.replace();
 
-      userIcon.addEventListener("click", function (e) {
-        e.preventDefault();
-        userDropdown.classList.toggle("show");
-      });
+  // Burger menu toggle
+  const burger = document.getElementById('burger');
+  const mobileMenu = document.getElementById('mobileMenu');
 
-      function logout() {
-        document.getElementById('logout-form').submit();
-      }
-
-      document.addEventListener("click", function (e) {
-  if (!userIcon.contains(e.target) && !userDropdown.contains(e.target)) {
-    userDropdown.classList.remove("show");
+  if (burger && mobileMenu) {
+    burger.addEventListener('click', function () {
+      mobileMenu.classList.toggle('show');
+    });
   }
-  
-});
+
+  // User dropdown desktop
+  const userIconDesktop = document.getElementById('userIconDesktop');
+  const userDropdownDesktop = document.getElementById('userDropdownDesktop');
+
+  if (userIconDesktop && userDropdownDesktop) {
+    userIconDesktop.addEventListener('click', function (e) {
+      e.preventDefault();
+      userDropdownDesktop.classList.toggle('show');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!userIconDesktop.contains(e.target) && !userDropdownDesktop.contains(e.target)) {
+        userDropdownDesktop.classList.remove('show');
+      }
+    });
+  }
+
+  // User dropdown mobile
+  const userIconMobile = document.getElementById('userIconMobile');
+  const userDropdownMobile = document.getElementById('userDropdownMobile');
+
+  if (userIconMobile && userDropdownMobile) {
+    userIconMobile.addEventListener('click', function (e) {
+      e.preventDefault();
+      userDropdownMobile.classList.toggle('show');
+    });
+
+    document.addEventListener('click', function (e) {
+      if (!userIconMobile.contains(e.target) && !userDropdownMobile.contains(e.target)) {
+        userDropdownMobile.classList.remove('show');
+      }
+    });
+  }
+
+  // Logout form submit
+  const userIcon = document.getElementById("userIcon");
+  const userDropdown = document.getElementById("userDropdown");
+
+  if (userIcon && userDropdown) {
+    userIcon.addEventListener("click", function (e) {
+      e.preventDefault();
+      userDropdown.classList.toggle("show");
+    });
+
+    document.addEventListener("click", function (e) {
+      if (!userIcon.contains(e.target) && !userDropdown.contains(e.target)) {
+        userDropdown.classList.remove("show");
+      }
+    });
+  }
+
+  function logout() {
+    const logoutForm = document.getElementById('logout-form');
+    if (logoutForm) {
+      logoutForm.submit();
+    }
+  }
 </script>
+@endpush

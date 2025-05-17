@@ -1,71 +1,3 @@
-<?php
-// // Koneksi ke database
-// $conn = new mysqli(
-//     'mysql-182f6de3-bernardofkowe-263b.k.aivencloud.com',
-//     'avnadmin',
-//     'AVNS_c98rz9H_eLwhrcG3ekc',
-//     'defaultdb',
-//     11040
-// );
-
-// if ($conn->connect_error) {
-//     die("Koneksi gagal: " . $conn->connect_error);
-// }
-
-// // Ambil data kategori dari database
-// $sql = "SELECT id, name FROM category";
-// $result = $conn->query($sql);
-
-// // Cek apakah ada kategori
-// $categories = [];
-// if ($result->num_rows > 0) {
-//     while($row = $result->fetch_assoc()) {
-//         $categories[] = $row;
-//     }
-// } else {
-//     echo "Tidak ada kategori.";
-// }
-
-   
-
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
-//     $name = $_POST['name'];
-//     $category_id = $_POST['category'];
-//     $description = $_POST['description'];
-//     $price = $_POST['price'];
-//     $color_name = $_POST['color'];
-//     $color_code = $_POST['color_code'];
-//     $sizes = $_POST['size'] ?? [];
-//     $gender = $_POST['gender'] ?? 'Unisex';
-
-//     // Insert ke tabel product
-//     $stmt = $conn->prepare("INSERT INTO product (name, gender, description, price, status, category_id) VALUES (?, ?, ?, ?, 1, ?)");
-//     $stmt->bind_param("sssdi", $name, $gender, $description, $price, $category_id);
-//     $stmt->execute();
-//     $product_id = $stmt->insert_id;
-//     $stmt->close();
-
-//     // Insert ke product_color
-//     $stmt = $conn->prepare("INSERT INTO product_color (product_id, color_name, color_code, is_primary) VALUES (?, ?, ?, 0)");
-//     $stmt->bind_param("iss", $product_id, $color_name, $color_code);
-//     $stmt->execute();
-//     $color_id = $stmt->insert_id;
-//     $stmt->close();
-
-//     // Insert ke product_variant
-//     $stmt = $conn->prepare("INSERT INTO product_variant (product_id, color_id, size, stock) VALUES (?, ?, ?, 0)");
-//     foreach ($sizes as $size) {
-//         $stmt->bind_param("iii", $product_id, $color_id, $size);
-//         $stmt->execute();
-//     }
-//     $stmt->close();
-
-//     $success = "Product saved successfully!";
-// }
-
-// $conn->close();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,7 +32,7 @@
     .main-container {
       display: flex;
       gap: 40px;
-      justify-content: center;
+      justify-content: center; 
     }
 
   .form-container, .image-container {
@@ -112,11 +44,23 @@
   }
 
     .form-container {
-      width: 600px;
+        background: #ffffff;
+  border: 1px solid #E1E1E1;
+  border-radius: 10px;
+  padding: 30px;
+  flex: 1 1 500px;
+  max-width: 600px;
     }
 
     .image-container {
-      width: 520px;
+      background: #ffffff;
+  border: 1px solid #E1E1E1;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: 10px;
+  padding: 30px;
+  flex: 1 1 500px;
+  max-width: 600px;
     }
 
     .form-group {
@@ -146,19 +90,21 @@
       flex-wrap: wrap;
     }
 
-    .gender-options {
-      display: flex;
-      gap: 20px;
-      margin-top: 10px;
-    }
+     .gender-options {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+    flex-wrap: wrap; 
+  }
 
-    .gender-options label {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      font-weight: normal;
-    }
-
+  .gender-options label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    white-space: nowrap;
+  }
     .price-stock {
       display: flex;
       gap: 20px;
@@ -169,24 +115,29 @@
     }
 
     .main-image {
-      width: 100%;
-      max-height: 300px;
-      object-fit: contain;
-      margin-bottom: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
+       display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+  margin-bottom: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
     }
 
     .thumbnails {
       display: flex;
-      gap: 10px;
+  justify-content: space-between;
+  gap: 0;
+  margin-bottom: 15px;
     }
 
     .thumbnails img {
-      width: 102px;
-      border-radius: 10px;
-      border: 1px solid #E1E1E1;
-      cursor: pointer;
+      width: calc(100% / 4);
+  height: auto;
+  object-fit: cover;
+  border: 2px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
     }
 
     .thumbnails img.active {
@@ -241,6 +192,111 @@
     .size-options input[type="checkbox"] {
     margin-right: 5px;
     }
+
+    @media (max-width: 1200px) {
+  .main-container {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .form-container,
+  .image-container {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .price-stock {
+    flex-direction: column;
+  }
+
+  .price-stock input {
+    width: 100%;
+  }
+
+  .thumbnails img {
+    width: 22%;
+  }
+
+  .save-btn {
+    width: 100%;
+    float: none;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+}
+
+    /* Responsive adjustments for tablet and phone */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    /* padding: 10px; */
+  }
+
+  .form-container {
+    width: 100% !important;
+    /* margin-bottom: 20px; */
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group input[type="color"],
+  .form-group .form-control {
+    width: 100%;
+  }
+
+  .save-btn {
+    width: 100%;
+  }
+
+  .image-container img.main-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .thumbnails img {
+    width: 22%;
+    height: auto;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+}
+
+@media (max-width: 576px) {
+  .size-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .image-container img.main-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .thumbnails img {
+    width: 20%;
+    height: auto;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+}
   </style>
 </head>
 <body>
@@ -252,7 +308,7 @@
 
   <form method="POST" action="{{ route('addproduct.store') }}">
     @csrf
-  <div class="main-container">
+  <div class="main-container d-flex gap-4 flex-wrap">
     <div class="form-container">
       <div class="form-group">
         <label>Name</label>
@@ -316,9 +372,9 @@
       <div class="form-group">
         <label>Gender</label>
         <div class="gender-options">
-            <input type="radio" name="gender" value="Men" checked> Men
-            <input type="radio" name="gender" value="Women"> Women
-            <input type="radio" name="gender" value="Unisex"> Unisex
+            <label><input type="radio" name="gender" value="Men" checked> Men</label>
+    <label><input type="radio" name="gender" value="Women"> Women</label>
+    <label><input type="radio" name="gender" value="Unisex"> Unisex</label>
         </div>
       </div>
 
@@ -393,11 +449,9 @@
 </div>
 
   </div>
-
 <a href="{{ route('productadmin') }}" class="btn btn-outline-secondary position-absolute top-0 end-0 m-3 p-2">
   <i class="bi bi-arrow-left"></i>
 </a>
-
   <script>
 
   let tabCount = 1;

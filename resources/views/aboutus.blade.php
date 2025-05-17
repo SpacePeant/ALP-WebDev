@@ -234,7 +234,7 @@
     /* quotes */
 
     .quote-section {
-      background: url('image/image_carousel/bg_quotes.png') no-repeat center center;
+      background: url('image/quotes.png') no-repeat center center;
       background-size: cover;
       height: 500px;
       display: flex;

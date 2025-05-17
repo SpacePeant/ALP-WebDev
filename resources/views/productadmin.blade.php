@@ -4,37 +4,6 @@
 @php
     $user_id = $user_id ?? null;
 @endphp
-<?php
-// Koneksi ke database
-// $conn = new mysqli(
-//     'mysql-182f6de3-bernardofkowe-263b.k.aivencloud.com',
-//     'avnadmin',
-//     'AVNS_c98rz9H_eLwhrcG3ekc',
-//     'defaultdb',
-//     11040
-// );
-
-// if ($conn->connect_error) {
-//     die("Koneksi gagal: " . $conn->connect_error);
-// }
-
-// // Tangani request delete
-// if (isset($_GET['delete_id'])) {
-//     $delete_id = intval($_GET['delete_id']);
-//     $conn->query("UPDATE product SET status = 'inactive' WHERE id = $delete_id");
-//     header("Location: product_admin.php");
-//     exit();
-// }
-
-// // Ambil data produk + gambar
-// $sql = "SELECT p.id, pc.id as color_id, p.name, pc.color_name, pci.image_kiri
-//         FROM product p 
-//         JOIN product_color pc ON p.id = pc.product_id 
-//         JOIN product_color_image pci ON pc.id = pci.color_id
-//         WHERE p.status = 'active'
-//         GROUP BY 1,2,3,4,5;"; // GROUP BY agar tidak duplikat produk
-// $result = $conn->query($sql);
-?>
 
 <!DOCTYPE html>
 <html lang="en">
