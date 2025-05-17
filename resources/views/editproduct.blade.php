@@ -411,100 +411,6 @@
 </a>
 
 
-<<<<<<< HEAD
-  <script>
-//     // Handle size button active state
-//     document.querySelectorAll('.size-btn').forEach(btn => {
-//       btn.addEventListener('click', () => {
-//         document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-//         btn.classList.add('active');
-//       });
-//     });
-
-//     // Handle image preview
-//     function setMainImage(thumbnail) {
-//       document.getElementById('mainImage').src = thumbnail.src;
-//       document.querySelectorAll('.thumbnails img').forEach(img => img.classList.remove('active'));
-//       thumbnail.classList.add('active');
-//     }
-
-//     document.querySelectorAll('.size-btn').forEach(btn => {
-//   btn.addEventListener('click', () => {
-//     document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-//     btn.classList.add('active');
-//     document.getElementById('selectedSize').value = btn.innerText.replace('EU ', '');
-//   });
-// });
-
-// const sizeStockMap = <?= json_encode($sizeStock); ?>;
-
-// document.querySelectorAll('.size-btn').forEach(btn => {
-//   btn.addEventListener('click', () => {
-//     // update tombol aktif
-//     document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-//     btn.classList.add('active');
-
-//     // update hidden input
-//     const size = btn.innerText.replace('EU ', '');
-//     document.getElementById('selectedSize').value = size;
-
-//     // update stok sesuai ukuran
-//     const stockInput = document.querySelector('input[name="stok"]');
-//     if (sizeStockMap[size]) {
-//       stockInput.value = sizeStockMap[size];
-//     } else {
-//       stockInput.value = 0;
-//     }
-//   });
-// });
-
-// Simpan stok per size (copy dari PHP)
-const sizeStockMap = <?= json_encode($sizeStock); ?>;
-
-// Variable untuk size yang sedang dipilih
-let currentSize = document.getElementById('selectedSize').value || null;
-
-// Ambil elemen input stok
-const stockInput = document.querySelector('input[name="stok"]');
-
-// Fungsi untuk update active button dan input stok saat pilih size
-function selectSize(size, btn) {
-  // Simpan stok yang terakhir diinput ke sizeStockMap untuk currentSize
-  if(currentSize !== null) {
-    sizeStockMap[currentSize] = parseInt(stockInput.value) || 0;
-  }
-
-  // Update currentSize
-  currentSize = size;
-
-  // Update hidden input ukuran
-  document.getElementById('selectedSize').value = size;
-
-  // Update stok input dengan stok yang tersimpan
-  stockInput.value = sizeStockMap[size] || 0;
-
-  // Update tombol active
-  document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-  btn.classList.add('active');
-}
-
-// Pasang event listener untuk tiap size button
-document.querySelectorAll('.size-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const size = btn.innerText.replace('EU ', '');
-    selectSize(size, btn);
-  });
-});
-
-// Update sizeStockMap saat stok diinput agar stok tetap update walau belum submit
-stockInput.addEventListener('input', () => {
-  if(currentSize !== null) {
-    sizeStockMap[currentSize] = parseInt(stockInput.value) || 0;
-  }
-});
-
-  </script>
-=======
 <script>
   const sizeStockMap = {!! json_encode($sizeStock) !!}; // misal dari controller
   let currentSize = document.getElementById('selectedSize').value || null;
@@ -535,7 +441,6 @@ stockInput.addEventListener('input', () => {
     document.getElementById('stocks-json').value = JSON.stringify(sizeStockMap);
   });
 </script>
->>>>>>> 3ba8af8a62a07ca3d9d6a4200928ca0a203b54a9
 
   
 
