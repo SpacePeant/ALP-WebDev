@@ -176,6 +176,15 @@
   .user-dropdown-menu .log:hover {
     background-color: #d32f2f;
   }
+  header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
 </style>
 <!-- Bootstrap CSS -->
 <link
