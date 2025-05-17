@@ -79,6 +79,15 @@
     border-color: #d6d8db;
     }
 
+    .view {
+        background-color :#444;
+        border-color: #444;
+    }
+
+    .view:hover {
+        background-color: black;
+        border-color: black;
+    }
 
 </style>
 
@@ -91,7 +100,7 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <p>Invoice Number:{{ $order->id }}</p>
+        <p>Invoice Number: {{ $order->id }}</p>
         <p>Total Amount: Rp {{ number_format($order->total_amount) }}</p>
 
         <p>Payment Status:
@@ -112,7 +121,7 @@
 
         <div class="text-center mt-4">
             <a href="{{ route('payment.status', $order->id) }}" class="btn btn-outline-secondary">Check Status Again</a>
-            <a href="{{ route('order') }}" class="btn btn-primary">View My Orders</a>
+            <a href="{{ route('order') }}" class="view btn btn-primary">View My Orders</a>
         </div>
     </div>
 </div>

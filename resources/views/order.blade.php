@@ -95,6 +95,7 @@
 
   .container {
     padding: 40px;
+    margin-top: 70px;
   }
 
   h1 {
@@ -154,14 +155,14 @@
 
     .pay-now-btn {
       text-decoration: none;
-      background-color: #007bff;
+      background-color: #444;
       color: #fff;
-      border-color: #007bff;
+      border-color: #444;
     }
 
     .pay-now-btn:hover {
-      background-color: #0056b3;
-      border-color: #004a99;
+      background-color: black;
+      border-color: black;
       color: #fff;
     }
 
