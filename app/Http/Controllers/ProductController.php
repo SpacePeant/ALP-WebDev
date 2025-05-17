@@ -425,6 +425,49 @@ public function update(Request $request, $id)
 
     return redirect()->route('productadmin')->with('success', 'Produk berhasil diperbarui');
 }
+public function update_gambar(Request $request)
+{
+    $request->validate([
+        'color_id' => 'required|integer|exists:product_color_image,color_id',
+        'position' => 'required|in:atas,kiri,kanan,bawah',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    $colorId = $request->input('color_id');
+    $position = $request->input('position');
+    $imageFile = $request->file('image');
+
+    // path ke public/image/sepatu/{posisi}/
+    $folderPath = public_path("image/sepatu/{$position}/");
+    $fileName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+    $columnName = "image_" . $position;
+
+    // Hapus gambar lama jika ada
+    $oldImage = DB::table('product_color_image')
+        ->where('color_id', $colorId)
+        ->value($columnName);
+
+    if ($oldImage && file_exists($folderPath . $oldImage)) {
+        unlink($folderPath . $oldImage);
+    }
+
+    // Buat folder jika belum ada
+    if (!file_exists($folderPath)) {
+        mkdir($folderPath, 0775, true);
+    }
+
+    // Simpan gambar baru
+    $imageFile->move($folderPath, $fileName);
+
+    // Update kolom di DB
+    DB::table('product_color_image')
+        ->where('color_id', $colorId)
+        ->update([
+            $columnName => $fileName
+        ]);
+
+    return back()->with('success', 'Gambar berhasil diupdate!');
+}
 }
 
 

@@ -26,6 +26,7 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('addpr
 
 Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
 
 // Cart
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');

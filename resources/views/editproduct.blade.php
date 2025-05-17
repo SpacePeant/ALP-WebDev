@@ -392,31 +392,36 @@
     </form>
   </div>
   <div class="image-container">
-  <form action="update_image.php" method="post" enctype="multipart/form-data">
-  <input type="hidden" name="color_id" value="{{ $color_id }}">
-
-<!-- Optional: Kirim product_id juga jika perlu -->
-<input type="hidden" name="product_id" value="{{ old('product_id', $id) }}">
-    <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
-
-    <!-- Input Jenis Gambar -->
-    <select name="position" required style="margin-bottom:10px;">
-      <option value="">-- Pilih Posisi Gambar --</option>
-      <option value="atas">Atas</option>
-      <option value="kiri">Kiri</option>
-      <option value="kanan">Kanan</option>
-      <option value="bawah">Bawah</option>
-    </select>
-
-    <!-- Input File -->
-    <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
-
-    <!-- Tombol Submit -->
-    <button type="submit" class="btn btn-black btn-sm">Upload</button>
-  </form>
-
-  <!-- Preview Utama -->
-<img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="main-image" id="mainImage" style="margin-top:20px;">
+    <!-- Upload Form -->
+    <form action="{{ route('product.update_gambar') }}" method="POST" enctype="multipart/form-data">
+      @csrf
+      <input type="hidden" name="color_id" value="{{ $color_id }}">
+      <input type="hidden" name="product_id" value="{{ old('product_id', $id) }}">
+  
+      <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
+  
+      <!-- Pilih Posisi Gambar -->
+      <select name="position" required style="margin-bottom:10px;">
+        <option value="">-- Pilih Posisi Gambar --</option>
+        <option value="atas">Atas</option>
+        <option value="kiri">Kiri</option>
+        <option value="kanan">Kanan</option>
+        <option value="bawah">Bawah</option>
+      </select>
+  
+      <!-- Pilih File Gambar -->
+      <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
+  
+      <button type="submit" class="btn btn-black btn-sm">Upload</button>
+    </form>
+  
+    <!-- Pesan Sukses -->
+    @if(session('success'))
+      <p style="color: green;">{{ session('success') }}</p>
+    @endif
+  
+    <!-- Preview Gambar -->
+    <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="main-image" id="mainImage" style="margin-top:20px;">
 
 <div class="thumbnails">
   <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="active" onclick="setMainImage(this)">
@@ -425,6 +430,14 @@
   <img src="{{ asset('image/sepatu/bawah/' . $product->image_bawah) }}" onclick="setMainImage(this)">
 </div>
   </div>
+  
+  <script>
+    function setMainImage(el) {
+      document.getElementById('mainImage').src = el.src;
+      document.querySelectorAll('.thumbnails img').forEach(img => img.classList.remove('active'));
+      el.classList.add('active');
+    }
+  </script>
 </div>
 </div>
 
