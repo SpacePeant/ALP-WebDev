@@ -7,6 +7,7 @@
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/feather-icons/dist/feather.min.js"></script>
     <style>
         /* Styling for your profile page remains the same */
         body {
@@ -89,9 +90,80 @@
         .btn-secondary {
             background-color: #444;
         }
+        @media (max-width: 768px) {
+    .profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .profile-initial {
+        margin: 0 auto 15px;
+    }
+
+    .info-row {
+        flex-direction: row; /* tetap row */
+        flex-wrap: wrap;     /* biar teks bisa wrap ke baris bawah jika terlalu panjang */
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .info-row > div {
+        flex: 1 1 auto; /* teks boleh melebar dan wrap */
+        min-width: 0;   /* supaya bisa wrap dengan baik */
+    }
+
+    .info-row .edit-btn {
+        flex: 0 0 auto; /* ukuran tetap sesuai icon */
+        margin-top: 0;
+        align-self: center;
+        cursor: pointer;
+    }
+}
+
+@media (max-width: 576px) {
+    .profile-card {
+        padding: 15px 20px;
+        max-width: 350px;
+        margin: 20px auto;
+        width: 90%;
+    }
+
+    .profile-initial {
+        width: 60px;
+        height: 60px;
+        font-size: 26px;
+    }
+
+    .btn {
+        width: 100%;
+        margin-top: 10px;
+    }
+}
+.back-to-collection {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+.back-to-collection:hover {
+    background: #f0f0f0;
+}
     </style>
 </head>
 <body>
+    <a href="javascript:void(0);" onclick="history.back();" class="back-to-collection" title="Kembali ke koleksi">
+        <i data-feather="x"></i>
+    </a>
     <div class="profile-card">
         <div class="profile-header">
             <div class="profile-initial">
@@ -293,6 +365,8 @@ $('#editPasswordForm').on('submit', function(e) {
     });
 });
 </script>
-
+<script>
+  feather.replace();
+  </script>
 </body>
 </html>

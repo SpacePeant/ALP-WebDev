@@ -25,8 +25,6 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('addpr
 Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
 
-
-
 // Cart
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
 Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
@@ -63,7 +61,7 @@ Route::get('/product-list', [CollectionController::class, 'productList'])->name(
 Route::get('/product/{id}', [ProductController::class, 'show'])->name('product.detail');
 Route::get('detail_sepatu/{id}', [ProductController::class, 'show'])->name('detail_sepatu.show');
 Route::get('/cart', [CartController::class, 'index'])->name('cart');
-
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 // Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
 // Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 
@@ -90,8 +88,6 @@ Route::get('/collection', function () {
 })->name('collection');
 
 Route::get('/blog', [BlogController::class, 'showBlogPage'])->name('blog');
-Route::get('/load-more-blogs', [BlogController::class, 'loadMore']);
-
 Route::get('/load-more-blogs', [BlogController::class, 'loadMoreBlogs']);
 
 Route::get('/signup', [RegisterController::class, 'show'])->name('signup.form');
@@ -103,6 +99,3 @@ Route::post('/profile/update', [ProfileController::class, 'update'])->name('prof
 Route::get('/order', [OrderController::class, 'index'])->name('order');
 
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
-
-
-

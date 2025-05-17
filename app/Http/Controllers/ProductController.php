@@ -267,7 +267,7 @@ class ProductController extends Controller
     }
 
     public function edit($id, $color_id)
-{
+    {
     $product = DB::table('product as p')
         ->leftJoin('category as c', 'p.category_id', '=', 'c.id')
         ->leftJoin('product_color as pc', 'pc.product_id', '=', 'p.id')

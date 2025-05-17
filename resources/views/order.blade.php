@@ -1,177 +1,215 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Orders</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+@extends('base.base1')
 
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Display:wght@400;500&display=swap" rel="stylesheet">
+@section('content')
 
-  <!-- Bootstrap CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+@php
+    $user_id = $user_id ?? null;
+@endphp
 
-  <style>
-    body {
-      font-family: 'Red Hat Display', sans-serif;
-      background-color: #f8f9fa;
-      padding: 40px;
-    }
+<div class="container">
+  <h1 class="text-center mb-4">Orders</h1>
 
-    h1 {
-      font-family: 'Playfair Display', serif;
-      font-weight: 700;
-      margin-bottom: 40px;
-    }
-
-    .order-card {
-      background-color: #fff;
-      border-radius: 12px;
-      border: 1px solid #ddd;
-      padding: 24px;
-      margin-bottom: 20px;
-    }
-
-    .order-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      flex-wrap: wrap;
-    }
-
-    .status-btn {
-      font-size: 14px;
-      padding: 6px 16px;
-      border-radius: 20px;
-      border: 1px solid transparent;
-      display: inline-block;
-      text-align: center;
-    }
-
-    .status-delivered {
-      background-color: #d4edda;
-      color: #3c763d;
-      border-color: #c3e6cb;
-    }
-
-    .status-pending {
-      background-color: #fff3cd;
-      color: #856404;
-      border-color: #ffeeba;
-    }
-
-    .view-order-toggle {
-      font-weight: 500;
-      color: #6c757d;
-      background: none;
-      border: none;
-      padding: 0;
-    }
-
-    .view-order-toggle .dropdown-icon {
-      transition: transform 0.3s ease;
-      display: inline-block;
-      margin-left: 6px;
-    }
-
-    .view-order-toggle[aria-expanded="true"] .dropdown-icon {
-      transform: rotate(180deg);
-    }
-
-    .product-item {
-      display: flex;
-      align-items: center;
-      padding: 12px 0;
-      border-top: 1px solid #eee;
-    }
-
-    .product-item img {
-      width: 80px;
-      height: auto;
-      object-fit: cover;
-      border-radius: 8px;
-      margin-right: 16px;
-    }
-
-    .product-info {
-      flex-grow: 1;
-    }
-
-    .product-qty-price {
-      text-align: right;
-      white-space: nowrap;
-    }
-
-    hr {
-      margin: 20px 0;
-    }
-  </style>
-</head>
-<body>
-  <h1>Orders</h1>
-
-    @foreach($orders as $order)
-     <div class="order-card">
-        <div class="order-header mb-3">
-            <div>
-                <p class="mb-1">Order ID: {{ $order->id }}</p>
-                <p class="mb-1">Order Date: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
-                <p class="mb-1">Items: {{ $order->details->count() }}</p>
-                <p class="mb-1">Total: Rp {{ number_format($order->details->sum(fn($d) => $d->unit_price * $d->quantity), 2, ',', '.') }}</p>
+  <div>
+    @foreach ($orders as $order)
+      <div class="order-card">
+        <div class="order-header mb-3 d-flex justify-content-between align-items-center flex-wrap">
+          <div>
+            <p class="mb-1">Order ID: {{ $order->id }}</p>
+            <p class="mb-1">Order Date: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
+            <p class="mb-1">Items: {{ $order->item_count }}</p>
+            <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p>
+          </div>
+          <div class="text-end">
+            <button class="view-order-toggle" type="button" aria-expanded="false" aria-controls="order-details-{{ $order->id }}">
+              View Order <span class="dropdown-icon">▼</span>
+            </button>
+            <div class="mt-2">
+              @if (strtolower($order->status) == 'delivered')
+                <span class="status-btn status-delivered">Delivered</span>
+              @else
+                <span class="status-btn status-pending">{{ $order->status }}</span>
+              @endif
             </div>
-            <div class="text-end">
-                <button class="view-order-toggle" type="button"
-        data-bs-toggle="collapse"
-        data-bs-target="#orderDetails{{ $order->id }}"
-        aria-expanded="false"
-        aria-controls="orderDetails{{ $order->id }}">
-    View Order <span class="dropdown-icon">▼</span>
-</button>
-<div class="mt-2">
-    @if ($order->status == 'Delivered')
-    <span class="status-btn status-delivered">Delivered</span>
-@else
-    <span class="status-btn status-pending">{{ $order->status }}</span>
-@endif
-            </div>
+          </div>
         </div>
-    </div>
 
-        <div class="collapse" id="orderDetails{{ $order->id }}">
+        <div id="order-details-{{ $order->id }}" class="order-details-wrapper" aria-hidden="true">
+          <div class="order-details-content">
             <hr>
             <p>Customer: {{ $customer->name }}</p>
-            <p>Phone: {{ $customer->phone_number }}</p>
-            <p>Address: {{ $customer->address ?? 'N/A' }}</p>
-            <p>Payment Method: {{ session('payment_method') ?? 'N/A' }}</p>
+            <p>Phone No.: {{ $customer->phone_number }}</p>
+            <p>Shipped To: {{ $customer_address }}</p>
+            <p>Payment Method: {{ session('payment_method', 'N/A') }}</p>
+            <hr>
             <p class="mb-2">Products</p>
 
-            @foreach($order->details as $detail)
-                <div class="product-item">
-                    {{-- <img src="{{ asset('image/sepatu/kiri/' . $detail->colorImage->image_kiri) }}"> --}}
-                    {{-- @if(!empty($detail->colorImage->image_kiri))
-    <img src="{{ asset('image/sepatu/kiri/' . $detail->colorImage->image_kiri) }}" alt="Sepatu Kiri" style="max-width: 100px;">
-@else
-    <p>Gambar tidak tersedia</p>
-@endif --}}
-<img src="{{ asset('image/sepatu/kiri/' . $detail->colorImage->image_kiri) }}" alt="{{ $detail->product->name }}">
-                    <div class="product-info">
-                        <p class="mb-0">{{ $detail->product->name }}</p>
-                        <small class="text-muted">Color: {{ $detail->color_name }}</small><br>
-                        <small class="text-muted">Size: {{ $detail->size }}</small>
-                    </div>
-                    <div class="product-qty-price">
-                        <small>x {{ $detail->quantity }}</small><br>
-                        <strong>Rp {{ number_format($detail->product->price, 2, ',', '.') }}</strong>
-                    </div>
+            @foreach ($order->details as $detail)
+              <div class="product-item d-flex align-items-center mb-2">
+                <img src="{{ asset('image/sepatu/kiri/' . $detail->image_kiri) }}" alt="{{ $detail->name }}" />
+                <div class="product-info ms-3">
+                  <p class="mb-0">{{ $detail->name }}</p>
+                  <small class="text-muted">Color: {{ $detail->color_name }}</small><br>
+                  <small class="text-muted">Size: {{ $detail->size }}</small>
                 </div>
+                <div class="product-qty-price ms-auto text-end">
+                  <small>x {{ $detail->quantity }}</small><br>
+                  Rp. {{ number_format($detail->unit_price, 2, ',', '.') }}
+                </div>
+              </div>
             @endforeach
+          </div>
         </div>
-    </div>
+      </div>
     @endforeach
+  </div>
 </div>
 
+@endsection
 
-  <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+@push('styles')
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Display:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+<style>
+  body {
+    font-family: 'Red Hat Display', sans-serif;
+    background-color: #f8f9fa;
+  }
+
+  .container {
+    padding: 40px;
+  }
+
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-weight: 700;
+    margin-bottom: 40px;
+    text-align: center;
+  }
+
+  .order-card {
+    background-color: #fff;
+    border-radius: 12px;
+    border: 1px solid #ddd;
+    padding: 24px;
+    margin-bottom: 20px;
+  }
+
+  .order-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .status-btn {
+    font-size: 14px;
+    padding: 6px 16px;
+    border-radius: 20px;
+    border: 1px solid transparent;
+    display: inline-block;
+    text-align: center;
+  }
+
+  .status-delivered {
+    background-color: #d4edda;
+    color: #3c763d;
+    border-color: #c3e6cb;
+  }
+
+  .status-pending {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+  }
+
+  .view-order-toggle {
+    font-weight: 500;
+    color: #6c757d;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+
+  .view-order-toggle .dropdown-icon {
+    transition: transform 0.3s ease;
+    display: inline-block;
+    margin-left: 6px;
+  }
+
+  .view-order-toggle[aria-expanded="true"] .dropdown-icon {
+    transform: rotate(180deg);
+  }
+
+  .product-item {
+    display: flex;
+    align-items: center;
+    padding: 12px 0;
+    border-top: 1px solid #eee;
+  }
+
+  .product-item img {
+    width: 80px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 16px;
+  }
+
+  .product-info {
+    flex-grow: 1;
+  }
+
+  .product-qty-price {
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  hr {
+    margin: 20px 0;
+  }
+
+  .order-details-wrapper {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s ease;
+  }
+
+  .order-details-wrapper.open {
+    max-height: 1000px;
+  }
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+  document.querySelectorAll('.view-order-toggle').forEach(function(button) {
+    button.addEventListener('click', function () {
+      const orderCard = this.closest('.order-card');
+      const wrapper = orderCard.querySelector('.order-details-wrapper');
+      const icon = this.querySelector('.dropdown-icon');
+
+      // Tutup semua wrapper lain
+      document.querySelectorAll('.order-details-wrapper').forEach(function(w) {
+        if (w !== wrapper) {
+          w.classList.remove('open');
+          const otherIcon = w.closest('.order-card').querySelector('.dropdown-icon');
+          if (otherIcon) otherIcon.textContent = '▼';
+          const otherButton = w.closest('.order-card').querySelector('.view-order-toggle');
+          if(otherButton) otherButton.setAttribute('aria-expanded', 'false');
+          w.setAttribute('aria-hidden', 'true');
+        }
+      });
+
+      // Toggle current
+      const isOpen = wrapper.classList.toggle('open');
+      icon.textContent = isOpen ? '▲' : '▼';
+      this.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      wrapper.setAttribute('aria-hidden', isOpen ? 'false' : 'true');
+    });
+  });
+</script>
+@endpush

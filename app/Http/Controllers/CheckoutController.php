@@ -90,9 +90,13 @@ public function updateQuantity(Request $request)
 
     public function processCheckout(Request $request)
     {
-        DB::beginTransaction(); // ✅ pindah ke awal
+         $customerId = Session::get('user_id') ?? $request->query('user_id', 1);
+        Log::info('Pay Now clicked by user ID: ' . $customerId);
+        Log::info('Request data:', $request->all());
 
-    $customerId = Auth::id();
+
+    DB::beginTransaction();
+
 
     $cartItems = CartItem::with('product')
         ->where('customer_id', $customerId)
@@ -127,20 +131,32 @@ public function updateQuantity(Request $request)
     Config::$isSanitized = true;
     Config::$is3ds = true;
 
+    $email = trim(Session::get('user_email', 'Guest'));
+
+    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        Log::error('Invalid email format: ' . $email);
+        return back()->with('error', 'Email Anda tidak valid. Mohon perbarui profil Anda.');
+    }
+
+    $user_name = Session::get('user_name', 'Guest');
+    $user_email = Session::get('user_email', 'Guest');
+
     $params = [
         'transaction_details' => [
             'order_id' => $order->id,
             'gross_amount' => $totalAmount,
         ],
         'customer_details' => [
-            'first_name' => Auth::user()->name,
-            'email' => Auth::user()->email,
+            'first_name' => $user_name,
+            'email' => $email,
         ],
         'callbacks' => [
             'finish' => route('collection'),
         ]
     ];
 
+    Log::info('Final email used for Midtrans: ' . $user_email);
+    try{
     $snapUrl = Snap::createTransaction($params)->redirect_url;
     $order->payment_url = $snapUrl;
     $order->save();
@@ -150,6 +166,13 @@ public function updateQuantity(Request $request)
     session()->forget('cart');
     CartItem::where('customer_id', $customerId)->where('is_pilih', 1)->delete();
 
-    return redirect()->away($snapUrl); // ⬅️ ini harus jadi baris terakhir
+    return redirect()->away($snapUrl);
+    } 
+    
+    catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Midtrans error: ' . $e->getMessage());
+        return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran.');
     }
+}
 }
