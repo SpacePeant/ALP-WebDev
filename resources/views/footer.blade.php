@@ -32,6 +32,7 @@
 
 .footer-about img {
     height: 30px;
+    width: 100%;
 }
 
 .footer-links h4,
