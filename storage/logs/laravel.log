@@ -14157,3 +14157,11 @@
 #47 C:\\Program Files\\Herd\\resources\\app.asar.unpacked\\resources\\valet\\server.php(139): require('C:\\\\Users\\\\miche\\\\...')
 #48 {main}
 "} 
+[2025-05-17 07:56:58] local.ERROR: Cannot redeclare function maskedName() (previously declared in C:\Users\miche\Herd\ALP-WebDev-2\storage\framework\views\a7eaffbb5b80fe93173c83fb2aa85b79.php:570) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare function maskedName() (previously declared in C:\\Users\\miche\\Herd\\ALP-WebDev-2\\storage\\framework\\views\\a7eaffbb5b80fe93173c83fb2aa85b79.php:570) at C:\\Users\\miche\\Herd\\ALP-WebDev-2\\storage\\framework\\views\\a7eaffbb5b80fe93173c83fb2aa85b79.php:570)
+[stacktrace]
+#0 {main}
+"} 
+[2025-05-17 07:59:40] local.ERROR: Cannot redeclare function maskedName() (previously declared in C:\Users\miche\Herd\ALP-WebDev-2\storage\framework\views\a7eaffbb5b80fe93173c83fb2aa85b79.php:570) {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Cannot redeclare function maskedName() (previously declared in C:\\Users\\miche\\Herd\\ALP-WebDev-2\\storage\\framework\\views\\a7eaffbb5b80fe93173c83fb2aa85b79.php:570) at C:\\Users\\miche\\Herd\\ALP-WebDev-2\\storage\\framework\\views\\a7eaffbb5b80fe93173c83fb2aa85b79.php:570)
+[stacktrace]
+#0 {main}
+"} 
