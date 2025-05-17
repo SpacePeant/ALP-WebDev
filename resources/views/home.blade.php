@@ -18,8 +18,12 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Red Hat Text", sans-serif;
 }
 
+#carouselExample{
+  margin-top :100px;
+}
 /* CAROUSEL */
 
 .haha {

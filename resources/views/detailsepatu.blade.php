@@ -594,7 +594,7 @@ body {
 }
 
 .mobile-add-cart {
-  background-color: #28a745;
+  background-color: #444;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -605,7 +605,7 @@ body {
 }
 
 .mobile-add-cart:hover {
-  background-color: #218838;
+  background-color: black;
 }
 
 
