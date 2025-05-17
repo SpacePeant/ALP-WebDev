@@ -257,7 +257,7 @@ header.scrolled .layout-desktop .logo {
   <div class="layout-desktop">
     <div class="logo">
       <!-- Hidden logo di desktop -->
-      <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+      <img src="{{ asset('image/huha.png') }}" alt="Logo" />
     </div>
 
     <nav class="menu">
@@ -294,7 +294,7 @@ header.scrolled .layout-desktop .logo {
     <div class="top-bar">
       <button id="burger"><i data-feather="menu"></i></button>
       <div class="logo">
-        <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+        <img src="{{ asset('image/huha.png') }}" alt="Logo" />
       </div>
       <div class="icons">
         <a href="{{ route('wishlist') }}"><i data-feather="star"></i></a>

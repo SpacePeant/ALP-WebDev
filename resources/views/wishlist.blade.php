@@ -16,6 +16,10 @@
     }
     #my-wishlist-title {
       font-family: 'Playfair Display';
+      margin-top:100px;
+    }
+    .iss{
+      margin-top:100px;
     }
     #list-wishlist {
       width: 80%;
@@ -63,6 +67,7 @@
   </style>
 </head>
 <body>
+  <div class="iss"></div>
   <h1 id="my-wishlist-title" class="fw-bold mb-3 my-5 mx-5">My Wishlist</h1>
   <div id="list-wishlist" class="container">
     @foreach ($wishlists as $item)
