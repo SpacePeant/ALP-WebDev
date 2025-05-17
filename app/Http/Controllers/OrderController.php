@@ -7,8 +7,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
-{
-    public function adminIndex(Request $request)
+{public function adminIndex(Request $request)
         {
         // Ambil semua order (ringkasan)
         $orders = DB::table('orders as o')
@@ -49,7 +48,7 @@ class OrderController extends Controller
 
         return view('orderadmin', compact('orders', 'orderDetails', 'completedOrders', 'pendingOrders', 'orderId'));
     }
-
+    
     public function index(Request $request)
     {
         $customer_id = Session::get('user_id') ?? $request->query('user_id', 1);
