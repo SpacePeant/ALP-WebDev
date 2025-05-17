@@ -28,6 +28,7 @@
     .carousel-item {
     position: relative;
     height: auto;
+    margin-top : 70px;
     }
 
     .carousel-item img {
@@ -37,6 +38,7 @@
     }
 
     .carousel-caption-center {
+    margin-top: 30px;
     position: absolute;
     top: 20%;
     left: 10%;
@@ -115,7 +117,7 @@
     }
 
     body {
-    font-family: Arial, sans-serif;
+    /* font-family: Arial, sans-serif; */
     background-color: #f8f8f8;
     margin: 0;
     /* padding: 20px; */
@@ -191,6 +193,7 @@
         align-items: center;
         gap: 20px;
         margin-bottom: 30px;
+        margin-top: -50px;
     }
 
     .filter-bar input[type="text"],
@@ -296,7 +299,8 @@
     background-color: #fff;
     border-bottom: 1px solid #ddd;
     position: sticky;
-    top: 0;
+    margin-top: -50px;
+    top: 70px;
     z-index: 10;
 }
 
@@ -340,14 +344,14 @@
 
 .filter-title {
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
     cursor: pointer;
     padding: 8px 0;
     transition: color 0.2s ease;
 }
 
 .filter-title:hover {
-    color: #007bff;
+    color: #444;
 }
 
 .filter-content {
@@ -406,6 +410,7 @@
         flex-wrap: nowrap;
         justify-content: flex-start;
         overflow-x: auto;
+        margin-top: -100px;
     }
 
     #searchToggle {
@@ -432,6 +437,42 @@
 }
 }
 
+@media (max-width: 768px) {
+    .product-container {
+        margin-top: 0 !important;
+    }
+
+    .filter-sidebar {
+        margin-right: 0 !important;
+    }
+
+    .offcanvas-body .filter-group {
+        margin-bottom: 1rem;
+    }
+
+    .product-container {
+        flex-direction: column;
+    }
+
+    #productResults {
+        margin-top: 0.5rem;
+    }
+
+    .product-grid {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center; /* Biar card produk ke tengah */
+        gap: 1rem; /* Jarak antar kartu */
+        padding: 0 1rem; /* Kasih padding samping biar gak mentok layar */
+    }
+
+    .product-card {
+        margin-right: 80px;
+        max-width: 400px; /* atau ukuran sesuai desain kamu */
+        width: 100%;
+    }
+}
+
   </style>
 </head>
 <body>
@@ -444,7 +485,7 @@
         <div class="carousel-caption-center" style="color: #5E4E47;">
           <h2>Running</h2>
           <p>Nike running shoes combine lightweight design, responsive cushioning, and innovative technology for optimal running performance.</p>
-          <a href="#" style="color: #5E4E47;">View Collection →</a>
+          {{-- <a href="#" style="color: #5E4E47;">View Collection →</a> --}}
         </div>
       </div>
 
@@ -453,7 +494,7 @@
         <div class="carousel-caption-center" style="color: #8C1D1D;">
           <h2>Casual</h2>
           <p>Nike casual shoes blend sporty style with all-day comfort, making them perfect for everyday wear.</p>
-          <a href="#" style="color: #8C1D1D;">View Collection →</a>
+          {{-- <a href="#" style="color: #8C1D1D;">View Collection →</a> --}}
         </div>
       </div>
 
@@ -462,7 +503,7 @@
         <div class="carousel-caption-center" style="color: #303034;">
           <h2>Basketball</h2>
           <p>Nike basketball shoes blend dynamic support, explosive cushioning, and cutting-edge innovation to elevate your game on every court.</p>
-          <a href="#" style="color: #303034;">View Collection →</a>
+          {{-- <a href="#" style="color: #303034;">View Collection →</a> --}}
         </div>
       </div>
 
@@ -471,7 +512,7 @@
         <div class="carousel-caption-center" style="color: #23AA97;"> 
           <h2>Training</h2>
           <p>Nike training shoes offer stability, support, and flexibility for a variety of workouts, from gym sessions to cross-training.</p>
-          <a href="#" style="color: #23AA97;">View Collection →</a>
+          {{-- <a href="#" style="color: #23AA97;">View Collection →</a> --}}
         </div>
       </div>
 
@@ -480,7 +521,7 @@
         <div class="carousel-caption-center" style="color: #035573;">
           <h2>Soccer</h2>
           <p>Nike soccer boots deliver precision touch, agile traction, and lightweight speed to dominate every match.</p>
-          <a href="#" style="color: #035573;">View Collection →</a>
+          {{-- <a href="#" style="color: #035573;">View Collection →</a> --}}
         </div>
       </div>
 
@@ -489,7 +530,7 @@
         <div class="carousel-caption-center" style="color: #6E5B59;">
           <h2>Sandals</h2>
           <p>Nike sandals offer lightweight comfort and easy style, perfect for casual wear, lounging, or post-workout recovery.</p>
-          <a href="#" style="color: #6E5B59;">View Collection →</a>
+          {{-- <a href="#" style="color: #6E5B59;">View Collection →</a> --}}
         </div>
       </div>
 
@@ -509,8 +550,7 @@
 <form method="GET" id="filterForm">
 
     {{-- Filter Bar: Search, Sort, Price Slider --}}
-<div class="filter-bar">
-    <!-- Tombol toggle hanya akan tampil di mobile -->
+    <div class="filter-bar">
     <button type="button" id="searchToggle" aria-label="Toggle search" class="d-inline-block d-md-none">
         <i class="bi bi-search"></i>
     </button>
@@ -519,7 +559,7 @@
 
     <div class="select-wrapper">
         <select name="sort" id="sortSelect" class="select">
-            <option value="">Sort By</option>
+            <option class="sort" value="">Sort By</option>
             <option value="newest">Newest</option>
             <option value="price_asc">Price: Low to High</option>
             <option value="price_desc">Price: High to Low</option>
@@ -537,11 +577,17 @@
     </div>
 </div>
 {{-- Filter Icon untuk Mobile --}}
-<div class="d-flex justify-content-end d-md-none mb-3">
+{{-- <div class="d-flex justify-content-end d-md-none mb-3">
     <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilter">
         <i class="bi bi-filter"></i>
     </button>
-</div>
+</div> --}}
+
+    <div class="d-flex justify-content-between align-items-center d-md-none mb-3" style="margin-left: 20px">
+        <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilter">
+            <i class="bi bi-filter"></i> Filter
+        </button>
+    </div>
 
 <div class="product-container d-flex">
     {{-- Sidebar (hanya tampil di desktop) --}}

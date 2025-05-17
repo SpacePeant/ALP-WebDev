@@ -43,7 +43,7 @@
     }
     .layout-desktop .icons {
       display: flex;
-      gap: 20px;
+      gap: 30px;
       font-size: 15px;
     }
 

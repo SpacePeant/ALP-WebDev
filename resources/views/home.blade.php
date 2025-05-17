@@ -15,6 +15,7 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
+  font-family: "Red Hat Text", sans-serif;
 }
 
 /* CAROUSEL */
@@ -322,6 +323,10 @@
   text-align: center;
   transition: background-color 0.5s ease;
   border-radius: 8px;
+}
+
+#carouselExample{
+  margin-top :100px;
 }
 
     </style>
