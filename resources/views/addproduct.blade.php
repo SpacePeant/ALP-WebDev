@@ -1,71 +1,3 @@
-<?php
-// // Koneksi ke database
-// $conn = new mysqli(
-//     'mysql-182f6de3-bernardofkowe-263b.k.aivencloud.com',
-//     'avnadmin',
-//     'AVNS_c98rz9H_eLwhrcG3ekc',
-//     'defaultdb',
-//     11040
-// );
-
-// if ($conn->connect_error) {
-//     die("Koneksi gagal: " . $conn->connect_error);
-// }
-
-// // Ambil data kategori dari database
-// $sql = "SELECT id, name FROM category";
-// $result = $conn->query($sql);
-
-// // Cek apakah ada kategori
-// $categories = [];
-// if ($result->num_rows > 0) {
-//     while($row = $result->fetch_assoc()) {
-//         $categories[] = $row;
-//     }
-// } else {
-//     echo "Tidak ada kategori.";
-// }
-
-   
-
-// if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save'])) {
-//     $name = $_POST['name'];
-//     $category_id = $_POST['category'];
-//     $description = $_POST['description'];
-//     $price = $_POST['price'];
-//     $color_name = $_POST['color'];
-//     $color_code = $_POST['color_code'];
-//     $sizes = $_POST['size'] ?? [];
-//     $gender = $_POST['gender'] ?? 'Unisex';
-
-//     // Insert ke tabel product
-//     $stmt = $conn->prepare("INSERT INTO product (name, gender, description, price, status, category_id) VALUES (?, ?, ?, ?, 1, ?)");
-//     $stmt->bind_param("sssdi", $name, $gender, $description, $price, $category_id);
-//     $stmt->execute();
-//     $product_id = $stmt->insert_id;
-//     $stmt->close();
-
-//     // Insert ke product_color
-//     $stmt = $conn->prepare("INSERT INTO product_color (product_id, color_name, color_code, is_primary) VALUES (?, ?, ?, 0)");
-//     $stmt->bind_param("iss", $product_id, $color_name, $color_code);
-//     $stmt->execute();
-//     $color_id = $stmt->insert_id;
-//     $stmt->close();
-
-//     // Insert ke product_variant
-//     $stmt = $conn->prepare("INSERT INTO product_variant (product_id, color_id, size, stock) VALUES (?, ?, ?, 0)");
-//     foreach ($sizes as $size) {
-//         $stmt->bind_param("iii", $product_id, $color_id, $size);
-//         $stmt->execute();
-//     }
-//     $stmt->close();
-
-//     $success = "Product saved successfully!";
-// }
-
-// $conn->close();
-?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -100,7 +32,7 @@
     .main-container {
       display: flex;
       gap: 40px;
-      justify-content: center;
+      justify-content: center; 
     }
 
   .form-container, .image-container {
@@ -112,7 +44,8 @@
   }
 
     .form-container {
-      width: 600px;
+      /* width: 600px; */ 
+      width: 48%;
     }
 
     .image-container {
@@ -241,6 +174,102 @@
     .size-options input[type="checkbox"] {
     margin-right: 5px;
     }
+
+    /* Responsive adjustments for tablet and phone */
+@media (max-width: 768px) {
+  .main-container {
+    flex-direction: column;
+    /* padding: 10px; */
+  }
+
+  .form-container {
+    width: 100% !important;
+    /* margin-bottom: 20px; */
+  }
+
+  .form-group {
+    width: 100%;
+  }
+
+  .form-group input[type="text"],
+  .form-group input[type="number"],
+  .form-group input[type="color"],
+  .form-group .form-control {
+    width: 100%;
+  }
+
+  .gender-options {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+
+  .size-options {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+
+  .save-btn {
+    width: 100%;
+  }
+
+  .image-container img.main-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .thumbnails img {
+    width: 22%;
+    height: auto;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+
+  .position-absolute.top-0.end-0 {
+    position: static !important;
+    margin: 20px 0 0 auto;
+    display: block;
+  }
+}
+
+@media (max-width: 576px) {
+  .size-options {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .nav-tabs {
+    flex-wrap: wrap;
+  }
+
+  .nav-link {
+    width: 100%;
+    margin-bottom: 5px;
+  }
+
+  .image-container img.main-image {
+    width: 100%;
+    height: auto;
+  }
+
+  .thumbnails img {
+    width: 20%;
+    height: auto;
+  }
+
+  .btn.mt-3 {
+    width: 100%;
+  }
+
+  .position-absolute.top-0.end-0 {
+    position: relative !important;
+    top: auto !important;
+    right: auto !important;
+    margin: 20px 0;
+  }
+}
   </style>
 </head>
 <body>
@@ -252,7 +281,7 @@
 
   <form method="POST" action="{{ route('addproduct.store') }}">
     @csrf
-  <div class="main-container">
+  <div class="main-container d-flex gap-4 flex-wrap">
     <div class="form-container">
       <div class="form-group">
         <label>Name</label>
