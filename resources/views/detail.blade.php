@@ -116,7 +116,7 @@
     }
 
     body {
-    font-family: Arial, sans-serif;
+    font-family: 'Red Hat Text', sans-serif;
     background-color: #f8f8f8;
     margin: 0;
     /* padding: 20px; */

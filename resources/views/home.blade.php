@@ -10,12 +10,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Carousel Grid Bootstrap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
       * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
- font-family: 'Red Hat Text', sans-serif;'
 }
 
 /* CAROUSEL */
@@ -327,6 +329,9 @@
   text-align: center;
   transition: background-color 0.5s ease;
   border-radius: 8px;
+}
+#carouselExample{
+  margin-top :100px;
 }
 
     </style>
