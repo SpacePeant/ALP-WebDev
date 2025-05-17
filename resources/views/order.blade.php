@@ -95,6 +95,7 @@
 
   .container {
     padding: 40px;
+    margin-top: 70px;
   }
 
   h1 {

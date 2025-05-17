@@ -27,7 +27,7 @@
       align-items: center;
     }
     .wishlist-item i{
-      color:red;
+      color:rgb(158, 22, 22);
     }
     .wishlist-img {
       width: 100px;
