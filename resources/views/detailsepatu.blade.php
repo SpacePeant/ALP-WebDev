@@ -796,9 +796,6 @@ body {
   .mobile-product-wrapper {
     display: block;
   }
-  .back-to-collection {
-    top:80px;
-  }
 }
   </style>
 </head>

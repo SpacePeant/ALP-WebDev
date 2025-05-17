@@ -26,6 +26,10 @@
 }
 /* CAROUSEL */
 
+#carouselExample{
+  margin-top :100px;
+}
+
 .haha {
   display: flex;
   margin: 0px 60px 20px 60px;
