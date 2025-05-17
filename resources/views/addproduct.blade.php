@@ -298,13 +298,33 @@
     width: 100%;
   }
 }
+.back-to-collection {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+.back-to-collection:hover {
+    background: #f0f0f0;
+}
   </style>
 </head>
 <body>
     <?php if (isset($success)): ?>
     <p style="color: green;"><?php echo $success; ?></p>
     <?php endif; ?>
-
+    <a href="{{ route('productadmin') }}" class="back-to-collection" title="Back to cart">
+      <i data-feather="corner-down-left"></i>
+    </a>
   <h1>Add Product</h1>
 
   <form method="POST" action="{{ route('addproduct.store') }}">
@@ -438,9 +458,7 @@
 </div>
 
   </div>
-<a href="{{ route('productadmin') }}" class="btn btn-outline-secondary position-absolute top-0 end-0 m-3 p-2">
-  <i class="bi bi-arrow-left"></i>
-</a>
+
   <script>
 
   let tabCount = 1;
@@ -570,5 +588,9 @@ function addNewTab() {
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+  feather.replace();
+</script>
 </html>
 
