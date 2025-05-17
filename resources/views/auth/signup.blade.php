@@ -5,8 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Create Account</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link
+      href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
   <style>
       body {
       background-color: #f8f9fa;
@@ -42,7 +45,6 @@
     a {
         text-decoration: none;
         color: #000000;
-        font-weight: bold;
     }
     h3 {
       margin-top: -15px;

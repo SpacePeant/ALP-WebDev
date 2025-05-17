@@ -450,7 +450,7 @@
 
           <div class="product-info">
             <h2>The Air Jordan 1 Low<br />Phantom Night Maroon</h2>
-            <button class="shop-button">SHOP NOW</button>
+            <button class="shop-button" onclick="window.location.href='{{ route('detail') }}'">SHOP NOW</button>
           </div>
         </div>
       </div>
@@ -459,7 +459,7 @@
     <section class="kepo">
       <div class="cta-content">
         <h1>KEPO KARO KAMI?</h1>
-        <a href="#" class="cta-button">Jelajahi Saiki</a>
+        <a href="{{ route('about') }}" class="cta-button">Jelajahi Saiki</a>
       </div>
     </section>
 
