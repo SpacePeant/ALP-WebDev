@@ -75,16 +75,10 @@
                     <div class="d-flex justify-content-between">
                         <span>Shipping fee</span><span>Rp 30.000,00</span>
                     </div>
-                    <div class="d-flex justify-content-between">
+                    <div class="d-flex justify-content-between" style ="margin-bottom: 20px;">
                         <strong>Total</strong><strong id="total">
                             Rp {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity) + 30000, 0, ',', '.') }},00
                         </strong>
-                    </div>
-
-                    <p class="mt-3 mb-1">Select Payment Method</p>
-                    <div class="d-flex gap-2 mb-3">
-                        <button type="button" class="btn btn-outline-dark payment-btn active" data-method="cash">Cash</button>
-                        <button type="button" class="btn btn-outline-dark payment-btn" data-method="transfer">Transfer</button>
                     </div>
                     <input type="hidden" name="payment_method" id="payment_method_input" value="cash">
                     <button type="submit" name="pay_now" class="btn btn-dark w-100">Pay Now</button>
@@ -212,6 +206,11 @@
 </script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
+
+    h1 {
+        font-family: 'Playfair Display', serif;
+    }
+
     .back-btn {
         display: inline-block;
         margin-bottom: 20px;

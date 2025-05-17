@@ -153,7 +153,7 @@ public function updateQuantity(Request $request)
             'email' => $email,
         ],
         'callbacks' => [
-            'finish' => route('collection'),
+            'finish' => route('payment.return', $order->id),
         ]
     ];
 
