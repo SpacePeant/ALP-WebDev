@@ -327,7 +327,7 @@
   <div class="layout-desktop">
     <div class="logo">
       <!-- Hidden logo di desktop -->
-      <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+      <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
     </div>
 
     <nav class="menu">
