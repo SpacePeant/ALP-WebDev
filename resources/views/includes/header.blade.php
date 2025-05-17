@@ -43,7 +43,7 @@
     }
     .layout-desktop .icons {
       display: flex;
-      gap: 20px;
+      gap: 30px;
       font-size: 15px;
     }
 
@@ -63,7 +63,7 @@
     }
     .layout-mobile .top-bar .icons {
       display: flex;
-      gap: 15px;
+      gap: 30px;
       font-size: 15px;
     }
     .layout-mobile #burger {
