@@ -392,7 +392,6 @@
     </form>
   </div>
   <div class="image-container">
-    <!-- Upload Form -->
     <form action="{{ route('product.update_gambar') }}" method="POST" enctype="multipart/form-data">
       @csrf
       <input type="hidden" name="color_id" value="{{ $color_id }}">
@@ -400,7 +399,6 @@
   
       <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
   
-      <!-- Pilih Posisi Gambar -->
       <select name="position" required style="margin-bottom:10px;">
         <option value="">-- Pilih Posisi Gambar --</option>
         <option value="atas">Atas</option>
@@ -409,18 +407,15 @@
         <option value="bawah">Bawah</option>
       </select>
   
-      <!-- Pilih File Gambar -->
       <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
   
       <button type="submit" class="btn btn-black btn-sm">Upload</button>
     </form>
   
-    <!-- Pesan Sukses -->
     @if(session('success'))
       <p style="color: green;">{{ session('success') }}</p>
     @endif
   
-    <!-- Preview Gambar -->
     <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="main-image" id="mainImage" style="margin-top:20px;">
 
 <div class="thumbnails">
@@ -443,7 +438,7 @@
 
 
 <script>
-  const sizeStockMap = {!! json_encode($sizeStock) !!}; // misal dari controller
+  const sizeStockMap = {!! json_encode($sizeStock) !!}; 
   let currentSize = document.getElementById('selectedSize').value || null;
   const stockInput = document.querySelector('input[name="stok"]');
 

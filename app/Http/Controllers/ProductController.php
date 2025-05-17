@@ -370,16 +370,15 @@ $averageRating = $totalReviews > 0
         return redirect()->back()->with('error', 'Produk tidak ditemukan.');
     }
 
-    // Ambil semua size-stock
     $sizeStock = DB::table('product_variant')
         ->where('product_id', $id)
         ->where('color_id', $color_id)
-        ->pluck('stock', 'size'); // hasilnya: ['36' => 10, '37' => 5, dst]
+        ->pluck('stock', 'size'); 
 
         return view('editproduct', [
             'product' => $product,
             'sizeStock' => $sizeStock,
-            'sizeStocksJson' => json_encode($sizeStock), // <--- Tambahkan ini
+            'sizeStocksJson' => json_encode($sizeStock),
             'color_id' => $color_id,
             'id' => $id
         ]);
@@ -437,12 +436,10 @@ public function update_gambar(Request $request)
     $position = $request->input('position');
     $imageFile = $request->file('image');
 
-    // path ke public/image/sepatu/{posisi}/
     $folderPath = public_path("image/sepatu/{$position}/");
     $fileName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
     $columnName = "image_" . $position;
 
-    // Hapus gambar lama jika ada
     $oldImage = DB::table('product_color_image')
         ->where('color_id', $colorId)
         ->value($columnName);
@@ -451,15 +448,11 @@ public function update_gambar(Request $request)
         unlink($folderPath . $oldImage);
     }
 
-    // Buat folder jika belum ada
     if (!file_exists($folderPath)) {
         mkdir($folderPath, 0775, true);
     }
 
-    // Simpan gambar baru
     $imageFile->move($folderPath, $fileName);
-
-    // Update kolom di DB
     DB::table('product_color_image')
         ->where('color_id', $colorId)
         ->update([
