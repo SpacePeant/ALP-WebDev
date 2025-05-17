@@ -52,10 +52,10 @@
         <div id="order-details-{{ $order->id }}" class="order-details-wrapper" aria-hidden="true">
           <div class="order-details-content">
             <hr>
-            <p>Customer: {{ $customer->name }}</p>
-            <p>Phone No.: {{ $customer->phone_number }}</p>
-            <p>Shipped To: {{ $customer_address }}</p>
-            <p>Payment Method: {{ session('payment_method', 'N/A') }}</p>
+            <p>Customer: {{ $order->customer_name }}</p>
+            <p>Phone No.: {{ $order->customer_phone }}</p>
+            <p>Shipped To: {{ $order->customer_address }}</p>
+            <p>Payment Method: {{ $order->payment_method }}</p>
             <hr>
             <p class="mb-2">Products</p>
 
@@ -154,14 +154,14 @@
 
     .pay-now-btn {
       text-decoration: none;
-      background-color: #007bff;
+      background-color: #444;
       color: #fff;
-      border-color: #007bff;
+      border-color: #444;
     }
 
     .pay-now-btn:hover {
-      background-color: #0056b3;
-      border-color: #004a99;
+      background-color: black;
+      border-color: black;
       color: #fff;
     }
 

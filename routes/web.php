@@ -47,6 +47,7 @@ Route::get('/product_list', [ProductController::class, 'index'])->name('product.
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
 Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
+Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
 
 Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
 ->name('payment.return');

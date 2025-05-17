@@ -187,8 +187,8 @@
           <hr>
           <p>Customer: {{ $order->customer_name }}</p>
           <p>Phone No.: {{ $order->phone_number }}</p>
-          <p>Shipped To: {{ session('customer_address', 'N/A') }}</p>
-          <p>Payment Method: {{ session('payment_method', 'N/A') }}</p>
+          <p>Shipped To: {{ $order->customer_address }}</p>
+          <p>Payment Method: {{ $order->payment_method }}</p>
           <hr>
           <p class="mb-2">Products</p>
 
