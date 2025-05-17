@@ -233,16 +233,17 @@ header.scrolled {
 }
 
 
-header.scrolled .layout-desktop,
-header.scrolled .layout-mobile {
+header.scrolled .layout-desktop {
   background-color: white; 
   transition: background-color 0.5s ease, box-shadow 0.5s ease;
 }
 
-header.default .layout-desktop,
-header.default .layout-mobile {
+header.default .layout-desktop{
   background-color: transparent; 
   transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+.header.default.layout-mobile.menu-mobile{
+  background-color: white;
 }
 header.scrolled .layout-desktop .logo {
   visibility: visible;
