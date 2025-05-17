@@ -18,10 +18,14 @@
   margin: 0;
   padding: 0;
   box-sizing: border-box;
-  font-family: 'Red Hat Text', sans-serif;
+  font-family: 'Red Hat Display', sans-serif;
 }
 
 /* CAROUSEL */
+
+#carouselExample{
+  margin-top :100px;
+}
 
 .haha {
   display: flex;

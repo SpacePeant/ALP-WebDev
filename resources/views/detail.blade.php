@@ -19,6 +19,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
 
   <style>
+    body {
+        font-family: 'Red Hat Text', sans-serif;
+    }
     /* CAROUSEL */
     .carousel-image-large {
         height: 100%;
@@ -65,7 +68,6 @@
     }
 
     .carousel-caption-center a {
-    font-family: 'Red Hat Text', sans-serif;
     color: black;
     text-decoration: none;
     }

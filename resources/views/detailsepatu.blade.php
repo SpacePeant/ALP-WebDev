@@ -612,6 +612,7 @@ body {
   margin-top:60px;
   margin-bottom:100px;
   padding: 16px;
+  font-family: Arial, sans-serif;
 }
 
 .mobile-category {
@@ -781,9 +782,6 @@ body {
 
   .mobile-product-wrapper {
     display: block;
-  }
-  .back-to-collection {
-    top:80px;
   }
 }
   </style>

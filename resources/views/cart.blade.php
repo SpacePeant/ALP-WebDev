@@ -38,7 +38,7 @@
                       <small class="mb-1 text-muted">Color: {{ $item->color_name }}</small>
                   </div>
               </td>
-              <td>Rp {{ number_format($item->price, 0, ',', '.') }}</td>
+              <td>Rp. {{ number_format($item->price, 0, ',', '.') }}</td>
               <td>
                   <div class="qty-container">
                       <div class="qty-btn">-</div>
@@ -46,7 +46,7 @@
                       <div class="qty-btn">+</div>
                   </div>
               </td>
-              <td id="total-column">Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
+              <td id="total-column">Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
           </tr>
           @endforeach
           @else
@@ -66,7 +66,7 @@
         </div>
         <div class="d-flex justify-content-between mb-3">
           <span>Total</span>
-          <span id="summary-total">Rp 0</span>
+          <span id="summary-total">Rp. 0</span>
         </div>
         <a href="{{ url('checkout') }}" class="btn btn-black w-100">Checkout</a>
       </div>
@@ -79,7 +79,8 @@
     font-family: 'Red Hat Text', sans-serif; 
   }
   #my-cart-title { 
-    font-family: 'Playfair Display'; 
+    font-family: 'Playfair Display';
+    margin-top: 100px; 
   }
   .product-img {
     max-height: 100px;
@@ -201,12 +202,12 @@
 
 <script>
   function formatRupiah(number) {
-    return 'Rp ' + number.toLocaleString('id-ID');
+    return 'Rp. ' + number.toLocaleString('id-ID');
   }
 
   function updateRowTotal(row) {
     const unitPriceText = row.querySelectorAll("td")[1].textContent;
-    const unitPrice = parseInt(unitPriceText.replace('Rp ', '').replace(/\./g, ''));
+    const unitPrice = parseInt(unitPriceText.replace('Rp. ', '').replace(/\./g, ''));
     const qty = parseInt(row.querySelector(".item-qty").textContent);
     const total = unitPrice * qty;
     row.querySelectorAll("td")[3].textContent = formatRupiah(total);
@@ -220,7 +221,7 @@
       if (!checkbox) return;
       const qty = parseInt(row.querySelector(".item-qty").textContent);
       const totalText = row.querySelectorAll("td")[3].textContent;
-      const numericPrice = parseInt(totalText.replace('Rp ', '').replace(/\./g, ''));
+      const numericPrice = parseInt(totalText.replace('Rp. ', '').replace(/\./g, ''));
       if (checkbox.checked) {
         totalItems += qty;
         totalPrice += numericPrice;

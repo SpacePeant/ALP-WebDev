@@ -298,16 +298,25 @@ $averageRating = $totalReviews > 0
                 'is_primary' => false,
             ]);
 
-            if ($request->size) {
-                foreach ($request->size as $size) {
-                    ProductVariant::create([
-                        'product_id' => $product->id,
-                        'color_id' => $color->id,
-                        'size' => $size,
-                        'stock' => 0,
-                    ]);
-                }
-            }
+            // if ($request->size) {
+            //     foreach ($request->size as $size) {
+            //         ProductVariant::create([
+            //             'product_id' => $product->id,
+            //             'color_id' => $color->id,
+            //             'size' => $size,
+            //             'stock' => 0,
+            //         ]);
+            //     }
+            // }
+
+            for ($size = 36; $size <= 45; $size++) {
+            ProductVariant::create([
+            'product_id' => $product->id,
+            'color_id' => $color->id,
+            'size' => $size,
+            'stock' => 0,
+        ]);
+    }
         }
 
         return redirect()->route('addproduct')->with('success', 'Product saved successfully!');
