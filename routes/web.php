@@ -6,13 +6,14 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
-use App\Http\Controllers\PaymentController;
 
 Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
 
@@ -105,3 +106,6 @@ Route::post('/profile/update', [ProfileController::class, 'update'])->name('prof
 Route::get('/order', [OrderController::class, 'index'])->name('order');
 
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
+
