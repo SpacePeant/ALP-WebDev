@@ -33,6 +33,7 @@
       display: flex;
       gap: 40px;
       justify-content: center; 
+      align-items: flex-start;
     }
 
   .form-container, .image-container {
@@ -84,11 +85,23 @@
       font-size: 14px;
     }
 
-    .size-options {
+     /* .size-options {
       display: flex;
       gap: 10px;
       flex-wrap: wrap;
     }
+
+    .size-btn {
+      border: 1px solid #000;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .size-btn.active {
+      background: #000;
+      color: #fff;
+    } */
 
      .gender-options {
     display: flex;
@@ -165,33 +178,17 @@
     padding-right: 32px;
     }
 
-    .size-btn {
-    border: 1px solid #000;
-    padding: 8px 14px;
-    cursor: pointer;
-    font-size: 14px;
-    }
-
-    .size-btn.active {
-    background: #000;
-    color: #fff;
-    }
-
-    .size-options {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    }
-
-    .size-options label {
-    font-size: 14px;
-    cursor: pointer;
-    margin-right: 15px;
-    }
-
-    .size-options input[type="checkbox"] {
-    margin-right: 5px;
-    }
+    .btn-black { 
+    background-color: black !important; 
+    color: white !important; 
+    border-radius: 0; 
+    border: none; 
+    margin-bottom: 10px;
+  }
+  .btn-black:hover { 
+    background-color: black !important; 
+    color: white !important; 
+  }
 
     @media (max-width: 1200px) {
   .main-container {
@@ -229,6 +226,10 @@
 
     /* Responsive adjustments for tablet and phone */
 @media (max-width: 768px) {
+   /* .size-options {
+    grid-template-columns: repeat(2, 1fr);
+  } */
+
   .main-container {
     flex-direction: column;
     /* padding: 10px; */
@@ -270,9 +271,9 @@
 }
 
 @media (max-width: 576px) {
-  .size-options {
+  /* .size-options {
     grid-template-columns: repeat(2, 1fr);
-  }
+  } */
 
   .nav-tabs {
     flex-wrap: wrap;
@@ -297,13 +298,33 @@
     width: 100%;
   }
 }
+.back-to-collection {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+.back-to-collection:hover {
+    background: #f0f0f0;
+}
   </style>
 </head>
 <body>
     <?php if (isset($success)): ?>
     <p style="color: green;"><?php echo $success; ?></p>
     <?php endif; ?>
-
+    <a href="{{ route('productadmin') }}" class="back-to-collection" title="Back to cart">
+      <i data-feather="corner-down-left"></i>
+    </a>
   <h1>Add Product</h1>
 
   <form method="POST" action="{{ route('addproduct.store') }}">
@@ -318,12 +339,12 @@
       <div class="form-group">
         <label>Category</label>
         {{-- <pre>{{ print_r($categories, true) }}</pre> --}}
-       <select class="form-select custom-select" name="category" required>
-  <option value="">Select Category</option>
-  <?php foreach ($categories as $category): ?>
-    <option value="<?php echo $category->id; ?>"><?php echo $category->name; ?></option>
-  <?php endforeach; ?>
-</select>
+            <select class="form-select custom-select" name="category" required>
+        <option value="">Select Category</option>
+        <?php foreach ($categories as $category): ?>
+          <option value="<?php echo $category->id; ?>"><?php echo $category->name; ?></option>
+        <?php endforeach; ?>
+      </select>
       </div>
 
       <!-- Other form fields -->
@@ -332,49 +353,23 @@
         <input type="text" name="description" class="form-control" required>
       </div>
 
-    <div class="form-group">
-    <label>Size</label>
-    <div class="size-options">
-        <label>
-        <input type="checkbox" name="size[]" value="36"> EU 36
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="37">EU 37
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="38">EU 38
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="39">EU 39
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="40">EU 40
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="41">EU 41
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="42">EU 42
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="43">EU 43
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="44">EU 44
-        </label>
-        <label>
-        <input type="checkbox" name="size[]" value="45">EU 45
-        </label>
-    </div>
-    </div>
-
+      {{-- <div class="form-group">
+      <label>Size</label>
+      <div class="size-options">
+              @for ($i = 36; $i <= 45; $i++)
+              <div class="size-btn" data-size="{{ $i }}">
+              EU {{ $i }}
+          </div>
+            @endfor
+          </div>
+      </div> --}}
 
       <div class="form-group">
         <label>Gender</label>
         <div class="gender-options">
             <label><input type="radio" name="gender" value="Men" checked> Men</label>
-    <label><input type="radio" name="gender" value="Women"> Women</label>
-    <label><input type="radio" name="gender" value="Unisex"> Unisex</label>
+      <label><input type="radio" name="gender" value="Women"> Women</label>
+      <label><input type="radio" name="gender" value="Unisex"> Unisex</label>
         </div>
       </div>
 
@@ -399,7 +394,7 @@
             <input type="color" id="colorPicker" value="#ff0000">
         </div>
       </div> -->
-    <button class="save-btn" type="submit" name="save">Save</button>
+      <button class="save-btn" type="submit" name="save">Save</button>
     </form>
     </div>
 
@@ -418,6 +413,20 @@
     <div class="tab-pane fade show active" id="color-content-0" role="tabpanel">
       <div class="image-container">
         <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
+
+         <select name="position" required style="margin-bottom:10px;">
+          <option value="">-- Pilih Posisi Gambar --</option>
+          <option value="atas">Atas</option>
+          <option value="kiri">Kiri</option>
+          <option value="kanan">Kanan</option>
+          <option value="bawah">Bawah</option>
+        </select>
+
+    <!-- Input File -->
+    <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
+
+    <!-- Tombol Submit -->
+    <button type="submit" class="btn btn-black btn-sm">Upload</button>
         <img src="{{ asset('image/no_image.png')}}" class="main-image" id="mainImage-0">
         <div class="thumbnails">
           <img src="{{ asset('image/no_image.png')}}" class="active">
@@ -449,9 +458,7 @@
 </div>
 
   </div>
-<a href="{{ route('productadmin') }}" class="btn btn-outline-secondary position-absolute top-0 end-0 m-3 p-2">
-  <i class="bi bi-arrow-left"></i>
-</a>
+
   <script>
 
   let tabCount = 1;
@@ -571,8 +578,19 @@ function addNewTab() {
       document.querySelectorAll('.thumbnails img').forEach(img => img.classList.remove('active'));
       thumbnail.classList.add('active');
     }
+
+    document.querySelectorAll('.size-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+  });
+});
   </script>
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+  feather.replace();
+</script>
 </html>
 

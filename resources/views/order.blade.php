@@ -17,7 +17,7 @@
             <p class="mb-1">Order ID: {{ $order->id }}</p>
             <p class="mb-1">Order Date: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
             <p class="mb-1">Items: {{ $order->item_count }}</p>
-            <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p>
+            <p class="mb-1">Total: Rp. {{ number_format($order->total, 0, ',', '.') }}</p>
             <div class="mb-1">
               Status:
               @if ($order->status == 'paid')
@@ -40,7 +40,7 @@
             <div class="mt-2">
             <div class="mt-2 d-flex align-items-center gap-2 flex-wrap justify-content-end">
               @if ($order->payment_url && $order->status == 'pending')
-                  <a href="{{ $order->payment_url }}" target="_blank" class="status-btn pay-now-btn" style="margin-top: -140px;">
+                  <a href="{{ $order->payment_url }}" target="_blank" class="status-btn pay-now-btn" style="margin-top: -120px;">
                       Pay Now
                   </a>
               @endif
@@ -52,10 +52,10 @@
         <div id="order-details-{{ $order->id }}" class="order-details-wrapper" aria-hidden="true">
           <div class="order-details-content">
             <hr>
-            <p>Customer: {{ $customer->name }}</p>
-            <p>Phone No.: {{ $customer->phone_number }}</p>
-            <p>Shipped To: {{ $customer_address }}</p>
-            <p>Payment Method: {{ session('payment_method', 'N/A') }}</p>
+            <p>Customer: {{ $order->customer_name }}</p>
+            <p>Phone No.: {{ $order->customer_phone }}</p>
+            <p>Shipped To: {{ $order->customer_address }}</p>
+            <p>Payment Method: {{ $order->payment_method }}</p>
             <hr>
             <p class="mb-2">Products</p>
 
@@ -69,7 +69,7 @@
                 </div>
                 <div class="product-qty-price ms-auto text-end">
                   <small>x {{ $detail->quantity }}</small><br>
-                  Rp. {{ number_format($detail->unit_price, 2, ',', '.') }}
+                  Rp. {{ number_format($detail->unit_price, 0, ',', '.') }}
                 </div>
               </div>
             @endforeach
@@ -95,6 +95,7 @@
 
   .container {
     padding: 40px;
+    margin-top: 70px;
   }
 
   h1 {
@@ -154,14 +155,14 @@
 
     .pay-now-btn {
       text-decoration: none;
-      background-color: #007bff;
+      background-color: #444;
       color: #fff;
-      border-color: #007bff;
+      border-color: #444;
     }
 
     .pay-now-btn:hover {
-      background-color: #0056b3;
-      border-color: #004a99;
+      background-color: black;
+      border-color: black;
       color: #fff;
     }
 

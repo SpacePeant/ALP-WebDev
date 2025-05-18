@@ -10,14 +10,25 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Carousel Grid Bootstrap</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+
     <style>
       * {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: "Red Hat Text", sans-serif;
+    }
 
+#carouselExample{
+  margin-top :100px;
+}
 /* CAROUSEL */
+
+#carouselExample{
+  margin-top :100px;
+}
 
 .haha {
   display: flex;
@@ -439,7 +450,7 @@
 
           <div class="product-info">
             <h2>The Air Jordan 1 Low<br />Phantom Night Maroon</h2>
-            <button class="shop-button">SHOP NOW</button>
+            <button class="shop-button" onclick="window.location.href='{{ route('detail') }}'">SHOP NOW</button>
           </div>
         </div>
       </div>
@@ -448,7 +459,7 @@
     <section class="kepo">
       <div class="cta-content">
         <h1>KEPO KARO KAMI?</h1>
-        <a href="#" class="cta-button">Jelajahi Saiki</a>
+        <a href="{{ route('about') }}" class="cta-button">Jelajahi Saiki</a>
       </div>
     </section>
 

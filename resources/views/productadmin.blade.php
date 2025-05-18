@@ -33,7 +33,7 @@
       font-family: 'Playfair Display', serif;
       font-weight: 700;
       text-align: center;
-      margin-top: 20px;
+      margin-top: 80px;
       margin-bottom: 30px;
     }
 
@@ -159,7 +159,7 @@
                     </button>
                     <div class="custom-dropdown-menu">
                         <a href="{{ route('product.edit', ['id' => $product->id, 'color_id' => $product->color_id]) }}">Edit</a>
-                        <a href="#" class="text-danger" onclick="confirmDelete({{ $product->id }})">Delete</a>
+                        <a href="#" class="text-danger" onclick="confirmDelete({{ $product->color_id }})">Delete</a>
                     </div>
                 </div>
 

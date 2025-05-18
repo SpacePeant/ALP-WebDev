@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ChartController;
+use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PaymentController;
@@ -25,6 +27,7 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('addpr
 
 Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
 
 // Cart
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -47,6 +50,7 @@ Route::get('/product_list', [ProductController::class, 'index'])->name('product.
 Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
 Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
 Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
+Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
 
 Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
 ->name('payment.return');
@@ -109,3 +113,11 @@ Route::put('/product/{id}', [ProductController::class, 'update'])->name('product
 
 Route::get('/articles/{id}', [ArticleController::class, 'show']);
 
+
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
+
+
+Route::get('/forgotpassword', function () {return view('forgotpassword');});
+
+Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [ChartController::class, 'indexDashboard'])->name('dashboard');

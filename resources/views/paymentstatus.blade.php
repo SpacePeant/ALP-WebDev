@@ -12,7 +12,7 @@
     }
 
     h1 {
-        margin-top: 50px;
+        margin-top: 100px;
         margin-bottom:-10px;
         font-family: 'Playfair Display', serif;
     }

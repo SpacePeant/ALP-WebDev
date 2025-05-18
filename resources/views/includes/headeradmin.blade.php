@@ -176,6 +176,15 @@
   .user-dropdown-menu .log:hover {
     background-color: #d32f2f;
   }
+  header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
 </style>
 <!-- Bootstrap CSS -->
 <link
@@ -191,11 +200,11 @@
   <!-- Desktop Layout -->
   <div class="layout-desktop">
     <div class="logo">
-      <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+      <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
     </div>
 
     <nav class="navbar">
-      <a href="#">Dashboard</a>
+      <a href="{{ route('dashboard') }}">Dashboard</a>
       <a href="{{ route('orderadmin') }}">Order</a>
       <a href="{{ route('productadmin') }}">Product</a>
     </nav>
@@ -223,7 +232,7 @@
       <button id="burger"><i data-feather="menu"></i></button>
 
       <div class="logo">
-        <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+        <img src="{{ asset('image/huha.png') }}" alt="Logo" />
       </div>
 
       <div class="icons">

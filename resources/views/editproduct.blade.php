@@ -281,10 +281,32 @@
     width: 100%;
   }
 }
+
+
+.back-to-collection {
+    position: fixed;
+    top: 50px;
+    right: 20px;
+    background: #fff;
+    border-radius: 50%;
+    padding: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    color: inherit;
+}
+.back-to-collection:hover {
+    background: #f0f0f0;
+}
   </style>
 </head>
 <body>
-
+  <a href="{{ route('productadmin') }}" class="back-to-collection" title="Back to cart">
+    <i data-feather="corner-down-left"></i>
+  </a>
   <h1>Edit Product</h1>
 
   <div class="main-container">
@@ -294,7 +316,6 @@
       @method('PUT')
       <input type="hidden" name="color_id" value="{{ $color_id }}">
 
-      <input type="hidden" name="ukuran" id="selectedSize" value="{{ $product->size }}">
 
       <div class="form-group">
         <label>Name</label>
@@ -318,23 +339,28 @@
         <input type="text" name="deskripsi" value="{{ old('deskripsi', $product->description) }}">
       </div>
 
-    <div class="form-group">
+      <div class="form-group">
         <label>Size</label>
         <div class="size-options">
             @php
                 $selectedSize = old('ukuran', $product->size ?? null);
             @endphp
-
+    
             @for ($i = 36; $i <= 45; $i++)
                 @php
                     $active = ($selectedSize == $i) ? 'active' : '';
                 @endphp
-                <div class="size-btn {{ $active }}" onclick="document.getElementById('selectedSize').value = '{{ $i }}'">EU {{ $i }}</div>
+                <div class="size-btn {{ $active }}" 
+                     onclick="selectSize({{ $i }})"
+                     id="size-btn-{{ $i }}">
+                    EU {{ $i }}
+                </div>
             @endfor
         </div>
     </div>
 
     <input type="hidden" name="ukuran" id="selectedSize" value="{{ $selectedSize }}">
+
 
     <div class="form-group">
         <label>Gender</label>
@@ -361,36 +387,36 @@
             <input type="number" name="stok" value="{{ old('stok', $product->stock) }}">
         </div>
     </div>
-
+    <input type="hidden" name="stocks_json" id="stocks-json">
       <button type="submit" class="save-btn">Save</button>
     </form>
   </div>
   <div class="image-container">
-  <form action="update_image.php" method="post" enctype="multipart/form-data">
-  <input type="hidden" name="color_id" value="{{ $color_id }}">
-
-<!-- Optional: Kirim product_id juga jika perlu -->
-<input type="hidden" name="product_id" value="{{ old('product_id', $id) }}">
-    <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
-
-    <!-- Input Jenis Gambar -->
-    <select name="position" required style="margin-bottom:10px;">
-      <option value="">-- Pilih Posisi Gambar --</option>
-      <option value="atas">Atas</option>
-      <option value="kiri">Kiri</option>
-      <option value="kanan">Kanan</option>
-      <option value="bawah">Bawah</option>
-    </select>
-
-    <!-- Input File -->
-    <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
-
-    <!-- Tombol Submit -->
-    <button type="submit" class="btn btn-black btn-sm">Upload</button>
-  </form>
-
-  <!-- Preview Utama -->
-<img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="main-image" id="mainImage" style="margin-top:20px;">
+    <form action="{{ route('product.update_gambar') }}" method="POST" enctype="multipart/form-data">
+      @csrf
+      <input type="hidden" name="color_id" value="{{ $color_id }}">
+      <input type="hidden" name="product_id" value="{{ old('product_id', $id) }}">
+  
+      <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
+  
+      <select name="position" required style="margin-bottom:10px;">
+        <option value="">-- Pilih Posisi Gambar --</option>
+        <option value="atas">Atas</option>
+        <option value="kiri">Kiri</option>
+        <option value="kanan">Kanan</option>
+        <option value="bawah">Bawah</option>
+      </select>
+  
+      <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
+  
+      <button type="submit" class="btn btn-black btn-sm">Upload</button>
+    </form>
+  
+    @if(session('success'))
+      <p style="color: green;">{{ session('success') }}</p>
+    @endif
+  
+    <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="main-image" id="mainImage" style="margin-top:20px;">
 
 <div class="thumbnails">
   <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="active" onclick="setMainImage(this)">
@@ -399,60 +425,53 @@
   <img src="{{ asset('image/sepatu/bawah/' . $product->image_bawah) }}" onclick="setMainImage(this)">
 </div>
   </div>
-</div>
-</div>
-
-<a href="{{ route('productadmin') }}" class="btn btn-outline-secondary position-absolute top-0 end-0 m-3 p-2">
-  <i class="bi bi-arrow-left"></i>
-</a>
-
-
+  
   <script>
-    // Handle size button active state
-    document.querySelectorAll('.size-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-      });
-    });
-
-    // Handle image preview
-    function setMainImage(thumbnail) {
-      document.getElementById('mainImage').src = thumbnail.src;
+    function setMainImage(el) {
+      document.getElementById('mainImage').src = el.src;
       document.querySelectorAll('.thumbnails img').forEach(img => img.classList.remove('active'));
-      thumbnail.classList.add('active');
+      el.classList.add('active');
     }
-
-    document.querySelectorAll('.size-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-    document.getElementById('selectedSize').value = btn.innerText.replace('EU ', '');
-  });
-});
-
-const sizeStockMap = <?= json_encode($sizeStock); ?>;
-
-document.querySelectorAll('.size-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    // update tombol aktif
-    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-
-    // update hidden input
-    const size = btn.innerText.replace('EU ', '');
-    document.getElementById('selectedSize').value = size;
-
-    // update stok sesuai ukuran
-    const stockInput = document.querySelector('input[name="stok"]');
-    if (sizeStockMap[size]) {
-      stockInput.value = sizeStockMap[size];
-    } else {
-      stockInput.value = 0;
-    }
-  });
-});
   </script>
+</div>
+</div>
+
+
+<script>
+  const sizeStockMap = {!! json_encode($sizeStock) !!}; 
+  let currentSize = document.getElementById('selectedSize').value || null;
+  const stockInput = document.querySelector('input[name="stok"]');
+
+  function selectSize(size) {
+    if (currentSize !== null) {
+      sizeStockMap[currentSize] = parseInt(stockInput.value) || 0;
+    }
+    currentSize = size;
+    document.getElementById('selectedSize').value = size;
+    stockInput.value = sizeStockMap[size] || 0;
+
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('size-btn-' + size).classList.add('active');
+  }
+
+  stockInput.addEventListener('input', () => {
+    if (currentSize !== null) {
+      sizeStockMap[currentSize] = parseInt(stockInput.value) || 0;
+    }
+  });
+
+  document.querySelector('form').addEventListener('submit', function () {
+    if (currentSize !== null) {
+      sizeStockMap[currentSize] = parseInt(stockInput.value) || 0;
+    }
+    document.getElementById('stocks-json').value = JSON.stringify(sizeStockMap);
+  });
+</script>
+
+<script src="https://unpkg.com/feather-icons"></script>
+<script>
+  feather.replace();
+</script>
 
 </body>
 </html>

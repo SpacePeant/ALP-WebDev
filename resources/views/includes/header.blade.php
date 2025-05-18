@@ -4,7 +4,6 @@
 @endphp
 
 <style>
-    /* Reset dan dasar */
     * {
       box-sizing: border-box;
     }
@@ -25,7 +24,6 @@
       background: none;
     }
 
-    /* Layout desktop */
     .layout-desktop {
       display: flex;
       justify-content: space-between;
@@ -45,11 +43,10 @@
     }
     .layout-desktop .icons {
       display: flex;
-      gap: 20px;
+      gap: 30px;
       font-size: 15px;
     }
 
-    /* Layout mobile (default hidden) */
     .layout-mobile {
       display: none;
       flex-direction: column;
@@ -66,7 +63,7 @@
     }
     .layout-mobile .top-bar .icons {
       display: flex;
-      gap: 15px;
+      gap: 30px;
       font-size: 15px;
     }
     .layout-mobile #burger {
@@ -90,7 +87,6 @@
       border-bottom: none;
     }
 
-    /* Responsive trigger */
     @media (max-width: 768px) {
       .layout-desktop {
         display: none;
@@ -100,7 +96,6 @@
       }
     }
 
-    /* User dropdown shared styles */
     .user-dropdown {
       position: relative;
     }
@@ -117,7 +112,6 @@
       z-index: 100;
       width: 200px;
 
-      /* Animasi */
       opacity: 0;
       transform: translateY(-10px);
       pointer-events: none;
@@ -162,13 +156,23 @@
     .user-dropdown-menu .log:hover {
       background-color: #d32f2f;
     }
+
+    header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background-color: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
 </style>
 
 <header>
   <!-- Desktop Layout -->
   <div class="layout-desktop">
     <div class="logo">
-      <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+      <img src="{{ asset('image/huha.png') }}" alt="Logo" />
     </div>
 
     <nav class="menu">
@@ -187,6 +191,7 @@
         <div class="user-dropdown-menu" id="userDropdownDesktop">
           <p>Hi, {{ $user_name }}!</p>
           <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+          <button onclick="window.location='{{ route('order') }}'">My Orders</button>
           <button>Help</button>
           <button>Send Feedback</button>
           <button>FAQ</button>
@@ -205,7 +210,7 @@
       <button id="burger"><i data-feather="menu"></i></button>
 
       <div class="logo">
-        <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+        <img src="{{ asset('image/huha.png') }}" alt="Logo" />
       </div>
 
       <div class="icons">
@@ -217,6 +222,7 @@
           <div class="user-dropdown-menu" id="userDropdownMobile">
             <p>Hi, {{ $user_name }}!</p>
             <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+            <button onclick="window.location='{{ route('order') }}'">My Orders</button>
             <button>Help</button>
             <button>Send Feedback</button>
             <button>FAQ</button>

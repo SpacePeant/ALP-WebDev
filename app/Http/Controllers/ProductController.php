@@ -40,7 +40,7 @@ class ProductController extends Controller
                  ->where('pc.is_primary', true);
         })
         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
-        ->where('p.status', 'active')
+        ->where('pc.status', 'active')
         ->where('p.id', $id)
         ->first();
 
@@ -52,6 +52,7 @@ class ProductController extends Controller
     $color_options = DB::table('product_color')
         ->leftJoin('product_color_image', 'product_color.id', '=', 'product_color_image.color_id')
         ->where('product_color.product_id', $id)
+        ->where('product_color.status', 'active')
         ->select(
             'product_color.id',
             'product_color.color_name',
@@ -80,7 +81,7 @@ class ProductController extends Controller
         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
         ->where('p.category_id', $product->category_id)
         ->where('p.id', '!=', $id)        
-        ->where('p.status', 'active')
+        ->where('pc.status', 'active')
         ->limit(5)
         ->get();
         
@@ -243,7 +244,7 @@ $averageRating = $totalReviews > 0
             ->leftjoin('product_color as pc', 'p.id', '=', 'pc.product_id')
             ->leftjoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
             ->select('p.id', 'pc.id as color_id', 'p.name', 'pc.color_name', 'pci.image_kiri')
-            ->where('p.status', 'active')
+            ->where('pc.status', 'active')
             ->groupBy('p.id', 'pc.id', 'p.name', 'pc.color_name', 'pci.image_kiri')
             ->get();
 
@@ -251,13 +252,30 @@ $averageRating = $totalReviews > 0
     }
 
     public function delete($id)
-    {
-        DB::table('product')
-            ->where('id', $id)
-            ->update(['status' => 'inactive']);
+{
+    $color = DB::table('product_color')->where('id', $id)->first();
 
-        return redirect()->route('productadmin');
+    DB::table('product_color')
+        ->where('id', $id)
+        ->update(['status' => 'inactive', 'is_primary' => 0]);
+
+    if ($color->is_primary == 1) {
+        $newPrimary = DB::table('product_color')
+            ->where('product_id', $color->product_id)
+            ->where('id', '!=', $id)
+            ->where('status', 'active')
+            ->orderBy('id', 'asc') 
+            ->first();
+
+        if ($newPrimary) {
+            DB::table('product_color')
+                ->where('id', $newPrimary->id)
+                ->update(['is_primary' => 1]);
+        }
     }
+
+    return redirect()->route('productadmin');
+}
 
     public function create()
     {
@@ -298,16 +316,25 @@ $averageRating = $totalReviews > 0
                 'is_primary' => false,
             ]);
 
-            if ($request->size) {
-                foreach ($request->size as $size) {
-                    ProductVariant::create([
-                        'product_id' => $product->id,
-                        'color_id' => $color->id,
-                        'size' => $size,
-                        'stock' => 0,
-                    ]);
-                }
-            }
+            // if ($request->size) {
+            //     foreach ($request->size as $size) {
+            //         ProductVariant::create([
+            //             'product_id' => $product->id,
+            //             'color_id' => $color->id,
+            //             'size' => $size,
+            //             'stock' => 0,
+            //         ]);
+            //     }
+            // }
+
+            for ($size = 36; $size <= 45; $size++) {
+            ProductVariant::create([
+            'product_id' => $product->id,
+            'color_id' => $color->id,
+            'size' => $size,
+            'stock' => 0,
+        ]);
+    }
         }
 
         return redirect()->route('addproduct')->with('success', 'Product saved successfully!');
@@ -343,30 +370,32 @@ $averageRating = $totalReviews > 0
         return redirect()->back()->with('error', 'Produk tidak ditemukan.');
     }
 
-    // Ambil semua size-stock
     $sizeStock = DB::table('product_variant')
         ->where('product_id', $id)
         ->where('color_id', $color_id)
-        ->pluck('stock', 'size'); // hasilnya: ['36' => 10, '37' => 5, dst]
+        ->pluck('stock', 'size'); 
 
-    return view('editproduct', compact('product', 'sizeStock', 'color_id', 'id'));
+        return view('editproduct', [
+            'product' => $product,
+            'sizeStock' => $sizeStock,
+            'sizeStocksJson' => json_encode($sizeStock),
+            'color_id' => $color_id,
+            'id' => $id
+        ]);
 }
 
 public function update(Request $request, $id)
 {
-    // Validasi data input
     $validated = $request->validate([
         'nama_produk' => 'required|string|max:255',
         'gender' => 'required|in:Men,Women,Unisex',
         'deskripsi' => 'nullable|string',
         'kategori' => 'required|integer|exists:categories,id',
         'harga' => 'required|integer',
-        'ukuran' => 'required|integer',
-        'stok' => 'required|integer',
         'color_id' => 'required|integer',
+        'stocks_json' => 'required|json',
     ]);
 
-    // Update product
     $product = Product::findOrFail($id);
     $product->name = $validated['nama_produk'];
     $product->gender = $validated['gender'];
@@ -376,19 +405,61 @@ public function update(Request $request, $id)
     $product->updated_at = now();
     $product->save();
 
-    // Update product variant stock
-    $variant = ProductVariant::where('product_id', $id)
-                ->where('color_id', $validated['color_id'])
-                ->where('size', $validated['ukuran'])
-                ->first();
+    $stocksArray = json_decode($validated['stocks_json'], true);
 
-    if ($variant) {
-        $variant->stock = $validated['stok'];
-        $variant->save();
+    if (is_array($stocksArray)) {
+        foreach ($stocksArray as $size => $stock) {
+            ProductVariant::updateOrCreate(
+                [
+                    'product_id' => $product->id,
+                    'color_id' => $validated['color_id'],
+                    'size' => $size,
+                ],
+                [
+                    'stock' => $stock,
+                ]
+            );
+        }
     }
 
-    // Redirect kembali dengan pesan sukses
     return redirect()->route('productadmin')->with('success', 'Produk berhasil diperbarui');
+}
+public function update_gambar(Request $request)
+{
+    $request->validate([
+        'color_id' => 'required|integer|exists:product_color_image,color_id',
+        'position' => 'required|in:atas,kiri,kanan,bawah',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    $colorId = $request->input('color_id');
+    $position = $request->input('position');
+    $imageFile = $request->file('image');
+
+    $folderPath = public_path("image/sepatu/{$position}/");
+    $fileName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+    $columnName = "image_" . $position;
+
+    $oldImage = DB::table('product_color_image')
+        ->where('color_id', $colorId)
+        ->value($columnName);
+
+    if ($oldImage && file_exists($folderPath . $oldImage)) {
+        unlink($folderPath . $oldImage);
+    }
+
+    if (!file_exists($folderPath)) {
+        mkdir($folderPath, 0775, true);
+    }
+
+    $imageFile->move($folderPath, $fileName);
+    DB::table('product_color_image')
+        ->where('color_id', $colorId)
+        ->update([
+            $columnName => $fileName
+        ]);
+
+    return back()->with('success', 'Gambar berhasil diupdate!');
 }
 }
 

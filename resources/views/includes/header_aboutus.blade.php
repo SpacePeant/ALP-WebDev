@@ -2,13 +2,15 @@
     use Illuminate\Support\Facades\Session;
     $user_name = Session::get('user_name', 'Guest');
 @endphp
-
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
 <style>
   /* RESET dan dasar */
   * {
     box-sizing: border-box;
+    font-family: 'Red Hat Text', sans-serif;
   }
-
+  
   /* LAYOUT DESKTOP */
   .layout-desktop {
     display: flex;
@@ -19,7 +21,6 @@
     top: 0;
     left: 0;
     right: 0;
-    background-color: transparent;
     z-index: 30;
   }
 
@@ -29,6 +30,7 @@
   }
   .layout-desktop .logo img{
         height: 30px;
+        transition: background-color 0.5s ease, box-shadow 0.5s ease;
   }
   .layout-desktop nav.menu a {
     margin: 0 15px;
@@ -57,7 +59,6 @@
     padding: 10px 20px;
     background-color: #fff;
     position: relative;
-    z-index: 20;
   }
 
   .layout-mobile .top-bar {
@@ -108,54 +109,67 @@
   }
 
   /* USER DROPDOWN (untuk keduanya) */
-  .user-dropdown-menu {
-    position: absolute;
-    top: 120%;
-    right: 0;
-    background: white;
-    border-radius: 10px;
-    padding: 15px;
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    opacity: 0;
-    transform: translateY(-10px);
-    pointer-events: none;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-    z-index: 100;
-    width: 220px;
-    margin-right: 30px;
-  }
+  .user-dropdown {
+      position: relative;
+    }
 
-  .user-dropdown-menu.show {
-    opacity: 1;
-    transform: translateY(0);
-    pointer-events: auto;
-  }
+    .user-dropdown-menu {
+      position: absolute;
+      top: 120%;
+      right: 0;
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+      padding: 15px;
+      z-index: 100;
+      width: 200px;
 
-  .user-dropdown-menu button {
-    display: block;
-    width: 100%;
-    padding: 8px 12px;
-    background: none;
-    border: none;
-    text-align: left;
-    margin-top: 5px;
-    cursor: pointer;
-    transition: background 0.3s;
-  }
+      /* Animasi */
+      opacity: 0;
+      transform: translateY(-10px);
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
 
-  .user-dropdown-menu .log {
-    background-color: #f44336;
-    color: white;
-    text-align: center;
-  }
+    .user-dropdown-menu.show {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
 
-  .user-dropdown-menu button:hover {
-    background-color: #eee;
-  }
+    .user-dropdown-menu p {
+      margin: 0 0 10px 0;
+      font-weight: bold;
+    }
 
-  .user-dropdown-menu .log:hover {
-    background-color: #d32f2f;
-  }
+    .user-dropdown-menu button {
+      background-color: white;
+      color: black;
+      border: none;
+      border-radius: 5px;
+      padding: 8px 12px;
+      width: 100%;
+      cursor: pointer;
+      text-align: left;
+      margin-top: 5px;
+    }
+
+    .user-dropdown-menu .log {
+      background-color: #f44336;
+      color: white;
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .user-dropdown-menu button:hover {
+      background-color: #484848;
+      color: white;
+    }
+
+    .user-dropdown-menu .log:hover {
+      background-color: #d32f2f;
+    }
 
   /* RESPONSIVE */
   @media (max-width: 768px) {
@@ -184,6 +198,7 @@
     justify-content: center;
     align-items: center;
     position: relative;
+    z-index: 1;
     border-radius: 10px;
     margin-bottom: 30px;
   }
@@ -194,21 +209,62 @@
     font-weight: 700;
     color: black;
   }
+
+  header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.default {
+  background-color: transparent;
+  box-shadow: none;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.scrolled {
+  background-color: white; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+
+header.scrolled .layout-desktop {
+  background-color: white; 
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.default .layout-desktop{
+  background-color: transparent; 
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+.header.default.layout-mobile.menu-mobile{
+  background-color: white;
+}
+header.scrolled .layout-desktop .logo {
+  visibility: visible;
+  opacity: 1;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
 </style>
 
-<header>
+<header class="default">
   <!-- Desktop Header -->
   <div class="layout-desktop">
     <div class="logo">
       <!-- Hidden logo di desktop -->
-      <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+      <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
     </div>
 
     <nav class="menu">
       <a href="{{ route('home') }}">Home</a>
       <a href="{{ route('about') }}">About</a>
       <a href="{{ route('blog') }}">Blog</a>
-      <a href="{{ route('collection') }}">Collection</a>
+      <a href="{{ route('detail') }}">Collection</a>
     </nav>
 
     <div class="icons">
@@ -220,6 +276,7 @@
         <div class="user-dropdown-menu" id="userDropdownDesktop">
           <p>Hi, {{ Session::get('user_name', 'Guest') }}!</p>
           <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+          <button onclick="window.location='{{ route('order') }}'">My Orders</button>
           <button>Help</button>
           <button>Send Feedback</button>
           <button>FAQ</button>
@@ -237,7 +294,7 @@
     <div class="top-bar">
       <button id="burger"><i data-feather="menu"></i></button>
       <div class="logo">
-        <img src="{{ asset('image/logo.png') }}" alt="Logo" />
+        <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
       </div>
       <div class="icons">
         <a href="{{ route('wishlist') }}"><i data-feather="star"></i></a>
@@ -247,6 +304,7 @@
           <div class="user-dropdown-menu" id="userDropdownMobile">
             <p>Hi, {{ Session::get('user_name', 'Guest') }}!</p>
             <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+            <button onclick="window.location='{{ route('order') }}'">My Orders</button>
             <button>Help</button>
             <button>Send Feedback</button>
             <button>FAQ</button>
@@ -313,4 +371,18 @@
       userDropdownMobile.classList.remove('show');
     }
   });
+</script>
+<script>
+  window.addEventListener('scroll', function() {
+  const header = document.querySelector('header');
+  console.log('Scroll Y:', window.scrollY); // debug
+
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+    header.classList.remove('default');
+  } else {
+    header.classList.remove('scrolled');
+    header.classList.add('default');
+  }
+});
 </script>
