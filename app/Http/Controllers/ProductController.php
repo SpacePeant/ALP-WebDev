@@ -370,16 +370,15 @@ $averageRating = $totalReviews > 0
         return redirect()->back()->with('error', 'Produk tidak ditemukan.');
     }
 
-    // Ambil semua size-stock
     $sizeStock = DB::table('product_variant')
         ->where('product_id', $id)
         ->where('color_id', $color_id)
-        ->pluck('stock', 'size'); // hasilnya: ['36' => 10, '37' => 5, dst]
+        ->pluck('stock', 'size'); 
 
         return view('editproduct', [
             'product' => $product,
             'sizeStock' => $sizeStock,
-            'sizeStocksJson' => json_encode($sizeStock), // <--- Tambahkan ini
+            'sizeStocksJson' => json_encode($sizeStock),
             'color_id' => $color_id,
             'id' => $id
         ]);
@@ -424,6 +423,43 @@ public function update(Request $request, $id)
     }
 
     return redirect()->route('productadmin')->with('success', 'Produk berhasil diperbarui');
+}
+public function update_gambar(Request $request)
+{
+    $request->validate([
+        'color_id' => 'required|integer|exists:product_color_image,color_id',
+        'position' => 'required|in:atas,kiri,kanan,bawah',
+        'image' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+    ]);
+
+    $colorId = $request->input('color_id');
+    $position = $request->input('position');
+    $imageFile = $request->file('image');
+
+    $folderPath = public_path("image/sepatu/{$position}/");
+    $fileName = uniqid() . '.' . $imageFile->getClientOriginalExtension();
+    $columnName = "image_" . $position;
+
+    $oldImage = DB::table('product_color_image')
+        ->where('color_id', $colorId)
+        ->value($columnName);
+
+    if ($oldImage && file_exists($folderPath . $oldImage)) {
+        unlink($folderPath . $oldImage);
+    }
+
+    if (!file_exists($folderPath)) {
+        mkdir($folderPath, 0775, true);
+    }
+
+    $imageFile->move($folderPath, $fileName);
+    DB::table('product_color_image')
+        ->where('color_id', $colorId)
+        ->update([
+            $columnName => $fileName
+        ]);
+
+    return back()->with('success', 'Gambar berhasil diupdate!');
 }
 }
 

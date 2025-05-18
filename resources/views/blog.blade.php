@@ -3,6 +3,9 @@
 @section('title', 'Blog')
 
 @section('content')
+{{-- @php
+    $isAdmin = session()->has('user_id') && !session()->has('user_email');
+@endphp --}}
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -12,13 +15,22 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
     <link href="https://fonts.googleapis.com/css2?family=Roboto&display=swap" rel="stylesheet"/>
     @vite(['resources/css/blog.css', 'resources/js/app.js'])
+
   </head>
+  {{-- <?php
+    // if (Session::has('user_id') && !Session::has('user_email')) {
+    //     echo("admin");
+    // }
 
+    // if (Session::has('user_id') && Session::has('user_email')) {
+    //    echo("customer");
+    // }
+  ?> --}}
   <body>
-
+    
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
+
         <div class="carousel-inner">
-        
           @foreach ($carouselImages as $index => $image)
           <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
             <img src="{{ asset('image/image_carousel/' . $image->filename) }}" class="d-block w-100" alt="Slide">
@@ -32,13 +44,18 @@
       <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
         <span class="carousel-control-next-icon"></span>
       </button>
+
     </div>
 
 
     <main>
       <section>
         <h3 class="articles-title">All articles</h3>
-        
+          {{-- @if ($isAdmin)
+            <div style="text-align: right; margin-bottom: 20px;">
+                <a href="{{ url('/articles/create') }}" class="btn btn-primary">Add Blog</a>
+            </div>
+          @endif --}}
         <div class="grid" id="blogGrid">
           @foreach ($articles->take(6) as $article)
             <a href="{{ url('/articles/' . $article->id) }}" style="text-decoration: none; color: inherit;">
