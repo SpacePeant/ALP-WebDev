@@ -172,7 +172,7 @@
   <!-- Desktop Layout -->
   <div class="layout-desktop">
     <div class="logo">
-      <img src="{{ asset('image/huha.png') }}" alt="Logo" />
+      <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
     </div>
 
     <nav class="menu">
@@ -210,7 +210,7 @@
       <button id="burger"><i data-feather="menu"></i></button>
 
       <div class="logo">
-        <img src="{{ asset('image/huha.png') }}" alt="Logo" />
+        <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
       </div>
 
       <div class="icons">
