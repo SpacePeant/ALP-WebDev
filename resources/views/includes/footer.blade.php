@@ -100,7 +100,7 @@
 <footer class="footer">
       <div class="footer-container">
         <div class="footer-about">
-          <img src="{{ asset('image/huha.png') }}" alt="Logo" />
+          <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
           <p>
             Brrr iku perusahaan sing adol macem-macem sepatu kaca sing bisa
             nggawe sampeyan ayu kaya Cinderella.
