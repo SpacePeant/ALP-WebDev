@@ -120,4 +120,3 @@ Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/forgotpassword', function () {return view('forgotpassword');});
 
 Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', [ChartController::class, 'indexDashboard'])->name('dashboard');
