@@ -76,7 +76,7 @@
 </head>
 <body style="min-height: 100vh;" class="d-flex align-items-center justify-content-center">
   <div class="resetpass-form text-center">
-    <img src="{{ asset('image/logo.png') }}" class="logo" alt="Nike Logo">
+    <img src="{{ asset('image/logg.png') }}" class="logo" alt="Nike Logo">
     <h3 class="fw-bold">Reset Password</h3>
     <small>We'll email you a link to reset your password</small>
 
