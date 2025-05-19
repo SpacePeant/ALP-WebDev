@@ -33,7 +33,7 @@ class BlogController extends Controller
     {
         $offset = $request->input('offset', 0);
 
-        $blogs = DB::table('article_image')
+        $blogs = DB::table('articles')
                     ->offset($offset)
                     ->limit(6)
                     ->get()

@@ -1,5 +1,4 @@
  
-{{-- @extends('base.base2') --}}
 @section('content')
 <a href="{{ route('blog') }}" class="back-button">← Back to Blog</a>
 
