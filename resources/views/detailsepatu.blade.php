@@ -903,7 +903,7 @@ body {
             </div>
           </div>
       @else
-          <p>Produk tidak ditemukan.</p>
+          <p>Product not found</p>
       @endif
   </div>
 </div>
@@ -1001,7 +1001,7 @@ body {
       </button>
     </div>
     @else
-    <p>Produk tidak ditemukan.</p>
+    <p>Product not found</p>
     @endif
   </div>
 </div>
@@ -1606,7 +1606,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
   </div>
 </div>
 @empty
-<p class="text-gray-500">Belum ada review untuk produk ini.</p>
+<p class="text-gray-500">No reviews yet for this product</p>
 @endforelse
 
 <div class="flex justify-center space-x-2 mt-4">

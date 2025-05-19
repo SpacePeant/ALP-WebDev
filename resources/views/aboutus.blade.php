@@ -339,7 +339,7 @@
   <div class="story-text">
     <h2>OUR STORY</h2>
     <p>
-      Brrr iku perusahaan sing dodolan macem-macem sepatu kaca sing bisa nggawe sampeyan ayu kaya Cinderella.
+      Brrrr is a store dedicated to offering innovative athletic footwear exclusively from Nike, inspiring both performance and style.
     </p>
   </div>
   <div class="story-images">
@@ -407,7 +407,7 @@
   <!-- quotes -->
   <section class="quote-section">
     <div class="quote-text">
-      <i>Tetaplah Menyerah dan <br> Janganlah Berusaha</i>
+      <i>From casual strolls to bold steps,<br>we've got you covered</i>
     </div>
   </section>
 

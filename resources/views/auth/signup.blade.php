@@ -42,9 +42,10 @@
       text-align: center;
       margin-top: 15px;
     }
-    a {
+       a {
         text-decoration: none;
         color: #000000;
+        font-weight: bold;
     }
     h3 {
       margin-top: -15px;
