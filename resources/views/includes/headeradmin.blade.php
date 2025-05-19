@@ -191,11 +191,11 @@
   <!-- Desktop Layout -->
   <div class="layout-desktop">
     <div class="logo">
-      <img src="{{ asset('image/huha.png') }}" alt="Logo" />
+      <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
     </div>
 
     <nav class="navbar">
-      <a href="#">Dashboard</a>
+      <a href="{{ route('dashboard') }}">Dashboard</a>
       <a href="{{ route('orderadmin') }}">Order</a>
       <a href="{{ route('productadmin') }}">Product</a>
     </nav>

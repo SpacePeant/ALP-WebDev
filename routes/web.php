@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\PaymentController;
@@ -109,3 +110,6 @@ Route::get('/order', [OrderController::class, 'index'])->name('order');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
 
 Route::get('/forgotpassword', function () {return view('forgotpassword');});
+
+Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
+Route::get('/dashboard', [ChartController::class, 'indexDashboard'])->name('dashboard');

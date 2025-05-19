@@ -361,7 +361,7 @@
             <div class="haha">
               <div class="besar">
                 <img
-                  src="image/gambar1.png"
+                  src="image/carostyle1.png"
                   alt="Gambar 1"
                   class="carousel-image-large"
                 />
@@ -370,7 +370,7 @@
                 <div class="kecil">
                   <div class="">
                     <img
-                      src="image/gambar2.png"
+                      src="image/carosports1.png"
                       alt="Gambar 2"
                       class="carousel-image-small"
                     />
@@ -379,7 +379,7 @@
                 <div class="temankecil">
                   <div class="">
                     <img
-                      src="image/gambar3.png"
+                      src="image/carofashion1.png"
                       alt="Gambar 3"
                       class="carousel-image-small"
                     />
@@ -393,7 +393,7 @@
             <div class="haha">
               <div class="besar">
                 <img
-                  src="image/gambar4.png"
+                  src="image/carostyle2.png"
                   alt="Gambar 1"
                   class="carousel-image-large"
                 />
@@ -402,7 +402,7 @@
                 <div class="kecil">
                   <div class="">
                     <img
-                      src="image/gambar2.png"
+                      src="image/carosports2.png"
                       alt="Gambar 2"
                       class="carousel-image-small"
                     />
@@ -411,7 +411,39 @@
                 <div class="temankecil">
                   <div class="">
                     <img
-                      src="image/gambar3.png"
+                      src="image/carofashion2.png"
+                      alt="Gambar 3"
+                      class="carousel-image-small"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="carousel-item">
+            <div class="haha">
+              <div class="besar">
+                <img
+                  src="image/carostyle3.png"
+                  alt="Gambar 1"
+                  class="carousel-image-large"
+                />
+              </div>
+              <div class="hihi">
+                <div class="kecil">
+                  <div class="">
+                    <img
+                      src="image/carosports3.png"
+                      alt="Gambar 2"
+                      class="carousel-image-small"
+                    />
+                  </div>
+                </div>
+                <div class="temankecil">
+                  <div class="">
+                    <img
+                      src="image/carofashion3.png"
                       alt="Gambar 3"
                       class="carousel-image-small"
                     />
@@ -450,7 +482,7 @@
 
           <div class="product-info">
             <h2>The Air Jordan 1 Low<br />Phantom Night Maroon</h2>
-            <button class="shop-button">SHOP NOW</button>
+            <button class="shop-button" onclick="window.location.href='{{ route('detail') }}'">SHOP NOW</button>
           </div>
         </div>
       </div>
