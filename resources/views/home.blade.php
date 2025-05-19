@@ -360,29 +360,35 @@
           <div class="carousel-item active">
             <div class="haha">
               <div class="besar">
+                <a href="{{ route('detail') }}">
                 <img
                   src="image/carostyle1.png"
                   alt="Gambar 1"
                   class="carousel-image-large"
                 />
+                </a>
               </div>
               <div class="hihi">
                 <div class="kecil">
                   <div class="">
+                    <a href="{{ route('detail') }}">
                     <img
                       src="image/carosports1.png"
                       alt="Gambar 2"
                       class="carousel-image-small"
                     />
+                    </a>
                   </div>
                 </div>
                 <div class="temankecil">
                   <div class="">
+                    <a href="{{ route('detail') }}">
                     <img
                       src="image/carofashion1.png"
                       alt="Gambar 3"
                       class="carousel-image-small"
                     />
+                    </a>
                   </div>
                 </div>
               </div>
@@ -392,29 +398,35 @@
           <div class="carousel-item">
             <div class="haha">
               <div class="besar">
+                <a href="{{ route('detail') }}">
                 <img
                   src="image/carostyle2.png"
                   alt="Gambar 1"
                   class="carousel-image-large"
                 />
+              </a>
               </div>
               <div class="hihi">
                 <div class="kecil">
                   <div class="">
+                    <a href="{{ route('detail') }}">
                     <img
                       src="image/carosports2.png"
                       alt="Gambar 2"
                       class="carousel-image-small"
                     />
+                    </a>
                   </div>
                 </div>
                 <div class="temankecil">
                   <div class="">
+                    <a href="{{ route('detail') }}">
                     <img
                       src="image/carofashion2.png"
                       alt="Gambar 3"
                       class="carousel-image-small"
                     />
+                    </a>
                   </div>
                 </div>
               </div>
@@ -424,29 +436,35 @@
           <div class="carousel-item">
             <div class="haha">
               <div class="besar">
+                <a href="{{ route('detail') }}">
                 <img
                   src="image/carostyle3.png"
                   alt="Gambar 1"
                   class="carousel-image-large"
                 />
+                </a>
               </div>
               <div class="hihi">
                 <div class="kecil">
                   <div class="">
+                    <a href="{{ route('detail') }}">
                     <img
                       src="image/carosports3.png"
                       alt="Gambar 2"
                       class="carousel-image-small"
                     />
+                    </a>
                   </div>
                 </div>
                 <div class="temankecil">
                   <div class="">
+                    <a href="{{ route('detail') }}">
                     <img
                       src="image/carofashion3.png"
                       alt="Gambar 3"
                       class="carousel-image-small"
                     />
+                    </a>
                   </div>
                 </div>
               </div>
