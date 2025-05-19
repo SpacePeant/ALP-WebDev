@@ -207,37 +207,68 @@
     }
 
     .price-filter {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-family: sans-serif;
+}
 
-    .slider-values {
-        display: flex;
-        justify-content: space-between;
-        width: 200px;
-        font-size: 14px;
-        margin-bottom: 5px;
-    }
+.slider-values {
+  display: flex;
+  justify-content: space-between;
+  width: 200px;
+  font-size: 14px;
+}
 
-    input[type="range"] {
-        -webkit-appearance: none;
-        width: 200px;
-        height: 5px;
-        background: #ddd;
-        border-radius: 5px;
-        outline: none;
-        margin: 5px 0;
-    }
+.slider-container {
+  position: relative;
+  width: 200px;
+  height: 30px;
+}
 
-    input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        width: 14px;
-        height: 14px;
-        background: black;
-        border-radius: 50%;
-        cursor: pointer;
-    }
+input[type="range"] {
+  position: absolute;
+  pointer-events: none;
+  -webkit-appearance: none;
+  width: 100%;
+  height: 5px;
+  margin: 0;
+  background: none;
+  z-index: 2;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  pointer-events: all;
+  width: 14px;
+  height: 14px;
+  background: black;
+  border-radius: 50%;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.slider-track {
+  position: absolute;
+  height: 5px;
+  background: #ddd;
+  top: 10%;
+  transform: translateY(-50%);
+  width: 100%;
+  z-index: 1;
+  border-radius: 5px;
+}
+
+.slider-track::after {
+  content: "";
+  position: absolute;
+  height: 100%;
+  background: black;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  border-radius: 5px;
+}
     .select-wrapper {
         position: relative;
         display: inline-block;
@@ -571,12 +602,15 @@
     <div class="price-filter">
         <label>Price</label>
         <div class="slider-values">
-            <span>Rp <span id="minPriceVal">500k</span></span>
-            <span>Rp <span id="maxPriceVal">8000k</span></span>
+          <span>Rp <span id="minPriceVal">500k</span></span>
+          <span>Rp <span id="maxPriceVal">8000k</span></span>
         </div>
-        <input type="range" name="min" id="minPrice" min="500" max="10000" value="500" step="100" />
-        <input type="range" name="max" id="maxPrice" min="500" max="10000" value="8000" step="100" />
-    </div>
+        <div class="slider-container">
+          <input type="range" name="min" id="minPrice" min="500" max="10000" value="500" step="100">
+          <input type="range" name="max" id="maxPrice" min="500" max="10000" value="8000" step="100">
+          <div class="slider-track"></div>
+        </div>
+      </div>
 </div>
 {{-- Filter Icon untuk Mobile --}}
 {{-- <div class="d-flex justify-content-end d-md-none mb-3">
