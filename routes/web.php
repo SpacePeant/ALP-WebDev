@@ -8,6 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -109,6 +110,12 @@ Route::post('/profile/update', [ProfileController::class, 'update'])->name('prof
 Route::get('/order', [OrderController::class, 'index'])->name('order');
 
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
+
+
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
+
 
 Route::get('/forgotpassword', function () {return view('forgotpassword');});
 
