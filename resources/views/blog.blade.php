@@ -29,22 +29,26 @@
   <body>
     
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
-
-        <div class="carousel-inner">
-          @foreach ($carouselImages as $index => $image)
+      <div class="carousel-inner">
+        @foreach ($carouselImages as $index => $image)
           <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
             <img src="{{ asset('image/image_carousel/' . $image->filename) }}" class="d-block w-100" alt="Slide">
+            <div class="carousel-caption d-none d-md-block">
+              <h4>Release</h4>
+              <h2>{{ $image->title1 }}</h2>
+              <h2>{{ $image->title2 }}</h2>
+                <p>{{ $image->description }}</p>
+            </div>
           </div>
-          @endforeach
-        </div>
-      
+        @endforeach
+      </div>
+
       <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
         <span class="carousel-control-prev-icon"></span>
       </button>
       <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
         <span class="carousel-control-next-icon"></span>
       </button>
-
     </div>
 
 

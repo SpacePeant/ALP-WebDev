@@ -124,23 +124,27 @@ main {
   border-radius: 20px;
 }
 
-.carousel-caption-center {
+.carousel-item img{
+  height: 640px;
+  width: 500px;
+  filter: brightness(60%);
+}
+
+.carousel-caption {
   position: absolute;
-  bottom: 20%;
-  left: 15%;
+  bottom: 0%;
+  left: 0%;
   right: 10%;
   text-align: left;
-  background: rgba(255,255,255,0.8);
-  padding: 1rem;
+  /* background: rgba(255,255,255,0.8); */
+  padding: 3rem;
   border-radius: 10px;
-  font-weight: bold;
 }
 
 .carousel-control-prev {
   position: absolute;
   top: 80%;
   transform: translateY(-200%);
-  background: rgba(255,255,255,0.7);
   border: none;
   font-size: 2rem;
   padding: 0.5rem 1rem;
@@ -153,7 +157,6 @@ main {
   position: absolute;
   top: 80%;
   transform: translateY(-200%);
-  background: rgba(255,255,255,0.7);
   border: none;
   font-size: 2rem;
   padding: 0.5rem 1rem;

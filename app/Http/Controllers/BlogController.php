@@ -22,7 +22,7 @@ class BlogController extends Controller
 
      public function showBlogPage()
     {
-        $articles = DB::table('article_image')->get(); 
+        $articles = DB::table('articles')->get(); 
         $carouselImages = DB::table('blog_image')->get(); // Adjust this if needed
 
         return view('blog', compact('articles', 'carouselImages'));
@@ -33,12 +33,13 @@ class BlogController extends Controller
     {
         $offset = $request->input('offset', 0);
 
-        $blogs = DB::table('article_image')
+        $blogs = DB::table('articles')
                     ->offset($offset)
                     ->limit(6)
                     ->get()
                     ->map(function ($blog) {
                         return [
+                            'id' => $blog->id,
                             'title' => $blog->title,
                             'excerpt' => $blog->description,
                             'image_url' => asset('image/image_article/' . $blog->filename),
