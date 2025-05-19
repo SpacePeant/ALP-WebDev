@@ -46,34 +46,37 @@
       text-align: center;
       transition: box-shadow 0.3s ease;
     }
+    
     .card-stat:hover {
       box-shadow: 0 6px 14px rgba(0,0,0,0.1);
     }
     .card-stat .card-title {
-      font-weight: 600;
+      font-weight: 500;
       font-size: 1.1rem;
       color: #6c757d;
       margin-bottom: 12px;
       letter-spacing: 0.04em;
     }
-    .card-stat .stat-value {
-      font-size: 2rem;
-      font-weight: 700;
-    }
+
     /* .text-success { color: #198754 !important; }
     .text-primary { color: #0d6efd !important; }
     .text-warning { color: #ffc107 !important; } */
 
     /* Section titles */
     .section-title {
-      font-weight: 700;
-      font-size: 1.3rem;
-      margin-bottom: 24px;
-      border-bottom: 2px solid black;
-      display: inline-block;
-      padding-bottom: 4px;
+      font-size: 1.2rem;
+      font-weight: 500;
+      margin-bottom: 20px;
+      border-bottom: 1px solid #000;
+      padding-bottom: 6px;
+      color: #111;
     }
 
+    .stat-value {
+      font-size: 2rem;
+      font-weight: 500;
+      color: #111;
+    }
     /* Cards for chart and stock */
     .card-box {
       background: #fff;
@@ -120,7 +123,7 @@
       color: #fff;
       border-radius: 50px;
       padding: 6px 16px;
-      font-weight: 700;
+      font-weight: 600;
       font-size: 0.9rem;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
@@ -268,59 +271,76 @@
 
 
   <script>
-    const ctx = document.getElementById('salesChart').getContext('2d');
-new Chart(ctx, {
-  type: 'line',
-  data: {
-    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
-    datasets: [{
-      label: 'Shoes Sold',
-      data: [5, 9, 7, 12, 8, 15, 10],
-      fill: true,
-    //   backgroundColor: 'rgba(30, 60, 120, 0.2)', // biru tua transparan
-    //   borderColor: '#1e3c78', // biru tua solid
-    backgroundColor: 'rgba(34, 139, 84, 0.15)', // hijau gelap transparan
-      borderColor: '#228b54', // hijau gelap solid
-      tension: 0.3,
-      pointRadius: 5,
-      pointBackgroundColor: '#228b54',
-      borderWidth: 3,
-    }]
-  },
-  options: {
-    responsive: true,
-    scales: {
-      y: {
-        beginAtZero: true,
-        ticks: {
-          stepSize: 2,
-          color: 'cccccc'  // abu-abu terang untuk angka y-axis
-        },
-      },
-      x: {
-        grid: {
+const ctx = document.getElementById('salesChart').getContext('2d');
+
+  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+  gradient.addColorStop(0, 'rgba(13,110,253,0.4)');
+  gradient.addColorStop(1, 'rgba(13,110,253,0)');
+
+  const salesChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: {!! json_encode($data['labels']) !!},
+      datasets: [{
+        label: 'Units Sold',
+        data: {!! json_encode($data['sales']) !!},
+        fill: true,
+        backgroundColor: gradient,
+        borderColor: '#0d6efd',
+        tension: 0.4,
+        pointBackgroundColor: '#0d6efd',
+        pointBorderColor: '#fff',
+        pointRadius: 5,
+        pointHoverRadius: 7,
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: {
           display: false
         },
-        ticks: {
-          color: 'cccccc'  // abu-abu terang untuk label x-axis
+        tooltip: {
+          mode: 'index',
+          intersect: false,
+          padding: 10,
+          backgroundColor: 'rgba(0,0,0,0.75)',
+          titleFont: {
+            weight: 'bold',
+            size: 14
+          },
+          bodyFont: {
+            size: 13
+          },
+          callbacks: {
+            label: function(context) {
+              return context.parsed.y + ' pairs';
+            }
+          }
         }
-      }
-    },
-    plugins: {
-      legend: {
-        display: true,
-        labels: {
-          color: 'cccccc',  // warna teks legend abu terang
-          font: { weight: '600' }
+      },
+      scales: {
+        y: {
+          beginAtZero: true,
+          ticks: {
+            stepSize: 1
+          },
+          grid: {
+            color: 'rgba(0,0,0,0.05)'
+          }
+        },
+        x: {
+          grid: {
+            display: false
+          }
         }
+      },
+      animation: {
+        duration: 1200,
+        easing: 'easeOutQuart'
       }
-    },
-    interaction: {
-      intersect: false,
-      mode: 'nearest',
     }
-  }
-});
+  });
   </script>
 </body>
 </html>
