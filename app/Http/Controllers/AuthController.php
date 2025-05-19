@@ -35,7 +35,7 @@ class AuthController extends Controller
         if ($admin && $request->password === $admin->password) {
             Session::put('user_id', $admin->id);
             Session::put('user_name', $admin->name);
-            return redirect('/orderadmin');
+            return redirect('/dashboard');
         }
 
         return back()->withErrors(['email' => 'Email or password incorrect'])->withInput();

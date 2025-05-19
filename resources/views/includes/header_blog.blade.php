@@ -325,6 +325,7 @@
     position: relative;
     border-radius: 10px;
     margin-bottom: 30px;
+    z-index: 1;
   }
 
   .about-overlay h1 {
@@ -333,14 +334,55 @@
     font-weight: 700;
     color: black;
   }
+
+  header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 9999;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.default {
+  background-color: transparent;
+  box-shadow: none;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.scrolled {
+  background-color: white; 
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+
+header.scrolled .layout-desktop {
+  background-color: white; 
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+
+header.default .layout-desktop{
+  background-color: transparent; 
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
+.header.default.layout-mobile.menu-mobile{
+  background-color: white;
+}
+header.scrolled .layout-desktop .logo {
+  visibility: visible;
+  opacity: 1;
+  transition: background-color 0.5s ease, box-shadow 0.5s ease;
+}
 </style>
 
-<header>
+<header class="default">
   <!-- Desktop Header -->
   <div class="layout-desktop">
     <div class="logo">
       <!-- Hidden logo di desktop -->
-      <img src="{{ asset('image/huha.png') }}" alt="Logo" />
+      <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
     </div>
 
     <nav class="menu">
@@ -454,4 +496,18 @@
       userDropdownMobile.classList.remove('show');
     }
   });
+</script>
+<script>
+  window.addEventListener('scroll', function() {
+  const header = document.querySelector('header');
+  console.log('Scroll Y:', window.scrollY); // debug
+
+  if (window.scrollY > 50) {
+    header.classList.add('scrolled');
+    header.classList.remove('default');
+  } else {
+    header.classList.remove('scrolled');
+    header.classList.add('default');
+  }
+});
 </script>

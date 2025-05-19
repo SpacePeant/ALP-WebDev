@@ -33,7 +33,7 @@
       font-family: 'Playfair Display', serif;
       font-weight: 700;
       text-align: center;
-      margin-top: 20px;
+      margin-top: 80px;
       margin-bottom: 30px;
     }
 

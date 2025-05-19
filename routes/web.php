@@ -8,6 +8,7 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\ProfileController;
@@ -26,6 +27,7 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('addpr
 
 Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
 
 // Cart
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -109,7 +111,12 @@ Route::get('/order', [OrderController::class, 'index'])->name('order');
 
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
 
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
+
+
+Route::get('/articles/{id}', [ArticleController::class, 'show']);
+
+
 Route::get('/forgotpassword', function () {return view('forgotpassword');});
 
 Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
-Route::get('/dashboard', [ChartController::class, 'indexDashboard'])->name('dashboard');
