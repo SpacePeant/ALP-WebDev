@@ -15841,3 +15841,34 @@
 "} 
 [2025-05-18 06:29:51] local.INFO: Pay Now clicked by user ID: 1  
 [2025-05-18 06:29:51] local.INFO: Request data: {"_token":"i2CTD6LkHth2plFckWfgAODvbqZCBwHeyyv71AOG","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:06:22] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:06:22] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:06:22] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:06:26] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:06:26] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:06:26] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:06:32] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:06:32] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:06:33] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:06:37] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:06:37] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:06:37] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:06:58] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:06:58] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:06:58] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:07:23] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:07:23] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:07:23] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:07:47] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:07:47] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:07:48] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:08:54] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:08:54] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:08:54] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:08:58] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:08:58] local.INFO: Request data: {"_token":"EkEfi8VVKiMB4cGSlYCyDIW7Bi3FzcJojpVaItpe","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:08:59] local.ERROR: Invalid email format: Guest  
+[2025-05-19 01:10:17] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:10:17] local.INFO: Request data: {"_token":"2bpLxx7g2prDZg15fWC0m3OhbCAwHolWHWD2AkxT","payment_method":"cash","pay_now":null} 
+[2025-05-19 01:11:12] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-19 01:11:12] local.INFO: Request data: {"_token":"2bpLxx7g2prDZg15fWC0m3OhbCAwHolWHWD2AkxT","payment_method":"cash","pay_now":null} 
