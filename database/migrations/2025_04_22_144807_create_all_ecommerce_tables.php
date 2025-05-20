@@ -29,14 +29,31 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('articles', function (Blueprint $table) {
             $table->id();
-            $table->string('category_name', 100);
+            $table->string('title');
+            $table->text('description');
+            $table->string('filename');
+            $table->timestamps();
+        });
+
+        Schema::create('blog_image', function (Blueprint $table) {
+            $table->id();
+            $table->string('filename');
+            $table->string('title1');
+            $table->string('title2');
             $table->text('description')->nullable();
             $table->timestamps();
         });
 
-        Schema::create('products', function (Blueprint $table) {
+        Schema::create('category', function (Blueprint $table) {
+            $table->id();
+            $table->string('name', 100);
+            $table->text('description')->nullable();
+            $table->timestamps();
+        });
+
+        Schema::create('product', function (Blueprint $table) {
             $table->id();
             $table->string('name', 100);
             $table->enum('gender', ['Men', 'Women', 'Unisex']);
@@ -47,7 +64,7 @@ return new class extends Migration
             $table->timestamps();
         });
 
-        Schema::create('product_colors', function (Blueprint $table) {
+        Schema::create('product_color', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->string('color_name', 50);
@@ -55,10 +72,11 @@ return new class extends Migration
             $table->string('color_code', 7)->nullable(); 
             $table->string('color_code_bg', 7)->nullable();
             $table->string('color_font', 7)->nullable();
+            $table->enum('status', ['active', 'inactive'])->default('active');
             $table->timestamps();
         });
 
-        Schema::create('product_color_images', function (Blueprint $table) {
+        Schema::create('product_color_image', function (Blueprint $table) {
             $table->id();
             $table->foreignId('color_id')->constrained('product_colors')->onDelete('cascade');
             $table->string('image_kiri', 255);
@@ -67,7 +85,7 @@ return new class extends Migration
             $table->string('image_bawah', 255);
         });
 
-        Schema::create('product_variants', function (Blueprint $table) {
+        Schema::create('product_variant', function (Blueprint $table) {
             $table->id();
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->foreignId('color_id')->constrained('product_colors')->onDelete('cascade');
@@ -101,6 +119,7 @@ return new class extends Migration
             $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
             $table->foreignId('product_color_id')->constrained('product_colors')->onDelete('cascade');
             $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
+            $table->boolean('is_pilih')->default(false);
             $table->integer('quantity');
             $table->timestamp('added_at')->nullable();
             $table->timestamps();
@@ -111,6 +130,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->dateTime('order_date');
             $table->string('status', 20);
+            $table->text('payment_url');
             $table->decimal('total_amount', 12, 2);
             $table->timestamps();
         });
@@ -186,11 +206,13 @@ return new class extends Migration
         Schema::dropIfExists('cart_items');
         Schema::dropIfExists('product_reviews');
         Schema::dropIfExists('wishlists');
-        Schema::dropIfExists('product_colors');
-        Schema::dropIfExists('product_color_images');
-        Schema::dropIfExists('product_variants');
-        Schema::dropIfExists('products');
-        Schema::dropIfExists('categories');
+        Schema::dropIfExists('product_color');
+        Schema::dropIfExists('product_color_image');
+        Schema::dropIfExists('product_variant');
+        Schema::dropIfExists('product');
+        Schema::dropIfExists('category');
+        Schema::dropIfExists('blog_image');
+        Schema::dropIfExists('articles');
         Schema::dropIfExists('admins');
         Schema::dropIfExists('customers');
     }

@@ -1,11 +1,10 @@
 @extends('base.base1')
 
 @section('content')
-{{-- @php
-    dd($cartItems);
-@endphp --}}
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
 </head>
 <div class="container my-5">
   <h2 id="my-cart-title" class="mb-4"><strong>My Cart</strong></h2>
