@@ -43,11 +43,9 @@ class ChartController extends Controller
     ];
 
     // Informasi lainnya
-    $balance = DB::table('product_variant as pv')
-        ->join('product as p', 'pv.product_id', '=', 'p.id')
-        ->where('p.status', 'active')
-        ->select(DB::raw('SUM(p.price * pv.stock) as balance'))
-        ->value('balance');
+    $balance = DB::table('orders')
+    ->whereNotNull('payment_url')
+    ->sum('total_amount');
 
     $totalSold = DB::table('order_details as od')->sum('od.quantity');
 

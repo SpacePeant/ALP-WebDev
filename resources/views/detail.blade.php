@@ -20,9 +20,10 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
   <style>
-    body {
+    * {
         font-family: 'Red Hat Text', sans-serif;
     }
+    
     /* CAROUSEL */
     .carousel-image-large {
         height: 100%;
@@ -94,12 +95,11 @@
     @media (max-width: 768px) {
     .carousel-caption-center h2 {
         font-size: 1.5rem; 
-        margin-top: -30px;
     }
 
     .carousel-caption-center p {
         font-size: 0.7rem; 
-       margin-top: -20px;
+        margin-top: -10px;
     }
     .carousel-caption-center a {
         font-size: 0.7rem; 
@@ -109,15 +109,22 @@
     @media (max-width: 576px) {
     .carousel-caption-center h2 {
         font-size: 1.2rem;
-        margin-top: -40px;
+        margin-top: -10px;
     }
 
     .carousel-caption-center p{
         font-size: 0.5rem;
-        margin-bottom: 13px;
+        margin-top: -20px;
     }
     .carousel-caption-center a {
         font-size: 0.5rem;
+    }
+    }
+
+    @media (max-width: 414px){
+        .carousel-caption-center h2 {
+        font-size: 1.2rem;
+        margin-top: -30px;
     }
     }
 
@@ -439,14 +446,13 @@ input[type="range"]::-webkit-slider-thumb {
     padding: 8px;
     margin-right: 5px;
 }
-
 /* === Mobile only === */
 @media (max-width: 768px) {
     .filter-bar {
         flex-wrap: nowrap;
         justify-content: flex-start;
         overflow-x: auto;
-        margin-top: -100px;
+        margin-top: -50px;
     }
 
     #searchToggle {
@@ -479,6 +485,7 @@ input[type="range"]::-webkit-slider-thumb {
     }
     .filter-bar {
         top: 58px;
+        font-size: 12px;
     }
     .filter-sidebar {
         margin-right: 0 !important;
@@ -499,9 +506,9 @@ input[type="range"]::-webkit-slider-thumb {
     .product-grid {
         display: flex;
         flex-wrap: wrap;
-        justify-content: left; /* Biar card produk ke tengah */
-        gap: 1rem; /* Jarak antar kartu */
-        padding: 0 1rem; /* Kasih padding samping biar gak mentok layar */
+        justify-content: left; 
+        gap: 1rem; 
+        padding: 0 1rem; 
     }
 
     .product-card {
@@ -513,6 +520,22 @@ input[type="range"]::-webkit-slider-thumb {
     .container-fluid {
         margin-top: -15px;
     }
+}
+
+.product-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    max-width: 270px;
+    padding: 15px;
+    margin-left: -20px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    text-align: center;
+    transition: transform 0.3s, background-color 0.3s;
+    display: flex;
+    flex-direction: column;
+    /* justify-content: space-between; */
 }
 
   </style>

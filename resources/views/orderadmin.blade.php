@@ -184,11 +184,11 @@
     <!-- Pending Orders -->
     <div class="border rounded p-4 shadow-sm d-flex align-items-center" style="width: 250px;">
       <div class="rounded-circle bg-warning bg-opacity-25 d-inline-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
-        <i class="bi bi-truck text-warning fs-3"></i>
+        <i class="bi bi-wallet2 text-warning fs-3"></i>
       </div>
       <div class="ms-3">
         <h4 class="mb-0">{{ $pendingOrders }}</h4>
-        <small class="text-muted">Pending Orders</small>
+        <small class="text-muted">Pending Payments</small>
       </div>
     </div>
   </div>

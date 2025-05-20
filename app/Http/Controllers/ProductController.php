@@ -458,7 +458,7 @@ public function update_gambar(Request $request)
             $columnName => $fileName
         ]);
 
-    return back()->with('success', 'Gambar berhasil diupdate!');
+    return back()->with('success', 'Image successfully updated!');
 }
 }
 
