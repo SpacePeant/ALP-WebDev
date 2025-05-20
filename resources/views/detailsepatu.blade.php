@@ -1398,7 +1398,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
       });
     });
 
-      document.querySelectorAll('.add-cart').forEach(button => {
+    document.querySelectorAll('.add-cart').forEach(button => {
     button.addEventListener('click', function () {
         const productId = this.dataset.productId;
         const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
@@ -1432,31 +1432,24 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
             if (data.success) {
                 Swal.fire({
                     icon: 'success',
-<<<<<<< HEAD
-                    title: 'Berhasil!',
-                    text: 'Produk berhasil ditambahkan ke keranjang!',
-                    showCancelButton: true,
-                    confirmButtonText: 'Lihat Keranjang',
-                    cancelButtonText: 'Lanjut Belanja',
-                    confirmButtonColor: '#133052',
-                    cancelButtonColor: '#6c757d'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = '/cart';
-                    }
-                    // Jika cancel, tetap di halaman saat ini (tidak perlu action)
-=======
                     title: 'Success!',
                     text: 'Product successfully added to the cart!',
+                    showCancelButton: true,
                     confirmButtonColor: '#000000',
-                    confirmButtonText: 'Continue Shopping'
->>>>>>> 9e0e6101f18d82d89b3d738afbd521a0f5552882
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Continue Shopping',
+                    cancelButtonText: 'View Cart'
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        window.location.href = '/cart';
+                    }
+                    // Jika pilih "Continue Shopping", tidak perlu aksi apa-apa
                 });
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Failed!',
-                    text: data.message || 'An Error Occured While Adding to Cart',
+                    text: data.message || 'An error occurred while adding to cart',
                     confirmButtonColor: '#d33',
                     confirmButtonText: 'Try Again'
                 });

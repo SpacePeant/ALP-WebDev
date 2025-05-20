@@ -61,21 +61,21 @@
     padding: 10px 20px;
     background: #fff;
   }
-
+  
   .layout-mobile .top-bar {
     display: flex;
     justify-content: space-between;
     align-items: center;
   }
 
+  .layout-mobile .top-bar .left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
   .layout-mobile .top-bar .logo img {
     height: 30px;
-  }
-
-  .layout-mobile .top-bar .icons {
-    display: flex;
-    gap: 15px;
-    font-size: 15px;
   }
 
   .layout-mobile #burger {
@@ -229,12 +229,13 @@
   <!-- Mobile Layout -->
   <div class="layout-mobile">
     <div class="top-bar">
-      <button id="burger"><i data-feather="menu"></i></button>
+      <div class="left">
+        <button id="burger"><i data-feather="menu"></i></button>
 
-      <div class="logo">
-        <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
+        <div class="logo">
+          <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
+        </div>
       </div>
-
       <div class="icons">
         <div class="user-dropdown">
           <a href="#" id="userIconMobile"><i data-feather="user"></i></a>
