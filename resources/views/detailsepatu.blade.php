@@ -1434,14 +1434,22 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
                     icon: 'success',
                     title: 'Success!',
                     text: 'Product successfully added to the cart!',
+                    showCancelButton: true,
                     confirmButtonColor: '#000000',
-                    confirmButtonText: 'Continue Shopping'
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Continue Shopping',
+                    cancelButtonText: 'View Cart'
+                }).then((result) => {
+                    if (result.dismiss === Swal.DismissReason.cancel) {
+                        window.location.href = '/cart';
+                    }
+                    // Jika pilih "Continue Shopping", tidak perlu aksi apa-apa
                 });
             } else {
                 Swal.fire({
                     icon: 'error',
                     title: 'Failed!',
-                    text: data.message || 'An Error Occured While Adding to Cart',
+                    text: data.message || 'An error occurred while adding to cart',
                     confirmButtonColor: '#d33',
                     confirmButtonText: 'Try Again'
                 });

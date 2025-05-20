@@ -23,6 +23,7 @@
     * {
         font-family: 'Red Hat Text', sans-serif;
     }
+    
     /* CAROUSEL */
     .carousel-image-large {
         height: 100%;

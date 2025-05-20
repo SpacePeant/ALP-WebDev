@@ -14,7 +14,7 @@ $user_name = Session::get('user_name', 'Guest');
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 25px 50px;
+    padding: 20px 50px;
     position: absolute;
     top: 0;
     left: 0;
@@ -61,21 +61,23 @@ $user_name = Session::get('user_name', 'Guest');
   }
 
   .layout-mobile .top-bar {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-
-  .layout-mobile .top-bar .logo img {
-    height: 30px;
-  }
-
-  .layout-mobile .top-bar .icons {
-    display: flex;
-    gap: 30px;
-    font-size: 20px;
-    align-items: center;
-  }
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .layout-mobile .top-bar .left {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+    .layout-mobile .top-bar .logo img {
+      height: 30px;
+    }
+    .layout-mobile .top-bar .icons {
+      display: flex;
+      gap: 20px;
+      font-size: 15px;
+    }
   .layout-mobile .top-bar .icons a{
    color:black;
   }
@@ -267,7 +269,7 @@ header.scrolled .layout-desktop .logo {
     </nav>
 
     <div class="icons">
-      <a href="{{ route('wishlist') }}"><i data-feather="star"></i></a>
+      <a href="{{ route('wishlist') }}"><i data-feather="heart"></i></a>
       <a href="{{ route('cart') }}"><i data-feather="shopping-cart"></i></a>
 
       <div class="user-dropdown">
@@ -291,12 +293,14 @@ header.scrolled .layout-desktop .logo {
   <!-- Mobile Header -->
   <div class="layout-mobile">
     <div class="top-bar">
-      <button id="burger"><i data-feather="menu"></i></button>
-      <div class="logo">
-        <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
+      <div class="left">
+        <button id="burger"><i data-feather="menu"></i></button>
+        <div class="logo">
+          <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
+        </div>
       </div>
       <div class="icons">
-        <a href="{{ route('wishlist') }}"><i data-feather="star"></i></a>
+        <a href="{{ route('wishlist') }}"><i data-feather="heart"></i></a>
         <a href="{{ route('cart') }}"><i data-feather="shopping-cart"></i></a>
         <div class="user-dropdown">
           <a href="#" id="userIconMobile"><i data-feather="user"></i></a>
