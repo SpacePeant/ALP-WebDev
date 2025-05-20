@@ -483,7 +483,7 @@
             <h1>10% OFF Discount Coupons</h1>
             <p>Subscribe us to get 10% OFF on all the purchases</p>
           </div>
-          <button class="email-button">EMAIL ME</button>
+          <button class="email-button">EMAIL US</button>
         </div>
       </div>
     </div>
