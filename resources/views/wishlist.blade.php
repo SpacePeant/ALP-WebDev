@@ -107,7 +107,7 @@
           if (result.success) {
             row.remove();
           } else {
-            alert(result.message || "Gagal menghapus item dari wishlist.");
+            alert(result.message || "Fail to Remove Item from Wishlist");
           }
         })
         .catch(error => {
