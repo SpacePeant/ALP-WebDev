@@ -173,7 +173,7 @@
   </div>
 </div>
   
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Bootstrap JS Bundle -->
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
@@ -197,11 +197,30 @@
     }
   });
 
+  // function confirmDelete(id) {
+  //   if (confirm('Are you sure you want to delete this product?')) {
+  //     window.location.href = '/products/delete/' + id;
+  //   }
+  // }
+
   function confirmDelete(id) {
-    if (confirm('Are you sure you want to delete this product?')) {
-      window.location.href = '/products/delete/' + id;
-    }
-  }
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "This item will be permanently deleted!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#d33',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: 'Yes, delete it',
+        cancelButtonText: 'Cancel',
+        reverseButtons: true
+    }).then((result) => {
+        if (result.isConfirmed) {
+            window.location.href = '/products/delete/' + id;
+        }
+    });
+}
+
 </script>
 </body>
 </html>

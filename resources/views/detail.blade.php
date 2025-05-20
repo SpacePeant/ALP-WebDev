@@ -78,11 +78,12 @@
     @media (max-width: 992px) {
     .carousel-caption-center h2 {
         font-size: 2rem;
+        margin-top: -20px;
     }
 
     .carousel-caption-center p {
         font-size: 1rem;
-        margin-bottom: 25px;
+        margin-bottom: -10px;
     }
 
     .carousel-caption-center a {
@@ -93,11 +94,12 @@
     @media (max-width: 768px) {
     .carousel-caption-center h2 {
         font-size: 1.5rem; 
+        margin-top: -30px;
     }
 
     .carousel-caption-center p {
         font-size: 0.7rem; 
-        margin-bottom: 20px;
+       margin-top: -20px;
     }
     .carousel-caption-center a {
         font-size: 0.7rem; 
@@ -107,6 +109,7 @@
     @media (max-width: 576px) {
     .carousel-caption-center h2 {
         font-size: 1.2rem;
+        margin-top: -40px;
     }
 
     .carousel-caption-center p{
@@ -146,6 +149,7 @@
         text-align: center;
         transition: transform 0.3s, background-color 0.3s; 
         position: relative;
+        height: 100%;
     }
 
     .product-card img {
@@ -195,7 +199,6 @@
         align-items: center;
         gap: 20px;
         margin-bottom: 30px;
-        margin-top: -50px;
     }
 
     .filter-bar input[type="text"],
@@ -474,7 +477,9 @@ input[type="range"]::-webkit-slider-thumb {
     .product-container {
         margin-top: 0 !important;
     }
-
+    .filter-bar {
+        top: 58px;
+    }
     .filter-sidebar {
         margin-right: 0 !important;
     }
@@ -494,15 +499,19 @@ input[type="range"]::-webkit-slider-thumb {
     .product-grid {
         display: flex;
         flex-wrap: wrap;
-        justify-content: center; /* Biar card produk ke tengah */
+        justify-content: left; /* Biar card produk ke tengah */
         gap: 1rem; /* Jarak antar kartu */
         padding: 0 1rem; /* Kasih padding samping biar gak mentok layar */
     }
 
     .product-card {
-        margin-right: 80px;
-        max-width: 400px; /* atau ukuran sesuai desain kamu */
-        width: 100%;
+        margin-right: 0px;
+        width: 180px;
+        height: 100%;
+    }
+
+    .container-fluid {
+        margin-top: -15px;
     }
 }
 
@@ -512,7 +521,6 @@ input[type="range"]::-webkit-slider-thumb {
 <div class="container-fluid px-0" id="car">
   <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
     <div class="carousel-inner">
-
       <div class="carousel-item active">
         <img src="{{ asset('image/image_carousel/running.png') }}" alt="Running">
         <div class="carousel-caption-center" style="color: #5E4E47;">

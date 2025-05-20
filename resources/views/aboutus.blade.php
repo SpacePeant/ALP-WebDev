@@ -358,7 +358,7 @@
         <div class="mission-card">
         <div class="icon"><i class="bi bi-geo-alt"></i></div>
           <h3>Empower <br>Every Step</h3>
-          <p>Deliver shoes that inspire movement and boost confidence</p>
+          <p>Deliver shoes that <br> boost confidence</p>
         </div>
         <div class="mission-card">
         <div class="icon"><i class="bi bi-bar-chart-fill"></i></div>
@@ -367,7 +367,7 @@
         </div>
         <div class="mission-card">
         <div class="icon"><i class="bi bi-send"></i></div>
-          <h3>Support Planet</h3>
+          <h3>Support <br>Planet</h3>
           <p>Promote inclusivity and eco-friendly practices</p>
         </div>
       </div>

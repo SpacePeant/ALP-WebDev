@@ -1280,12 +1280,12 @@ body {
           desktopIcon.classList.add(icon.classList.contains('bi-heart-fill') ? 'bi-heart-fill' : 'bi-heart');
         }
       } else {
-        alert(data.message || 'Gagal mengubah wishlist.');
+        alert(data.message || 'Failed to Update Wishlist');
       }
     })
     .catch(error => {
       console.error(error);
-      alert('Terjadi kesalahan saat mengubah wishlist.');
+      alert('An Error Occured When Updating Wishlist');
     });
   });
 });
@@ -1322,12 +1322,12 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
           desktopIcon.classList.add(icon.classList.contains('bi-heart-fill') ? 'bi-heart-fill' : 'bi-heart');
         }
       } else {
-        alert(data.message || 'Gagal mengubah wishlist.');
+        alert(data.message || 'Failed to Update Wishlist');
       }
     })
     .catch(error => {
       console.error(error);
-      alert('Terjadi kesalahan saat mengubah wishlist.');
+      alert('An Error Occured When Updating Wishlist');
     });
   });
 });
@@ -1346,7 +1346,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
           Swal.fire({
             icon: 'warning',
             title: 'Oops!',
-            text: 'Silakan pilih ukuran dan warna terlebih dahulu.',
+            text: 'Please select the size and color first',
             confirmButtonColor: '#d33',
             confirmButtonText: 'OK'
           });
@@ -1370,16 +1370,16 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
           if (data.success) {
             Swal.fire({
               icon: 'success',
-              title: 'Berhasil!',
-              text: 'Produk berhasil ditambahkan ke keranjang!',
-              confirmButtonColor: '#133052',
+              title: 'Success!',
+              text: 'Product successfully added to the cart!',
+              confirmButtonColor: '#000000',
               confirmButtonText: 'OK'
             });
           } else {
             Swal.fire({
               icon: 'error',
-              title: 'Gagal!',
-              text: data.message || 'Gagal menambahkan produk ke keranjang.',
+              title: 'Failed!',
+              text: data.message || 'Failed to add the product to the cart',
               confirmButtonColor: '#d33',
               confirmButtonText: 'OK'
             });
@@ -1389,8 +1389,8 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
           console.error(error);
           Swal.fire({
             icon: 'error',
-            title: 'Kesalahan',
-            text: 'Terjadi kesalahan saat menambahkan produk ke keranjang.',
+            title: 'Error!',
+            text: 'An Error Occured While Adding to Cart',
             confirmButtonColor: '#d33',
             confirmButtonText: 'OK'
           });
@@ -1408,7 +1408,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
             Swal.fire({
                 icon: 'warning',
                 title: 'Oops!',
-                text: 'Silakan pilih ukuran dan warna terlebih dahulu.',
+                text: 'Please select the size and color first',
                 confirmButtonColor: '#d33',
                 confirmButtonText: 'OK'
             });
@@ -1432,18 +1432,18 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
             if (data.success) {
                 Swal.fire({
                     icon: 'success',
-                    title: 'Berhasil!',
-                    text: 'Produk berhasil ditambahkan ke keranjang!',
-                    confirmButtonColor: '#133052',
-                    confirmButtonText: 'Lanjut Belanja'
+                    title: 'Success!',
+                    text: 'Product successfully added to the cart!',
+                    confirmButtonColor: '#000000',
+                    confirmButtonText: 'Continue Shopping'
                 });
             } else {
                 Swal.fire({
                     icon: 'error',
-                    title: 'Gagal!',
-                    text: data.message || 'Terjadi kesalahan saat menambahkan ke keranjang.',
+                    title: 'Failed!',
+                    text: data.message || 'An Error Occured While Adding to Cart',
                     confirmButtonColor: '#d33',
-                    confirmButtonText: 'Coba Lagi'
+                    confirmButtonText: 'Try Again'
                 });
             }
         })
@@ -1452,7 +1452,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
-                text: 'Terjadi kesalahan koneksi.',
+                text: 'A connection error occurred',
                 confirmButtonColor: '#d33',
                 confirmButtonText: 'OK'
             });
