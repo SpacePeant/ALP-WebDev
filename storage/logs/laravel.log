@@ -16975,3 +16975,11 @@
 #58 C:\\Program Files\\Herd\\resources\\app.asar.unpacked\\resources\\valet\\server.php(139): require('C:\\\\Users\\\\Feylin...')
 #59 {main}
 "} 
+[2025-05-19 15:39:30] local.ERROR: Maximum execution time of 30 seconds exceeded {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 30 seconds exceeded at C:\\Users\\Feylin\\Herd\\ALP-WebDev-1\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connection.php:593)
+[stacktrace]
+#0 {main}
+"} 
+[2025-05-19 16:01:16] local.ERROR: Maximum execution time of 30 seconds exceeded {"exception":"[object] (Symfony\\Component\\ErrorHandler\\Error\\FatalError(code: 0): Maximum execution time of 30 seconds exceeded at C:\\Users\\Feylin\\Herd\\ALP-WebDev-1\\vendor\\laravel\\framework\\src\\Illuminate\\Database\\Connectors\\Connector.php:67)
+[stacktrace]
+#0 {main}
+"} 
