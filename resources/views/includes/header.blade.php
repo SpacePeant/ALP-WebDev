@@ -2,7 +2,9 @@
     use Illuminate\Support\Facades\Session;
     $user_name = Session::get('user_name', 'Guest');
 @endphp
-
+<head>
+{{-- <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet"> --}}
 <style>
     * {
       box-sizing: border-box;
@@ -172,6 +174,8 @@
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 </style>
+</head>
+
 
 <header>
   <!-- Desktop Layout -->
