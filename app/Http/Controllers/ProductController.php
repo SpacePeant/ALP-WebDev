@@ -79,8 +79,7 @@ class ProductController extends Controller
                  ->where('pc.is_primary', true);
         })
         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
-        ->where('p.category_id', $product->category_id)
-        ->where('p.id', '!=', $id)        
+        ->where('p.category_id', $product->category_id)      
         ->where('pc.status', 'active')
         ->limit(5)
         ->get();
