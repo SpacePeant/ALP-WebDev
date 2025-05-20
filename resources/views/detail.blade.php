@@ -195,7 +195,6 @@
         align-items: center;
         gap: 20px;
         margin-bottom: 30px;
-        margin-top: -50px;
     }
 
     .filter-bar input[type="text"],
@@ -474,7 +473,9 @@ input[type="range"]::-webkit-slider-thumb {
     .product-container {
         margin-top: 0 !important;
     }
-
+    .filter-bar {
+        top: 58px;
+    }
     .filter-sidebar {
         margin-right: 0 !important;
     }
