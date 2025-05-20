@@ -57,6 +57,7 @@ class ChartController extends Controller
     $productStock = DB::table('product as p')
         ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')
         ->select('p.name', DB::raw('SUM(pv.stock) as total_stock'))
+        ->where('p.status', 'active')
         ->where('pv.stock', '>', 0)
         ->groupBy('p.name')
         ->orderByDesc('total_stock')

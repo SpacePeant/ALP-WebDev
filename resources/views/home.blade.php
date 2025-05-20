@@ -335,6 +335,230 @@
   border-radius: 8px;
 }
 
+.top-product h2{
+      margin:30px 80px 20px 90px
+}
+.ttop-product h2{
+      margin:30px 80px 20px 90px
+}
+
+    .product-card {
+        background-color: #fff; 
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        width: 240px;
+        padding: 15px;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: transform 0.3s, background-color 0.3s; 
+        position: relative;
+    }
+
+    .product-card img {
+        max-width: 100%;
+        height: auto;
+        transform: rotate(-28deg);
+        border-radius: 4px;
+        transition: transform 0.3s ease-in-out;
+    }
+
+    .product-card:hover img {
+        transform: rotate(0deg); 
+    }
+
+.product-card:hover {
+    background-color: var(--bg-color);
+    color: var(--font-color);
+}
+
+.product-card:hover h3,
+.product-card:hover p {
+    color: var(--font-color);
+}
+    .product-card:hover {
+        transform: translateY(-10px); 
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
+        background-color: var(--bg-color); 
+    }
+
+    .product-card h3 {
+        transition: all 0.3s ease;
+        font-size: 18px;
+        margin: 10px 0;
+        color: inherit; 
+        color: #333;
+    }
+
+    .product-card p {
+        transition: all 0.3s ease;
+        font-size: 16px;
+        color: #333;
+    }
+    .overflow-x-auto::-webkit-scrollbar {
+    display: none;
+}
+
+.horizontal-scroll-wrapper, .horizontal-scroll-wrapperr {
+  display: flex;
+  gap: 100px;
+  overflow-x: auto;
+  padding: 1rem 40px;
+  scroll-snap-type: x mandatory;
+  margin: 0px 40px;
+}
+
+.horizontal-scroll-wrapperr{
+  justify-content:center;
+}
+
+.horizontal-scroll-wrapper::-webkit-scrollbar,
+.horizontal-scroll-wrapperr::-webkit-scrollbar {
+  display: none; 
+}
+
+.product-link {
+  flex: 0 0 auto;
+  width: 200px; 
+  scroll-snap-align: start;
+  text-decoration:none;
+}
+.top-product {
+    display: none;
+  }
+@media screen and (max-width: 1250px) {
+  .top-product {
+    display: block;
+  }
+
+  .ttop-product {
+    display: none;
+  }
+}
+
+.HUHU h5 {
+  font-size: 20px;
+}
+.HUHU p {
+  font-size: 16px;
+}
+#best h3{
+  font-size: 32px;
+}
+
+/* Medium screen: max 1250px */
+@media screen and (max-width: 1250px) {
+  .HUHU h5 {
+    font-size: 16px;
+  }
+
+  .HUHU p {
+    font-size: 14px;
+  }
+
+  #best h3{
+    font-size: 24px;
+  }
+  .product-info h2{
+    font-size: 25px;
+  }
+}
+
+/* Small screen: max 992px */
+@media screen and (max-width: 992px) {
+  .HUHU h5 {
+    font-size: 14px;
+  }
+
+  .HUHU p {
+    font-size: 13px;
+  }
+
+  #best h3{
+    font-size: 20px;
+  }
+  .product-info h2{
+    font-size: 20px;
+  }
+  .product-image img {
+  margin-left: 40px;
+}
+.shop-button{
+  font-size: 14px;
+}
+}
+
+/* Extra small screen: max 700px */
+@media screen and (max-width: 700px) {
+  .HUHU h5 {
+    font-size: 12px;
+  }
+
+  .HUHU p {
+    font-size: 12px;
+  }
+
+  #best h3{
+    font-size: 18px;
+  }
+
+  .coupon-text h1{
+    font-size:20px;
+  }
+  .coupon-text p{
+    font-size:15px;
+  }
+  .email-button{
+    font-size:13px;
+  }
+  .product-info h2{
+    font-size: 16px;
+  }
+  .product-image img {
+  margin-left: 0px;
+}
+.shop-button{
+  font-size: 10px;
+  padding: 10px 30px;
+}
+}
+
+/* Very small screens: max 500px */
+@media screen and (max-width: 500px) {
+  .HUHU h5 {
+    font-size: 10px;
+  }
+
+  .HUHU p {
+    font-size: 10px;
+  }
+
+  #best h3{
+    font-size: 14px;
+  }
+
+  .coupon-text h1{
+    font-size:17px;
+  }
+  .coupon-text p{
+    font-size:12px;
+  }
+  .email-button{
+    font-size:10px;
+  }
+  .product-info h2{
+    font-size: 12px;
+  }
+  .product-info{
+    margin-right: 30px;
+  }
+  .product-image img {
+  margin-left: 0px;
+}
+.shop-button{
+  font-size: 6px;
+    padding: 5px 20px;
+}
+}
     </style>
     <!-- Bootstrap CSS -->
     <link
@@ -478,12 +702,12 @@
       <div class="coupon-container">
         <div class="background-text">10% OFF</div>
 
-        <div class="content">
-          <div class="coupon-text">
+        <div class="content row">
+          <div class="coupon-text col-8">
             <h1>10% OFF Discount Coupons</h1>
             <p>Subscribe us to get 10% OFF on all the purchases</p>
           </div>
-          <button class="email-button">EMAIL US</button>
+          <button class="email-button col-3">EMAIL ME</button>
         </div>
       </div>
     </div>
@@ -493,18 +717,105 @@
         <div class="bekatas">NEW</div>
         <div class="bekbawah">ITEM</div>
 
-        <div class="product-content">
-          <div class="product-image">
-            <img src="{{ asset('image/new.png') }}" alt="New Shoes" />
+        <div class="product-content row">
+          <div class="product-image col-5">
+            <img src="{{ asset('image/new.png') }}" alt="New Shoes" class="img-fluid"/>
           </div>
 
-          <div class="product-info">
+          <div class="product-info col-4">
             <h2>The Air Jordan 1 Low<br />Phantom Night Maroon</h2>
             <button class="shop-button" onclick="window.location.href='{{ route('detail') }}'">SHOP NOW</button>
           </div>
         </div>
       </div>
     </div>
+
+    <div class="top-product flex flex-col items-center justify-center text-center mt-10 mb-5">
+      <h2 class="text-xl font-semibold mb-4">Best Seller</h2>
+      <div class="horizontal-scroll-wrapper">
+        @forelse ($topProduct as $related)
+          <a href="{{ url('detail_sepatu/' . $related->product_id) }}" class="product-link">
+            <div class="product-card"
+              style="--bg-color: {{ $related->color_code_bg ?? '#fff' }}; --font-color: {{ $related->color_font ?? '#000' }};">
+              <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
+                alt="{{ $related->product_name }}">
+              <h3>{{ $related->product_name }}</h3>
+              <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+            </div>
+          </a>
+        @empty
+          <p>Tidak ada rekomendasi produk.</p>
+        @endforelse
+      </div>
+    </div>
+
+    <div class="ttop-product flex flex-col items-center justify-center text-center mt-10 mb-5">
+      <h2 class="text-xl font-semibold mb-4">Best Seller</h2>
+      <div class="horizontal-scroll-wrapperr">
+        @forelse ($topProduct as $related)
+          <a href="{{ url('detail_sepatu/' . $related->product_id) }}" class="product-link">
+            <div class="product-card"
+              style="--bg-color: {{ $related->color_code_bg ?? '#fff' }}; --font-color: {{ $related->color_font ?? '#000' }};">
+              <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
+                alt="{{ $related->product_name }}">
+              <h3>{{ $related->product_name }}</h3>
+              <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+            </div>
+          </a>
+        @empty
+          <p>Tidak ada rekomendasi produk.</p>
+        @endforelse
+      </div>
+    </div>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
+<div class="container py-5">
+  <div class="row align-items-center">
+    <!-- Gambar (satu gambar utuh) -->
+    <div class="col-6 mb-4 mb-lg-0 text-center">
+      <img src="{{ asset('image/huhah.png') }}" alt="Shoes" class="img-fluid rounded">
+    </div>
+    <div class="col-1 mb-4 mb-lg-0 text-center">
+      
+    </div>  
+    <!-- Teks fitur -->
+    <div class="col-5" id="best">
+      <h3 class="fw-bold mb-4">BEST FEATURE<br>IN SHOES</h3>
+
+      <div class="mb-4 d-flex">
+        <div class="me-3">
+          <i class="bi bi-clock-history fs-3 text-dark"></i>
+        </div>
+        <div class="HUHU">
+          <h5 class="fw-bold mb-1">All-Day Comfort</h5>
+          <p class="mb-0">Soft insoles and breathable design keep feet fresh and comfy.</p>
+        </div>
+      </div>
+
+      <div class="mb-4 d-flex">
+        <div class="me-3">
+          <i class="bi bi-link-45deg fs-3 text-dark"></i>
+        </div>
+        <div class="HUHU">
+          <h5 class="fw-bold mb-1">Durable & Stylish</h5>
+          <p class="mb-0">Built to last with looks that fit any style.</p>
+        </div>
+      </div>
+
+      <div class="d-flex">
+        <div class="me-3">
+          <i class="bi bi-award fs-3 text-dark"></i>
+        </div>
+        <div class="HUHU">
+          <h5 class="fw-bold mb-1">Premium Quality Materials</h5>
+          <p class="mb-0">Made with top-tier materials for lasting wear.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 
     <section class="kepo">
       <div class="cta-content">

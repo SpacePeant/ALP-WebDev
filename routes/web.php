@@ -16,6 +16,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\HomeController;
 
 Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
 
@@ -78,10 +79,7 @@ Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 // Route::post('/wishlist/add', [WishlistController::class, 'add'])->name('wishlist.add');
 // Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
 
-Route::get('/home', function () {
-    if (!session()->has('user_id')) return redirect('/login');
-    return view('home');
-});
+Route::get('/home', [HomeController::class, 'index'])->name('home');
 
 // Route::get('/orderadmin', function () {
 //     if (!session()->has('user_id')) return redirect('/login');
