@@ -201,9 +201,6 @@
           <p>Hi, {{ $user_name }}!</p>
           <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
           <button onclick="window.location='{{ route('order') }}'">My Orders</button>
-          <button>Help</button>
-          <button>Send Feedback</button>
-          <button>FAQ</button>
           <form action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit" class="log">Logout</button>
