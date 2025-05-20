@@ -278,9 +278,6 @@ header.scrolled .layout-desktop .logo {
           <p>Hi, {{ Session::get('user_name', 'Guest') }}!</p>
           <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
           <button onclick="window.location='{{ route('order') }}'">My Orders</button>
-          <button>Help</button>
-          <button>Send Feedback</button>
-          <button>FAQ</button>
           <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button class="log" type="submit">Logout</button>
@@ -308,9 +305,6 @@ header.scrolled .layout-desktop .logo {
             <p>Hi, {{ Session::get('user_name', 'Guest') }}!</p>
             <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
             <button onclick="window.location='{{ route('order') }}'">My Orders</button>
-            <button>Help</button>
-            <button>Send Feedback</button>
-            <button>FAQ</button>
             <form method="POST" action="{{ route('logout') }}">
               @csrf
               <button class="log" type="submit">Logout</button>
@@ -324,7 +318,7 @@ header.scrolled .layout-desktop .logo {
       <a href="{{ route('home') }}">Home</a>
       <a href="{{ route('about') }}">About</a>
       <a href="{{ route('blog') }}">Blog</a>
-      <a href="{{ route('collection') }}">Collection</a>
+      <a href="{{ route('detail') }}">Collection</a>
     </nav>
   </div>
 </header>

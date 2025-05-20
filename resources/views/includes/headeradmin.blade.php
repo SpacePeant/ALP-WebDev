@@ -214,9 +214,6 @@
         <a href="#" id="userIconDesktop"><i data-feather="user"></i></a>
         <div class="user-dropdown-menu" id="userDropdownDesktop">
           <p>Hi, {{ $user_name }}!</p>
-          <button>Help</button>
-          <button>Send Feedback</button>
-          <button>FAQ</button>
           <form id="logout-form-desktop" action="{{ route('logout') }}" method="POST">
             @csrf
             <button type="submit" class="log">Logout</button>
@@ -241,9 +238,6 @@
           <a href="#" id="userIconMobile"><i data-feather="user"></i></a>
           <div class="user-dropdown-menu" id="userDropdownMobile">
             <p>Hi, {{ $user_name }}!</p>
-            <button>Help</button>
-            <button>Send Feedback</button>
-            <button>FAQ</button>
             <form id="logout-form-mobile" action="{{ route('logout') }}" method="POST">
               @csrf
               <button type="submit" class="log">Logout</button>
