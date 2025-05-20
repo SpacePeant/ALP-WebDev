@@ -399,13 +399,13 @@
   
       <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
   
-      <select name="position" required style="margin-bottom:10px;">
-        <option value="">-- Pilih Posisi Gambar --</option>
-        <option value="atas">Atas</option>
-        <option value="kiri">Kiri</option>
-        <option value="kanan">Kanan</option>
-        <option value="bawah">Bawah</option>
-      </select>
+        <select name="position" class="form-select custom-select" required style="margin-bottom:10px;">
+          <option value="">Select Position</option>
+          <option value="atas">Top</option>
+          <option value="kiri">Left</option>
+          <option value="kanan">Right</option>
+          <option value="bawah">Bottom</option>
+        </select>
   
       <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
   

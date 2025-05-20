@@ -508,8 +508,8 @@
 
     <section class="kepo">
       <div class="cta-content">
-        <h1>KEPO KARO KAMI?</h1>
-        <a href="{{ route('about') }}" class="cta-button">Jelajahi Saiki</a>
+        <h1>WANT TO KNOW US MORE?</h1>
+        <a href="{{ route('about') }}" class="cta-button">EXPLORE NOW</a>
       </div>
     </section>
 

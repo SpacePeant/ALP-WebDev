@@ -129,10 +129,19 @@ return new class extends Migration
         Schema::create('shipping', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
+            
             $table->text('shipping_address');
             $table->string('courier', 50);
             $table->string('tracking_number', 50)->nullable();
             $table->string('shipping_status', 20);
+            
+            $table->unsignedInteger('origin_city_id')->nullable();
+            $table->unsignedInteger('destination_city_id')->nullable();
+            $table->unsignedInteger('total_weight')->default(1000);
+            
+            $table->unsignedInteger('shipping_cost')->nullable();
+            $table->string('etd', 50)->nullable();
+        
             $table->dateTime('shipped_date')->nullable();
             $table->dateTime('delivered_date')->nullable();
             $table->timestamps();

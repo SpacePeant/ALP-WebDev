@@ -102,37 +102,36 @@
         <div class="footer-about">
           <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
           <p>
-            Brrr iku perusahaan sing adol macem-macem sepatu kaca sing bisa
-            nggawe sampeyan ayu kaya Cinderella.
+            Brrrr is a store dedicated to offering innovative athletic footwear exclusively from Nike, inspiring both performance and style.
           </p>
         </div>
         <div class="footer-links">
-          <h4>NDUKUNG</h4>
+          <h4>COMPANY</h4>
           <ul>
-            <li><a href="#">Blog & Artikel Contact</a></li>
-            <li><a href="#">Bagan Ukuran</a></li>
-            <li><a href="#">Pengiriman & Retur</a></li>
+            <li><a href="{{ route('about') }}">About Us</a></li>
+            <li><a href="{{ route('blog') }}">Blog</a></li>
           </ul>
         </div>
         <div class="footer-links">
-          <h4>LAYANAN EKSKLUSIF</h4>
+          <h4>SHOP</h4>
           <ul>
-            <li><a href="#">Mriksa Pesenan</a></li>
-            <li><a href="#">Brrrr Club</a></li>
+            <li><a href="{{ route('detail') }}">Collection</a></li>
+            <li><a href="{{ route('order') }}">My Orders</a></li>
+            <li><a href="{{ route('wishlist') }}">Wishlist</a></li>
           </ul>
         </div>
         <div class="footer-links">
-          <h4>PERUSAHAAN</h4>
-          <ul>
-            <li><a href="#">Propile Kene</a></li>
-            <li><a href="#">Sopo Awake Dewe?</a></li>
-          </ul>
-        </div>
-        <div class="footer-contact">
           <h4>CONTACT</h4>
           <ul>
-            <li><i class="fa-brands fa-instagram"></i> brrrr</li>
             <li><i class="fa-regular fa-envelope"></i> brrrr@gmail.com</li>
+          </ul>
+        </div>
+        <div class="footer-links">
+          <h4>SUPPORT</h4>
+          <ul>
+            <li><a href="#">Help</a></li>
+            <li><a href="#">Send Feedback</a></li>
+            <li><a href="#">FAQ</a></li>
           </ul>
         </div>
       </div>

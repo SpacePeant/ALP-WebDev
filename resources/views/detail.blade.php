@@ -199,7 +199,6 @@
         align-items: center;
         gap: 20px;
         margin-bottom: 30px;
-        margin-top: -50px;
     }
 
     .filter-bar input[type="text"],
@@ -478,7 +477,9 @@ input[type="range"]::-webkit-slider-thumb {
     .product-container {
         margin-top: 0 !important;
     }
-
+    .filter-bar {
+        top: 58px;
+    }
     .filter-sidebar {
         margin-right: 0 !important;
     }
@@ -637,7 +638,7 @@ input[type="range"]::-webkit-slider-thumb {
     <aside class="filter-sidebar d-none d-md-block me-3">
         {{-- Kategori --}}
         <div class="filter-group">
-            <div class="filter-title" onclick="toggleFilter(this)">Kategori</div>
+            <div class="filter-title" onclick="toggleFilter(this)">Category</div>
             <div class="filter-content">
                 @foreach ($categories as $cat)
                     <label>
@@ -651,7 +652,7 @@ input[type="range"]::-webkit-slider-thumb {
 
         {{-- Warna --}}
         <div class="filter-group warna">
-            <div class="filter-title" onclick="toggleFilter(this)">Warna</div>
+            <div class="filter-title" onclick="toggleFilter(this)">Color</div>
             <div class="filter-content">
                 @foreach ($colors as $color)
                     <label>
@@ -666,7 +667,7 @@ input[type="range"]::-webkit-slider-thumb {
 
         {{-- Ukuran --}}
         <div class="filter-group">
-            <div class="filter-title" onclick="toggleFilter(this)">Ukuran</div>
+            <div class="filter-title" onclick="toggleFilter(this)">Size</div>
             <div class="filter-content">
                 @foreach ($sizes as $size)
                     <label>
@@ -708,7 +709,7 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="offcanvas-body">
         {{-- COPY ISI FILTER DARI SIDEBAR --}}
         <div class="filter-group">
-            <div class="filter-title" onclick="toggleFilter(this)">Kategori</div>
+            <div class="filter-title" onclick="toggleFilter(this)">Category</div>
             <div class="filter-content">
                 @foreach ($categories as $cat)
                     <label>
@@ -721,7 +722,7 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
 
         <div class="filter-group warna">
-            <div class="filter-title" onclick="toggleFilter(this)">Warna</div>
+            <div class="filter-title" onclick="toggleFilter(this)">Color</div>
             <div class="filter-content">
                 @foreach ($colors as $color)
                     <label>
@@ -735,7 +736,7 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
 
         <div class="filter-group">
-            <div class="filter-title" onclick="toggleFilter(this)">Ukuran</div>
+            <div class="filter-title" onclick="toggleFilter(this)">Size</div>
             <div class="filter-content">
                 @foreach ($sizes as $size)
                     <label>
