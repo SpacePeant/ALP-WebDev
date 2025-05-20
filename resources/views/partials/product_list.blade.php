@@ -10,6 +10,6 @@
             </div>
         </a>
     @empty
-        <p>Tidak ada produk tersedia.</p>
+        <p>No product available</p>
     @endforelse
 </div>
