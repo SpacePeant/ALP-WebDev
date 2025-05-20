@@ -1398,7 +1398,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
       });
     });
 
-    document.querySelectorAll('.add-cart').forEach(button => {
+      document.querySelectorAll('.add-cart').forEach(button => {
     button.addEventListener('click', function () {
         const productId = this.dataset.productId;
         const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
@@ -1434,8 +1434,16 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
                     icon: 'success',
                     title: 'Berhasil!',
                     text: 'Produk berhasil ditambahkan ke keranjang!',
+                    showCancelButton: true,
+                    confirmButtonText: 'Lihat Keranjang',
+                    cancelButtonText: 'Lanjut Belanja',
                     confirmButtonColor: '#133052',
-                    confirmButtonText: 'Lanjut Belanja'
+                    cancelButtonColor: '#6c757d'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = '/cart';
+                    }
+                    // Jika cancel, tetap di halaman saat ini (tidak perlu action)
                 });
             } else {
                 Swal.fire({
