@@ -10,7 +10,8 @@
   <title>Dashboard</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Display&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Display:wght@400;500&display=swap" rel="stylesheet">
+
   <style>
     body {
       font-family: 'Red Hat Display', sans-serif;
@@ -108,22 +109,22 @@
       margin-top: 8px;
     }
     .table-custom td:first-child {
-      font-weight: 600;
+      font-weight: 500;
     }
     .table-custom td.text-end {
-      font-weight: 700;
+      font-weight: 500;
     }
 
     /* Best Seller badges */
     .product-name {
-      font-weight: 600;
+      font-weight: 500;
     }
     .product-badge {
       background-color: black;
       color: #fff;
       border-radius: 50px;
       padding: 6px 16px;
-      font-weight: 600;
+      font-weight: 500;
       font-size: 0.9rem;
       box-shadow: 0 1px 4px rgba(0,0,0,0.1);
     }
