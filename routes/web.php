@@ -86,9 +86,9 @@ Route::get('/home', [HomeController::class, 'index'])->name('home');
 //     return view('orderadmin');
 // });
 
-Route::get('/', function () {
-    return view('home');
-})->name('home');
+// Route::get('/', function () {
+//     return view('home');
+// })->name('home');
 
 Route::get('/about-us', function () {
     return view('aboutus');
