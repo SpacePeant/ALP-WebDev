@@ -17430,3 +17430,17 @@
 #29 C:\\Users\\Bernard\\Herd\\ALP-WebDev-3\\artisan(16): Illuminate\\Foundation\\Application->handleCommand(Object(Symfony\\Component\\Console\\Input\\ArgvInput))
 #30 {main}
 "} 
+[2025-05-21 03:57:17] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-21 03:57:17] local.INFO: Request data: {"_token":"Ca8dgmC3md7CCH702G713eR1zOabPqtjM3hnjPpB","payment_method":"cash","pay_now":null} 
+[2025-05-21 03:57:17] local.ERROR: Midtrans error: SQLSTATE[HY000]: General error: 1364 Field 'payment_url' doesn't have a default value (Connection: mysql, SQL: insert into `orders` (`customer_id`, `order_date`, `status`, `total_amount`, `updated_at`, `created_at`) values (1, 2025-05-21 03:57:17, Pending, 5746000, 2025-05-21 03:57:17, 2025-05-21 03:57:17))  
+[2025-05-21 03:57:23] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-21 03:57:23] local.INFO: Request data: {"_token":"Ca8dgmC3md7CCH702G713eR1zOabPqtjM3hnjPpB","payment_method":"cash","pay_now":null} 
+[2025-05-21 03:57:23] local.ERROR: Midtrans error: SQLSTATE[HY000]: General error: 1364 Field 'payment_url' doesn't have a default value (Connection: mysql, SQL: insert into `orders` (`customer_id`, `order_date`, `status`, `total_amount`, `updated_at`, `created_at`) values (1, 2025-05-21 03:57:23, Pending, 5746000, 2025-05-21 03:57:23, 2025-05-21 03:57:23))  
+[2025-05-21 04:02:00] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-21 04:02:00] local.INFO: Request data: {"_token":"qsmOp3hcErkByr11Ie1hFDnhOW2emdST6LwWYQ7H","payment_method":"cash","pay_now":null} 
+[2025-05-21 04:02:01] local.ERROR: Midtrans error: SQLSTATE[HY000]: General error: 1364 Field 'payment_url' doesn't have a default value (Connection: mysql, SQL: insert into `orders` (`customer_id`, `order_date`, `status`, `total_amount`, `updated_at`, `created_at`) values (1, 2025-05-21 04:02:00, Pending, 5746000, 2025-05-21 04:02:00, 2025-05-21 04:02:00))  
+[2025-05-21 04:05:30] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-21 04:05:30] local.INFO: Request data: {"_token":"iUxgoeEb2xZtDhWwzLenjIiHQIH2IPrZOg7aWY0M","payment_method":"cash","pay_now":null} 
+[2025-05-21 04:05:32] local.ERROR: Midtrans error: SQLSTATE[42S22]: Column not found: 1054 Unknown column 'payment_url' in 'field list' (Connection: mysql, SQL: update `orders` set `payment_url` = https://app.sandbox.midtrans.com/snap/v4/redirection/0d067e4d-6930-4712-baf6-11582e1c4ef8, `orders`.`updated_at` = 2025-05-21 04:05:32 where `id` = 1)  
+[2025-05-21 04:08:17] local.INFO: Pay Now clicked by user ID: 1  
+[2025-05-21 04:08:17] local.INFO: Request data: {"_token":"D5UWHF9QfRTqy3SXJztKb2YXQ8zHd9GoSn6EVA15","payment_method":"cash","pay_now":null} 

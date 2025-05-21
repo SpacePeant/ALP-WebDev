@@ -132,7 +132,7 @@ return new class extends Migration
             $table->dateTime('order_date');
             $table->string('status', 20);
             $table->string('payment_method', 50)->nullable();
-            $table->text('payment_url');
+            $table->text('payment_url')->nullable();
             $table->decimal('total_amount', 12, 2);
             $table->timestamps();
         });
