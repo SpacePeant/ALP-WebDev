@@ -131,7 +131,7 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->dateTime('order_date');
             $table->string('status', 20);
-            $table->string('payment_method', 50);
+            $table->string('payment_method', 50)->nullable();
             $table->text('payment_url');
             $table->decimal('total_amount', 12, 2);
             $table->timestamps();
