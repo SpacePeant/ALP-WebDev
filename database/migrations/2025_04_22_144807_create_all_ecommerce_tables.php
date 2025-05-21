@@ -61,13 +61,13 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->unsignedInteger('price');
             $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->foreignId('category_id')->nullable()->constrained('categories');
+            $table->foreignId('category_id')->nullable()->constrained('category');
             $table->timestamps();
         });
 
         Schema::create('product_color', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
             $table->string('color_name', 50);
             $table->boolean('is_primary')->default(false);
             $table->string('color_code', 7)->nullable(); 
@@ -79,7 +79,7 @@ return new class extends Migration
 
         Schema::create('product_color_image', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('color_id')->constrained('product_colors')->onDelete('cascade');
+            $table->foreignId('color_id')->constrained('product_color')->onDelete('cascade');
             $table->string('image_kiri', 255);
             $table->string('image_kanan', 255);
             $table->string('image_atas', 255);
@@ -88,8 +88,8 @@ return new class extends Migration
 
         Schema::create('product_variant', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('color_id')->constrained('product_colors')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
+            $table->foreignId('color_id')->constrained('product_color')->onDelete('cascade');
             $table->integer('size');
             $table->unsignedInteger('stock')->default(0);
         });
@@ -97,7 +97,7 @@ return new class extends Migration
         Schema::create('wishlists', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
             $table->timestamp('added_at')->nullable();
             $table->timestamps();
             $table->unique(['customer_id', 'product_id']);
@@ -106,7 +106,7 @@ return new class extends Migration
         Schema::create('product_reviews', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
             $table->tinyInteger('rating');
             $table->text('review_title');
             $table->text('comment')->nullable();
@@ -117,9 +117,9 @@ return new class extends Migration
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
             $table->foreignId('product_color_id')->constrained('product_colors')->onDelete('cascade');
-            $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
+            $table->foreignId('product_variant_id')->constrained('product_variant')->onDelete('cascade');
             $table->boolean('is_pilih')->default(false);
             $table->integer('quantity');
             $table->timestamp('added_at')->nullable();
@@ -131,8 +131,8 @@ return new class extends Migration
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->dateTime('order_date');
             $table->string('status', 20);
-            $table->string('payment_method', 50);
-            $table->text('payment_url');
+            $table->string('payment_method', 50)->nullable();
+            $table->text('payment_url')->default('');
             $table->decimal('total_amount', 12, 2);
             $table->timestamps();
         });
@@ -140,9 +140,9 @@ return new class extends Migration
         Schema::create('order_details', function (Blueprint $table) {
             $table->id();
             $table->foreignId('order_id')->constrained('orders')->onDelete('cascade');
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->foreignId('product_color_id')->constrained('product_colors')->onDelete('cascade');
-            $table->foreignId('product_variant_id')->constrained('product_variants')->onDelete('cascade');
+            $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
+            $table->foreignId('product_color_id')->constrained('product_color')->onDelete('cascade');
+            $table->foreignId('product_variant_id')->constrained('product_variant')->onDelete('cascade');
             $table->integer('quantity');
             $table->decimal('unit_price', 10, 2);
             $table->timestamps();
