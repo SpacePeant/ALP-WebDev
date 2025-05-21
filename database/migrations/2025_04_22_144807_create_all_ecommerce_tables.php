@@ -118,7 +118,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
-            $table->foreignId('product_color_id')->constrained('product_colors')->onDelete('cascade');
+            $table->foreignId('product_color_id')->constrained('product_color')->onDelete('cascade');
             $table->foreignId('product_variant_id')->constrained('product_variant')->onDelete('cascade');
             $table->boolean('is_pilih')->default(false);
             $table->integer('quantity');
@@ -132,7 +132,7 @@ return new class extends Migration
             $table->dateTime('order_date');
             $table->string('status', 20);
             $table->string('payment_method', 50)->nullable();
-            $table->text('payment_url')->default('');
+            $table->text('payment_url')->nullable();
             $table->decimal('total_amount', 12, 2);
             $table->timestamps();
         });
@@ -195,6 +195,55 @@ return new class extends Migration
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
         });
+
+        DB::unprepared("
+            CREATE TRIGGER before_insert_product_color
+            BEFORE INSERT ON product_color
+            FOR EACH ROW
+            BEGIN
+                DECLARE r INT;
+                DECLARE g INT;
+                DECLARE b INT;
+                DECLARE luminosity INT;
+
+                SET r = CONV(SUBSTRING(NEW.color_code_bg, 2, 2), 16, 10);
+                SET g = CONV(SUBSTRING(NEW.color_code_bg, 4, 2), 16, 10);
+                SET b = CONV(SUBSTRING(NEW.color_code_bg, 6, 2), 16, 10);
+
+                SET luminosity = ROUND(0.2126 * r + 0.7152 * g + 0.0722 * b);
+
+                IF luminosity < 128 THEN
+                    SET NEW.color_font = '#ffffff';
+                ELSE
+                    SET NEW.color_font = '#333';
+                END IF;
+            END;
+        ");
+
+        DB::unprepared("
+            CREATE TRIGGER before_update_product_color
+            BEFORE UPDATE ON product_color
+            FOR EACH ROW
+            BEGIN
+                DECLARE r INT;
+                DECLARE g INT;
+                DECLARE b INT;
+                DECLARE luminosity INT;
+
+                SET r = CONV(SUBSTRING(NEW.color_code_bg, 2, 2), 16, 10);
+                SET g = CONV(SUBSTRING(NEW.color_code_bg, 4, 2), 16, 10);
+                SET b = CONV(SUBSTRING(NEW.color_code_bg, 6, 2), 16, 10);
+
+                SET luminosity = ROUND(0.2126 * r + 0.7152 * g + 0.0722 * b);
+
+                IF luminosity < 128 THEN
+                    SET NEW.color_font = '#ffffff';
+                ELSE
+                    SET NEW.color_font = '#333';
+                END IF;
+            END;
+        ");
+    
     }
 
     public function down(): void
@@ -217,5 +266,7 @@ return new class extends Migration
         Schema::dropIfExists('articles');
         Schema::dropIfExists('admins');
         Schema::dropIfExists('customers');
+        DB::unprepared("DROP TRIGGER IF EXISTS before_insert_product_color;");
+        DB::unprepared("DROP TRIGGER IF EXISTS before_update_product_color;");
     }
 };
