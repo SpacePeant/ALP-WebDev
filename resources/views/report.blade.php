@@ -26,6 +26,7 @@
             font-family: 'Playfair Display', serif;
             font-size: 32px;
             margin-bottom: 10px;
+            margin-top: -30px;
         }
 
         table {
@@ -74,9 +75,13 @@
     <div class="text-center report-title mb-4">
         <h1 class="text-3xl font-semibold mb-1">Sales Report</h1>
         <p class="text-sm">
-            {{ \Carbon\Carbon::parse($start)->translatedFormat('j F Y') }}
-            to
-            {{ \Carbon\Carbon::parse($end)->translatedFormat('j F Y') }}
+            @if($month && $year)
+                {{ \Carbon\Carbon::create()->month((int)$month)->format('F') }} {{ $year }}
+            @elseif($month)
+                Month: {{ \Carbon\Carbon::create()->month((int)$month)->format('F') }}
+            @elseif($year)
+                Year: {{ $year }}
+            @endif
         </p>
     </div>
 
