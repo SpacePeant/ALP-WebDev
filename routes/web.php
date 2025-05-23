@@ -133,3 +133,8 @@ Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/forgotpassword', function () {return view('forgotpassword');});
 
 Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
+
+Route::post('/articles/store', [ArticleController::class, 'store'])->name('articles.store');
+Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+Route::post('/articles/{id}/update', [ArticleController::class, 'update'])->name('articles.update');
+   

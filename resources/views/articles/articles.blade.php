@@ -7,9 +7,15 @@
 
 <main style="max-width: 800px; margin: auto; padding: 20px;">
     <h1>{{ $article->title }}</h1>
+    <div class="popup-menu" role="menu">
+      <button class="edit-btn" type="button" role="menuitem" onclick="event.stopPropagation(); alert('Edit article {{ $article->id }}');">Edit</button>
+      <button class="delete-btn" type="button" role="menuitem" onclick="event.stopPropagation(); alert('Delete article {{ $article->id }}');">Delete</button>
+    </div>
     <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">
     <h4>{{ $article->description }}</h4>
     <p>{{ $article->article }}</p>
+
+    
 </main>
 
 <style>
