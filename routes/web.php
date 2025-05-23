@@ -5,9 +5,11 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\ReportController;
 use App\Http\Controllers\ArticleController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ProductController;
@@ -16,7 +18,6 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
-use App\Http\Controllers\HomeController;
 
 Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
 
@@ -59,6 +60,14 @@ Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn']
 Route::get('/payment/status/{order}', [PaymentController::class, 'checkStatus'])
 ->name('payment.status');
 
+// REPORT
+Route::get('/report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
+Route::get('/report/sales/pdf', [ReportController::class, 'downloadPDF'])->name('report.sales.pdf');
+Route::get('/report/sales/data', [ReportController::class, 'fetchSalesTable'])->name('report.sales.data');
+
+// Route::get('/chart/data', [ChartController::class, 'getData']);
+// Route::get('/dashboard', [ChartController::class, 'getData']);
+Route::get('/dashboard/filter', [ChartController::class, 'getData']);
 
 
 // Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
@@ -97,6 +106,10 @@ Route::get('/about-us', function () {
 Route::get('/collection', function () {
     return view('collection');
 })->name('collection');
+
+Route::get('/report', function () {
+    return view('report-menu');
+})->name('report');
 
 Route::get('/blog', [BlogController::class, 'showBlogPage'])->name('blog');
 Route::get('/load-more-blogs', [BlogController::class, 'loadMoreBlogs']);
