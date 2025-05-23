@@ -190,159 +190,192 @@
   }
 }
 
+.container{
+  margin-top:150px;
+}
+
   </style>
 </head>
 <body>
   <div class="dashboard-container px-3 px-sm-4 px-md-0">
-    <h1>Dashboard</h1>
+  <h1>Dashboard</h1>
 
-   <!-- Statistik -->
-  <div class="row g-4 mb-5">
-    <div class="col-md-4">
-      <div class="card-stat">
-        <div class="card-title">Balance</div>
-        <div class="stat-value">Rp. {{ number_format($balance, 0, ',', '.') }}</div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card-stat">
-        <div class="card-title">Total Sold</div>
-        <div class="stat-value">{{ $totalSold }} pairs</div>
-      </div>
-    </div>
-    <div class="col-md-4">
-      <div class="card-stat">
-        <div class="card-title">Stock Available</div>
-        <div class="stat-value">{{ $stockAvailable }} pairs</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Chart & Stok Produk -->
-  <div class="row g-4 mb-5">
-    <!-- Chart -->
-    <div class="col-md-8">
-      <div class="card-box">
-        <div class="section-title">Daily Sales Chart</div>
-        <canvas id="salesChart"></canvas>
-      </div>
-    </div>
-
-    <!-- Product Stock -->
-    <div class="col-md-4">
-  <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
-    <!-- Judul dipisah dari area scroll -->
-    <div class="section-title" id="product-stock" style="flex-shrink: 0;">Product Stock</div>
-
-    <!-- Area scroll hanya untuk tabel -->
-    <div style="overflow-y: auto; flex-grow: 1;">
-      <table class="table-custom">
-        <tbody>
-          @foreach($productStock as $product)
-            <tr>
-              <td>{{ $product->name }}</td>
-              <td class="text-end">{{ $product->total_stock }}</td>
-            </tr>
-          @endforeach
-        </tbody>
-      </table>
-    </div>
-  </div>
+  <div class="d-flex justify-content-end mb-3">
+  <select id="filterSelect" class="form-select w-auto">
+    <option value="week" selected>This Week</option>
+    <option value="month">This Month</option>
+    <option value="year">This Year</option>
+  </select>
 </div>
 
-  </div>
+<div id="dashboardContent"></div>
 
-  <!-- Best Seller -->
-  <div class="row">
-    <div class="col-12">
-      <div class="card-box">
-        <div class="section-title">Best Seller</div>
-        <div class="row g-3">
-          @foreach($bestSellers as $product)
-            <div class="col-md-4 d-flex justify-content-between align-items-center">
-              <div class="product-name">{{ $product->name }}</div>
-              <span class="product-badge">{{ $product->total_sold }} sold</span>
-            </div>
-          @endforeach
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+  const dashboardContent = document.getElementById('dashboardContent');
+  let salesChart;
+
+  function fetchDashboardData(filter = 'week') {
+    fetch(`/dashboard/filter?filter=${filter}`)
+      .then(res => res.json())
+      .then(data => {
+        renderDashboard(data);
+        renderChart(data.data.labels, data.data.sales.map(Number));
+      })
+      .catch(err => console.error('Error fetching dashboard data:', err));
+  }
+
+  function renderDashboard(data) {
+    const { balance, totalSold, stockAvailable, productStock, bestSellers } = data;
+
+    dashboardContent.innerHTML = `
+      <!-- Statistik -->
+      <div class="row g-4 mb-5">
+        <div class="col-md-4">
+          <div class="card-stat">
+            <div class="card-title">Balance</div>
+            <div class="stat-value">Rp. ${formatNumber(balance)}</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card-stat">
+            <div class="card-title">Total Sold</div>
+            <div class="stat-value">${totalSold} pairs</div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card-stat">
+            <div class="card-title">Stock Available</div>
+            <div class="stat-value">${stockAvailable} pairs</div>
+          </div>
         </div>
       </div>
-    </div>
-  </div>
-</div>
 
+      <!-- Chart & Product Stock -->
+      <div class="row g-4 mb-5">
+        <div class="col-md-8">
+          <div class="card-box">
+            <div class="section-title">Daily Sales Chart</div>
+            <canvas id="salesChart"></canvas>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
+            <div class="section-title" style="flex-shrink: 0;">Product Stock</div>
+            <div style="overflow-y: auto; flex-grow: 1;">
+              <table class="table-custom">
+                <tbody>
+                  ${productStock.map(p => `
+                    <tr>
+                      <td>${p.name}</td>
+                      <td class="text-end">${p.total_stock}</td>
+                    </tr>`).join('')}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
 
-  <script>
-const ctx = document.getElementById('salesChart').getContext('2d');
+      <!-- Best Seller -->
+      <div class="row">
+        <div class="col-12">
+          <div class="card-box">
+            <div class="section-title">Best Seller</div>
+            <div class="row g-3">
+              ${bestSellers.map(p => `
+                <div class="col-md-4 d-flex justify-content-between align-items-center">
+                  <div class="product-name">${p.name}</div>
+                  <span class="product-badge">${p.total_sold} sold</span>
+                </div>`).join('')}
+            </div>
+          </div>
+        </div>
+      </div>
+    `;
+  }
 
-  const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-  gradient.addColorStop(0, 'rgba(13,110,253,0.4)');
-  gradient.addColorStop(1, 'rgba(13,110,253,0)');
+  function renderChart(labels, values) {
+    const canvas = document.getElementById('salesChart');
+    if (!canvas) {
+      console.warn('Canvas #salesChart tidak ditemukan');
+      return;
+    }
+    const ctx = canvas.getContext('2d');
 
-  const salesChart = new Chart(ctx, {
-    type: 'line',
-    data: {
-      labels: {!! json_encode($data['labels']) !!},
-      datasets: [{
-        label: 'Units Sold',
-        data: {!! json_encode($data['sales']) !!},
-        fill: true,
-        backgroundColor: gradient,
-        borderColor: '#0d6efd',
-        tension: 0.4,
-        pointBackgroundColor: '#0d6efd',
-        pointBorderColor: '#fff',
-        pointRadius: 5,
-        pointHoverRadius: 7,
-      }]
-    },
-    options: {
-      responsive: true,
-      plugins: {
-        legend: {
-          display: false
-        },
-        tooltip: {
-          mode: 'index',
-          intersect: false,
-          padding: 10,
-          backgroundColor: 'rgba(0,0,0,0.75)',
-          titleFont: {
-            weight: 'bold',
-            size: 14
-          },
-          bodyFont: {
-            size: 13
-          },
-          callbacks: {
-            label: function(context) {
-              return context.parsed.y + ' pairs';
+    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+    gradient.addColorStop(0, 'rgba(13,110,253,0.4)');
+    gradient.addColorStop(1, 'rgba(13,110,253,0)');
+
+    if (salesChart) salesChart.destroy();
+
+    salesChart = new Chart(ctx, {
+      type: 'line',
+      data: {
+        labels: labels,
+        datasets: [{
+          label: 'Units Sold',
+          data: values,
+          fill: true,
+          backgroundColor: gradient,
+          borderColor: '#0d6efd',
+          tension: 0.4,
+          pointBackgroundColor: '#0d6efd',
+          pointBorderColor: '#fff',
+          pointRadius: 5,
+          pointHoverRadius: 7,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            mode: 'index',
+            intersect: false,
+            padding: 10,
+            backgroundColor: 'rgba(0,0,0,0.75)',
+            titleFont: { weight: 'bold', size: 14 },
+            bodyFont: { size: 13 },
+            callbacks: {
+              label: function(context) {
+                return context.parsed.y + ' pairs';
+              }
             }
           }
-        }
-      },
-      scales: {
-        y: {
-          beginAtZero: true,
-          ticks: {
-            stepSize: 1
-          },
-          grid: {
-            color: 'rgba(0,0,0,0.05)'
-          }
         },
-        x: {
-          grid: {
-            display: false
-          }
-        }
-      },
-      animation: {
-        duration: 1200,
-        easing: 'easeOutQuart'
+        scales: {
+          y: {
+            beginAtZero: true,
+            ticks: { stepSize: 1 },
+            grid: { color: 'rgba(0,0,0,0.05)' }
+          },
+          x: { grid: { display: false } }
+        },
+        animation: { duration: 1200, easing: 'easeOutQuart' }
       }
-    }
-  });
-  </script>
+    });
+  }
+
+  function formatNumber(numberStr) {
+    const number = parseFloat(numberStr);
+    return number.toLocaleString('id-ID');
+  }
+
+  // Event listener
+  const filterSelect = document.getElementById('filterSelect');
+  if (filterSelect) {
+    filterSelect.addEventListener('change', () => {
+      fetchDashboardData(filterSelect.value);
+    });
+  }
+
+  // First load
+  fetchDashboardData('week');
+});
+</script>
 </body>
 </html>
 
