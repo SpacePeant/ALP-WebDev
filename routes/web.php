@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -30,6 +31,7 @@ Route::post('/products/store', [ProductController::class, 'store'])->name('addpr
 Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
 Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
+Route::get('/product/{color_id}', [ProductController::class, 'getVariants']);
 
 // Cart
 Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
@@ -68,6 +70,7 @@ Route::get('/report/sales/data', [ReportController::class, 'fetchSalesTable'])->
 // Route::get('/chart/data', [ChartController::class, 'getData']);
 // Route::get('/dashboard', [ChartController::class, 'getData']);
 Route::get('/dashboard/filter', [ChartController::class, 'getData']);
+Route::get('/report/data', [ReportController::class, 'getData']);
 
 
 // Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])
@@ -138,3 +141,19 @@ Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin
 
 Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
 
+Route::get('/product-detail/{id}', function ($id) {
+    $details = DB::table('product as p')
+        ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')
+        ->join('product_color as pc', 'pv.color_id', '=', 'pc.id')
+        ->select('p.name', 'pc.color_name', 'pv.size', 'pv.stock')
+        ->where('p.id', $id)
+        ->get();
+
+    // Ambil nama produk dari data pertama (anggap pasti ada)
+    $productName = $details->isNotEmpty() ? $details[0]->name : 'Produk tidak ditemukan';
+
+    return response()->json([
+        'productName' => $productName,
+        'variants' => $details
+    ]);
+});

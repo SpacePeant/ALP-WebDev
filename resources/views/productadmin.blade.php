@@ -18,7 +18,7 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
-
+<script src="https://cdn.tailwindcss.com"></script>
   <style>
     body {
       font-family: 'Red Hat Display', sans-serif;
@@ -41,9 +41,14 @@
       font-weight: 500;
       font-size: 16px;
       margin-bottom: 20px;
-      display: inline-block;
+      display: flex;
       color: #000;
       text-decoration: none;
+    }
+
+    .add-product p{
+      margin-left:10px;
+      margin-top: -3px;
     }
 
     .product-card {
@@ -135,6 +140,24 @@
     .custom-dropdown-menu a:hover {
     background-color: #f2f2f2;
     }
+
+    @keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+.product-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+}
+
+.product-card:hover {
+  transform: scale(1.05);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
+}
   </style>
 </head>
 <body>
@@ -147,19 +170,19 @@
       <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0-1A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
     </svg>
-    Add New Product
+    <p>Add New Product</p>
   </a>
 
   <div class="product-grid mt-4">
    @forelse ($products as $product)
-            <div class="product-card">
+            <div class="product-card" onclick="showVariants({{ $product->color_id }})">
                 <div class="dropdown-container custom-dropdown">
-                    <button class="custom-dropdown-toggle" onclick="toggleDropdown(this)">
+                    <button class="custom-dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(this)">
                         <i class="bi bi-three-dots-vertical"></i>
                     </button>
                     <div class="custom-dropdown-menu">
-                        <a href="{{ route('product.edit', ['id' => $product->id, 'color_id' => $product->color_id]) }}">Edit</a>
-                        <a href="#" class="text-danger" onclick="confirmDelete({{ $product->color_id }})">Delete</a>
+                        <a href="{{ route('product.edit', ['id' => $product->id, 'color_id' => $product->color_id]) }}" onclick="event.stopPropagation()">Edit</a>
+                        <a href="#" class="text-danger" onclick="event.stopPropagation(); confirmDelete({{ $product->color_id }})">Delete</a>
                     </div>
                 </div>
 
@@ -172,6 +195,90 @@
         @endforelse
   </div>
 </div>
+
+<div id="variantModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 overflow-y-auto">
+  <div class="bg-white rounded-lg shadow-xl w-full max-w-lg max-h-[60vh] p-6 relative animate-fadeIn overflow-y-auto">
+    <button onclick="closeModal()" class="absolute top-3 right-3 text-gray-400 hover:text-gray-700 text-xl font-bold">&times;</button>
+    <h3 class="text-xl font-semibold mb-2">Product Detail</h3>
+
+    <div class="mb-4 text-sm text-gray-700 flex gap-4 items-center">
+      <img id="productImage" src="" alt="Product Image" class="w-24 h-24 object-contain rounded-md border" />
+      <div>
+        <p><strong>Product Name:</strong> <span id="productName"></span></p>
+        <p><strong>Color:</strong> <span id="productColor"></span></p>
+        <p><strong>Category:</strong> <span id="productCategory"></span></p>
+      </div>
+    </div>
+
+    <table class="w-full text-left border-collapse text-sm text-gray-700">
+      <thead>
+        <tr>
+          <th class="border-b py-2">Size</th>
+          <th class="border-b py-2">Stock</th>
+        </tr>
+      </thead>
+      <tbody id="variantTable">
+        <!-- Rows will be inserted here -->
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+function showVariants(color_id) {
+  fetch(`/product/${color_id}`)
+    .then(res => res.json())
+    .then(data => {
+      const tbody = document.getElementById('variantTable');
+      tbody.innerHTML = '';
+
+      if (data.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="2" class="py-2">No variants found.</td></tr>';
+        // Clear texts and image if no data
+        document.getElementById('productName').textContent = '-';
+        document.getElementById('productColor').textContent = '-';
+        document.getElementById('productCategory').textContent = '-';
+        document.getElementById('productImage').src = '';
+      } else {
+        const item = data[0];
+        document.getElementById('productName').textContent = item.product_name || '-';
+        document.getElementById('productColor').textContent = item.color_name || '-';
+        document.getElementById('productCategory').textContent = item.category_name || '-';
+
+        // Set image, pastikan path gambarnya valid
+        if (item.image_kiri) {
+          document.getElementById('productImage').src = '/image/sepatu/kiri/' + item.image_kiri;
+        } else {
+          document.getElementById('productImage').src = ''; // kosongkan jika tidak ada gambar
+        }
+
+
+        data.forEach(item => {
+          tbody.innerHTML += `<tr>
+            <td class="py-2 border-b">${item.size}</td>
+            <td class="py-2 border-b">${item.stock}</td>
+          </tr>`;
+        });
+      }
+
+      const modal = document.getElementById('variantModal');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex');
+
+      // Disable scroll body saat modal aktif
+      document.body.style.overflow = 'hidden';
+    });
+}
+
+function closeModal() {
+  const modal = document.getElementById('variantModal');
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+
+  // Enable scroll body saat modal ditutup
+  document.body.style.overflow = '';
+}
+</script>
   
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <!-- Bootstrap JS Bundle -->

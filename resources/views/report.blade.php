@@ -26,7 +26,6 @@
             font-family: 'Playfair Display', serif;
             font-size: 32px;
             margin-bottom: 10px;
-            margin-top: -30px;
         }
 
         table {
