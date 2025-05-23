@@ -157,7 +157,6 @@ public function processCheckout(Request $request)
             $snapUrl = Snap::createTransaction($params)->redirect_url;
 
             $order->payment_url = $snapUrl;
-            // Jangan isi payment_method di sini, karena belum tau jenis payment yang dipilih user di Midtrans
             $order->save();
 
             DB::commit();
