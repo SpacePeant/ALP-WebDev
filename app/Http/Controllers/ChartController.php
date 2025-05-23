@@ -56,10 +56,10 @@ class ChartController extends Controller
 
     $productStock = DB::table('product as p')
         ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')
-        ->select('p.name', DB::raw('SUM(pv.stock) as total_stock'))
+        ->select('p.id', 'p.name', DB::raw('SUM(pv.stock) as total_stock'))
         ->where('p.status', 'active')
         ->where('pv.stock', '>', 0)
-        ->groupBy('p.name')
+        ->groupBy('p.id', 'p.name')
         ->orderByDesc('total_stock')
         ->get();
 
@@ -68,7 +68,7 @@ class ChartController extends Controller
         ->select('p.name', DB::raw('SUM(od.quantity) as total_sold'))
         ->groupBy('p.name')
         ->orderByDesc('total_sold')
-        ->limit(3)
+        ->limit(5)
         ->get();
 
     return view('dashboard', compact('data', 'balance', 'totalSold', 'stockAvailable', 'productStock', 'bestSellers'));
@@ -150,7 +150,7 @@ public function getData(Request $request)
         ->whereYear('o.order_date', now()->year)
         ->groupBy('p.name')
         ->orderByDesc('total_sold')
-        ->limit(3)
+        ->limit(5)
         ->get();
     } elseif ($filter === 'week') {
         $data = DB::select("
@@ -205,7 +205,7 @@ public function getData(Request $request)
         ->whereBetween('o.order_date', [now()->startOfWeek(), now()->endOfWeek()])
         ->groupBy('p.name')
         ->orderByDesc('total_sold')
-        ->limit(3)
+        ->limit(5)
         ->get();
     } else {
         $data = DB::select("
@@ -265,7 +265,7 @@ public function getData(Request $request)
         ->whereYear('o.order_date', now()->year)
         ->groupBy('p.name')
         ->orderByDesc('total_sold')
-        ->limit(3)
+        ->limit(5)
         ->get();
     }
 

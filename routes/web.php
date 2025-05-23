@@ -1,5 +1,6 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -133,3 +134,20 @@ Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/forgotpassword', function () {return view('forgotpassword');});
 
 Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
+
+Route::get('/product-detail/{id}', function ($id) {
+    $details = DB::table('product as p')
+        ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')
+        ->join('product_color as pc', 'pv.color_id', '=', 'pc.id')
+        ->select('p.name', 'pc.color_name', 'pv.size', 'pv.stock')
+        ->where('p.id', $id)
+        ->get();
+
+    // Ambil nama produk dari data pertama (anggap pasti ada)
+    $productName = $details->isNotEmpty() ? $details[0]->name : 'Produk tidak ditemukan';
+
+    return response()->json([
+        'productName' => $productName,
+        'variants' => $details
+    ]);
+});

@@ -142,6 +142,41 @@
   background-color: #f1f1f1;
 }
 
+#productDetailModal .modal-body {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding: 1rem; /* beri ruang supaya isi tidak mepet */
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+  #productDetailModal .modal-dialog {
+   position: fixed;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 500px;
+  width: 90vw;
+  max-height: calc(100vh - 160px);
+  margin: 0;
+  overflow: hidden; /* supaya isi tidak keluar */
+  z-index: 1055;
+}
+
+#productDetailContent tr.no-border td {
+  border: none !important;
+  background-color: transparent;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+#productDetailModal .modal-content {
+  border-radius: 0px;
+  overflow: hidden; /* ini aman kalau modal-body diatur */
+  background-color: white;
+}
     /* Responsive spacing */
 
 /* Untuk layar >= 768px (Tablet dan ke atas) */
@@ -201,181 +236,344 @@
   <h1>Dashboard</h1>
 
   <div class="d-flex justify-content-end mb-3">
-  <select id="filterSelect" class="form-select w-auto">
-    <option value="week" selected>This Week</option>
-    <option value="month">This Month</option>
-    <option value="year">This Year</option>
-  </select>
+    <select id="filterSelect" class="form-select w-auto">
+      <option value="week" selected>This Week</option>
+      <option value="month">This Month</option>
+      <option value="year">This Year</option>
+    </select>
+  </div>
+
+  <div id="dashboardContent"></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const dashboardContent = document.getElementById('dashboardContent');
+      let salesChart;
+      let bestSellerChartInstance;
+
+      function fetchDashboardData(filter = 'week') {
+        fetch(`/dashboard/filter?filter=${filter}`)
+          .then(res => res.json())
+          .then(data => {
+            renderDashboard(data);
+            renderSalesChart(data.data.labels, data.data.sales.map(Number));
+            renderBestSellerChart(data.bestSellers);
+          })
+          .catch(err => console.error('Error fetching dashboard data:', err));
+      }
+
+      function renderDashboard(data) {
+        const { balance, totalSold, stockAvailable, productStock } = data;
+
+        dashboardContent.innerHTML = `
+          <!-- Statistik -->
+          <div class="row g-4 mb-5">
+            <div class="col-md-4">
+              <div class="card-stat">
+                <div class="card-title">Balance</div>
+                <div class="stat-value">Rp. ${formatNumber(balance)}</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-stat">
+                <div class="card-title">Total Sold</div>
+                <div class="stat-value">${totalSold} pairs</div>
+              </div>
+            </div>
+            <div class="col-md-4">
+              <div class="card-stat">
+                <div class="card-title">Stock Available</div>
+                <div class="stat-value">${stockAvailable} pairs</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Best Seller Bar Chart -->
+          <div class="row">
+            <div class="col-12">
+              <div class="card-box">
+                <div class="section-title">Best Seller Chart</div>
+                <canvas id="salesChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+          <!-- Chart & Product Stock -->
+          <div class="row g-4 my-5">
+            <div class="col-md-8">
+              <div class="card-box">
+                <div class="section-title">Daily Sales Chart</div>
+                <canvas id="bestSellerChart"></canvas>
+              </div>
+            </div>
+            <div class="col-md-4">
+  <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
+    <div class="section-title d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
+      <span>Product Stock</span>
+      <select id="sortStock" class="form-select form-select-sm" style="width: auto;">
+        <option class="sort" value="" selected>Sort By</option>
+        <option value="desc">Stock: High to Low</option>
+        <option value="asc">Stock: Low to High</option>
+      </select>
+    </div>
+    <div style="overflow-y: auto; flex-grow: 1;">
+      <table class="table-custom">
+        <tbody id="productList">
+          @foreach($productStock as $p)
+            <tr onclick="fetchProductDetail('{{ $p->id }}')" style="cursor:pointer;">
+               <td class="d-flex justify-content-between align-items-center">
+  <span>{{ $p->name }}</span>
+  <span class="text-end">{{ $p->total_stock }}</span>
+</td>
+            </tr>   
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>
 
-<div id="dashboardContent"></div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-
-<script>
-document.addEventListener("DOMContentLoaded", function () {
-  const dashboardContent = document.getElementById('dashboardContent');
-  let salesChart;
-
-  function fetchDashboardData(filter = 'week') {
-    fetch(`/dashboard/filter?filter=${filter}`)
-      .then(res => res.json())
-      .then(data => {
-        renderDashboard(data);
-        renderChart(data.data.labels, data.data.sales.map(Number));
-      })
-      .catch(err => console.error('Error fetching dashboard data:', err));
-  }
-
-  function renderDashboard(data) {
-    const { balance, totalSold, stockAvailable, productStock, bestSellers } = data;
-
-    dashboardContent.innerHTML = `
-      <!-- Statistik -->
-      <div class="row g-4 mb-5">
-        <div class="col-md-4">
-          <div class="card-stat">
-            <div class="card-title">Balance</div>
-            <div class="stat-value">Rp. ${formatNumber(balance)}</div>
           </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card-stat">
-            <div class="card-title">Total Sold</div>
-            <div class="stat-value">${totalSold} pairs</div>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card-stat">
-            <div class="card-title">Stock Available</div>
-            <div class="stat-value">${stockAvailable} pairs</div>
-          </div>
-        </div>
+
+<!-- Modal -->
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productDetailModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
       </div>
-
-      <!-- Chart & Product Stock -->
-      <div class="row g-4 mb-5">
-        <div class="col-md-8">
-          <div class="card-box">
-            <div class="section-title">Daily Sales Chart</div>
-            <canvas id="salesChart"></canvas>
-          </div>
-        </div>
-        <div class="col-md-4">
-          <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
-            <div class="section-title" style="flex-shrink: 0;">Product Stock</div>
-            <div style="overflow-y: auto; flex-grow: 1;">
-              <table class="table-custom">
-                <tbody>
-                  ${productStock.map(p => `
-                    <tr>
-                      <td>${p.name}</td>
-                      <td class="text-end">${p.total_stock}</td>
-                    </tr>`).join('')}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+      
+          <tbody id="productDetailContent">
+            <!-- Diisi oleh JavaScript -->
+          </tbody>
+        </table>
       </div>
+    </div>
+  </div>
+</div>
+</div>
+        `;
+      }
 
-      <!-- Best Seller -->
-      <div class="row">
-        <div class="col-12">
-          <div class="card-box">
-            <div class="section-title">Best Seller</div>
-            <div class="row g-3">
-              ${bestSellers.map(p => `
-                <div class="col-md-4 d-flex justify-content-between align-items-center">
-                  <div class="product-name">${p.name}</div>
-                  <span class="product-badge">${p.total_sold} sold</span>
-                </div>`).join('')}
-            </div>
-          </div>
-        </div>
-      </div>
-    `;
-  }
+      function renderSalesChart(labels, values) {
+        const canvas = document.getElementById('salesChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
 
-  function renderChart(labels, values) {
-    const canvas = document.getElementById('salesChart');
-    if (!canvas) {
-      console.warn('Canvas #salesChart tidak ditemukan');
-      return;
-    }
-    const ctx = canvas.getContext('2d');
+        const gradient = ctx.createLinearGradient(0, 0, 0, 400);
+        gradient.addColorStop(0, 'rgba(13,110,253,0.4)');
+        gradient.addColorStop(1, 'rgba(13,110,253,0)');
 
-    const gradient = ctx.createLinearGradient(0, 0, 0, 400);
-    gradient.addColorStop(0, 'rgba(13,110,253,0.4)');
-    gradient.addColorStop(1, 'rgba(13,110,253,0)');
+        if (salesChart) salesChart.destroy();
 
-    if (salesChart) salesChart.destroy();
-
-    salesChart = new Chart(ctx, {
-      type: 'line',
-      data: {
-        labels: labels,
-        datasets: [{
-          label: 'Units Sold',
-          data: values,
-          fill: true,
-          backgroundColor: gradient,
-          borderColor: '#0d6efd',
-          tension: 0.4,
-          pointBackgroundColor: '#0d6efd',
-          pointBorderColor: '#fff',
-          pointRadius: 5,
-          pointHoverRadius: 7,
-        }]
-      },
-      options: {
-        responsive: true,
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            mode: 'index',
-            intersect: false,
-            padding: 10,
-            backgroundColor: 'rgba(0,0,0,0.75)',
-            titleFont: { weight: 'bold', size: 14 },
-            bodyFont: { size: 13 },
-            callbacks: {
-              label: function(context) {
-                return context.parsed.y + ' pairs';
+        salesChart = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Units Sold',
+              data: values,
+              fill: true,
+              backgroundColor: gradient,
+              borderColor: '#0d6efd',
+              tension: 0.4,
+              pointBackgroundColor: '#0d6efd',
+              pointBorderColor: '#fff',
+              pointRadius: 5,
+              pointHoverRadius: 7,
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                mode: 'index',
+                intersect: false,
+                callbacks: {
+                  label: ctx => 'Rp ' + formatNumber(ctx.parsed.y)
+                }
               }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: { stepSize: 1 },
+                grid: { color: 'rgba(0,0,0,0.05)' }
+              },
+              x: { grid: { display: false } }
+            },
+            animation: { duration: 1200, easing: 'easeOutQuart' }
+          }
+        });
+      }
+
+      function renderBestSellerChart(bestSellers) {
+        const canvas = document.getElementById('bestSellerChart');
+        if (!canvas) return;
+        const ctx = canvas.getContext('2d');
+
+        if (bestSellerChartInstance) bestSellerChartInstance.destroy();
+
+        const labels = bestSellers.map(item => item.name);
+        const data = bestSellers.map(item => item.total_sold);
+
+        // Soft color palette
+        const softColors = [
+          '#A0C4FF', '#BDB2FF', '#FFC6FF',
+          '#FFADAD', '#FDFFB6', '#CAFFBF',
+          '#9BF6FF', '#FFD6A5', '#E2F0CB'
+        ];
+        const backgroundColors = labels.map((_, i) => softColors[i % softColors.length]);
+
+        // Chart.js v3+ support for rounded bars
+        Chart.defaults.elements.bar.borderRadius = 10;
+        Chart.defaults.elements.bar.borderSkipped = false;
+
+        bestSellerChartInstance = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: 'Total Sold',
+              data: data,
+              backgroundColor: backgroundColors,
+              borderWidth: 0
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: ctx => `${ctx.parsed.y} pairs`
+                }
+              }
+            },
+            scales: {
+              y: {
+                beginAtZero: true,
+                ticks: {
+                  stepSize: 1,
+                  color: '#333'
+                },
+                grid: { color: 'rgba(0,0,0,0.05)' }
+              },
+              x: {
+                ticks: {
+                  maxRotation: 45,
+                  minRotation: 0,
+                  autoSkip: true,
+                  color: '#333'
+                },
+                grid: { display: false }
+              }
+            },
+            animation: {
+              duration: 1000,
+              easing: 'easeOutQuart'
             }
           }
-        },
-        scales: {
-          y: {
-            beginAtZero: true,
-            ticks: { stepSize: 1 },
-            grid: { color: 'rgba(0,0,0,0.05)' }
-          },
-          x: { grid: { display: false } }
-        },
-        animation: { duration: 1200, easing: 'easeOutQuart' }
+        });
       }
+
+      function formatNumber(numberStr) {
+        const number = parseFloat(numberStr);
+        return number.toLocaleString('id-ID');
+      }
+
+      const filterSelect = document.getElementById('filterSelect');
+      if (filterSelect) {
+        filterSelect.addEventListener('change', () => {
+          fetchDashboardData(filterSelect.value);
+        });
+      }
+
+      fetchDashboardData('week');
     });
-  }
 
-  function formatNumber(numberStr) {
-    const number = parseFloat(numberStr);
-    return number.toLocaleString('id-ID');
-  }
+ function fetchProductDetail(productId) {
+  fetch(`/product-detail/${productId}`)
+    .then(response => response.json())
+    .then(data => {
+      // Set nama produk di modal title
+      document.getElementById('productDetailModalLabel').textContent = `${data.productName}`;
 
-  // Event listener
-  const filterSelect = document.getElementById('filterSelect');
-  if (filterSelect) {
-    filterSelect.addEventListener('change', () => {
-      fetchDashboardData(filterSelect.value);
+      const variants = data.variants;
+
+      // Group variants by color
+      const groupedByColor = {};
+      variants.forEach(variant => {
+        const color = variant.color_name;
+        if (!groupedByColor[color]) {
+          groupedByColor[color] = [];
+        }
+        groupedByColor[color].push({
+          size: variant.size,
+          stock: variant.stock
+        });
+      });
+
+      let content = '';
+      for (const color in groupedByColor) {
+        content += `
+          <tr class="no-border" style="border-top: none">
+            <td colspan="3"><strong>Color: ${color}</strong></td>
+          </tr>
+          <tr>
+            <th>Size</th>
+            <th>Stock</th>
+          </tr>
+        `;
+        groupedByColor[color].forEach(item => {
+          content += `
+            <tr>
+              <td>${item.size}</td>
+              <td>${item.stock}</td>
+            </tr>
+          `;
+        });
+      }
+
+      document.getElementById('productDetailContent').innerHTML = content;
+
+      const modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+      modal.show();
+    })
+    .catch(err => console.error('Gagal mengambil detail produk:', err));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM loaded");
+
+  const sortSelect = document.getElementById('sortStock');
+  const tbody = document.getElementById('productList');
+
+  sortSelect.addEventListener('change', function() {
+    const order = this.value;
+    if (!order) return;
+
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    rows.sort((a, b) => {
+      const stockA = parseInt(a.querySelector('td:last-child').textContent.trim(), 10);
+      const stockB = parseInt(b.querySelector('td:last-child').textContent.trim(), 10);
+      return order === 'asc' ? stockA - stockB : stockB - stockA;
     });
-  }
 
-  // First load
-  fetchDashboardData('week');
+    // Render ulang
+    tbody.innerHTML = '';
+    rows.forEach(row => tbody.appendChild(row));
+  });
 });
-</script>
+  </script>
+</div>
 </body>
 </html>
 
