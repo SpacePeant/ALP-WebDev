@@ -133,3 +133,8 @@ Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/forgotpassword', function () {return view('forgotpassword');});
 
 Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
+
+Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
+
+Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
+
