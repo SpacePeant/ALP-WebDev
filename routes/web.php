@@ -136,6 +136,10 @@ Route::get('/forgotpassword', function () {return view('forgotpassword');});
 
 Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
 
+Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
+
+Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
+
 Route::get('/product-detail/{id}', function ($id) {
     $details = DB::table('product as p')
         ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')

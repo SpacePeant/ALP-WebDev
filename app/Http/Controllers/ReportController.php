@@ -157,6 +157,11 @@ public function downloadPDF(Request $request)
 
     
     return $pdf->download($filename);
+    //     return view('report', [
+    //     'sales' => $sales,
+    //     'start' => $start,
+    //     'end' => $end
+    // ]);
 }
 
 public function fetchSalesTable(Request $request)
