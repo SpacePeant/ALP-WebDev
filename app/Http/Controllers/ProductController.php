@@ -460,6 +460,28 @@ public function update_gambar(Request $request)
 
     return back()->with('success', 'Image successfully updated!');
 }
+
+public function getVariants($color_id)
+{
+    $variants = DB::table('product_variant as pv')
+    ->leftJoin('product_color as pc', 'pc.id', '=', 'pv.color_id')
+    ->leftJoin('product as p', 'p.id', '=', 'pc.product_id')
+    ->leftJoin('category as c', 'c.id', '=', 'p.category_id')
+    ->leftJoin('product_color_image as pci', 'pci.color_id', '=', 'pc.id')
+    ->where('pv.color_id', $color_id)
+    ->select(
+        'pc.color_name',
+        'p.name as product_name',
+        'c.name as category_name',
+        'pv.size',
+        'pv.stock',
+        'pci.image_kiri'
+    )
+    ->get();
+
+return response()->json($variants);
+
+}
 }
 
 

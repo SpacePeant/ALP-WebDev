@@ -8,30 +8,33 @@
             font-family: sans-serif;
             font-size: 12px;
         }
-
         h4 {
             margin-bottom: 15px;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
             margin-top: 15px;
         }
-
         th, td {
             border: 1px solid #000;
             padding: 6px;
             text-align: left;
         }
-
         th {
             background-color: #eee;
         }
     </style>
 </head>
 <body>
-    <h4>Laporan Penjualan Berdasarkan Tanggal ({{ $start }} s/d {{ $end }})</h4>
+    <h4>
+        Laporan Penjualan 
+        @if($month)
+            Bulan {{ \Carbon\Carbon::create()->month((int)$month)->format('F') }}
+        @endif
+        Tahun {{ $year }}
+    </h4>
+
     <table>
         <thead>
             <tr>
