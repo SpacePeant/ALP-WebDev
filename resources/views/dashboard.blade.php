@@ -142,6 +142,41 @@
   background-color: #f1f1f1;
 }
 
+#productDetailModal .modal-body {
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
+  padding: 1rem; /* beri ruang supaya isi tidak mepet */
+  border-bottom-left-radius: 12px;
+  border-bottom-right-radius: 12px;
+  background-color: white;
+  box-sizing: border-box;
+}
+
+  #productDetailModal .modal-dialog {
+   position: fixed;
+  top: 120px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 500px;
+  width: 90vw;
+  max-height: calc(100vh - 160px);
+  margin: 0;
+  overflow: hidden; /* supaya isi tidak keluar */
+  z-index: 1055;
+}
+
+#productDetailContent tr.no-border td {
+  border: none !important;
+  background-color: transparent;
+  font-weight: bold;
+  font-size: 1.1em;
+}
+
+#productDetailModal .modal-content {
+  border-radius: 0px;
+  overflow: hidden; /* ini aman kalau modal-body diatur */
+  background-color: white;
+}
     /* Responsive spacing */
 
 /* Untuk layar >= 768px (Tablet dan ke atas) */
@@ -274,22 +309,54 @@
               </div>
             </div>
             <div class="col-md-4">
-              <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
-                <div class="section-title" style="flex-shrink: 0;">Product Stock</div>
-                <div style="overflow-y: auto; flex-grow: 1;">
-                  <table class="table-custom">
-                    <tbody>
-                      ${data.productStock.map(p => `
-                        <tr>
-                          <td>${p.name}</td>
-                          <td class="text-end">${p.total_stock}</td>
-                        </tr>`).join('')}
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
+  <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
+    <div class="section-title d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
+      <span>Product Stock</span>
+      <select id="sortStock" class="form-select form-select-sm" style="width: auto;">
+        <option class="sort" value="" selected>Sort By</option>
+        <option value="desc">Stock: High to Low</option>
+        <option value="asc">Stock: Low to High</option>
+      </select>
+    </div>
+    <div style="overflow-y: auto; flex-grow: 1;">
+      <table class="table-custom">
+        <tbody id="productList">
+          @foreach($productStock as $p)
+            <tr onclick="fetchProductDetail('{{ $p->id }}')" style="cursor:pointer;">
+               <td class="d-flex justify-content-between align-items-center">
+  <span>{{ $p->name }}</span>
+  <span class="text-end">{{ $p->total_stock }}</span>
+</td>
+            </tr>   
+          @endforeach
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
           </div>
+
+<!-- Modal -->
+<div class="modal fade" id="productDetailModal" tabindex="-1" aria-labelledby="productDetailModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="productDetailModalLabel"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Tutup"></button>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered">
+      
+          <tbody id="productDetailContent">
+            <!-- Diisi oleh JavaScript -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+</div>
         `;
       }
 
@@ -430,6 +497,81 @@
 
       fetchDashboardData('week');
     });
+
+ function fetchProductDetail(productId) {
+  fetch(`/product-detail/${productId}`)
+    .then(response => response.json())
+    .then(data => {
+      // Set nama produk di modal title
+      document.getElementById('productDetailModalLabel').textContent = `${data.productName}`;
+
+      const variants = data.variants;
+
+      // Group variants by color
+      const groupedByColor = {};
+      variants.forEach(variant => {
+        const color = variant.color_name;
+        if (!groupedByColor[color]) {
+          groupedByColor[color] = [];
+        }
+        groupedByColor[color].push({
+          size: variant.size,
+          stock: variant.stock
+        });
+      });
+
+      let content = '';
+      for (const color in groupedByColor) {
+        content += `
+          <tr class="no-border" style="border-top: none">
+            <td colspan="3"><strong>Color: ${color}</strong></td>
+          </tr>
+          <tr>
+            <th>Size</th>
+            <th>Stock</th>
+          </tr>
+        `;
+        groupedByColor[color].forEach(item => {
+          content += `
+            <tr>
+              <td>${item.size}</td>
+              <td>${item.stock}</td>
+            </tr>
+          `;
+        });
+      }
+
+      document.getElementById('productDetailContent').innerHTML = content;
+
+      const modal = new bootstrap.Modal(document.getElementById('productDetailModal'));
+      modal.show();
+    })
+    .catch(err => console.error('Gagal mengambil detail produk:', err));
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+  console.log("DOM loaded");
+
+  const sortSelect = document.getElementById('sortStock');
+  const tbody = document.getElementById('productList');
+
+  sortSelect.addEventListener('change', function() {
+    const order = this.value;
+    if (!order) return;
+
+    const rows = Array.from(tbody.querySelectorAll('tr'));
+
+    rows.sort((a, b) => {
+      const stockA = parseInt(a.querySelector('td:last-child').textContent.trim(), 10);
+      const stockB = parseInt(b.querySelector('td:last-child').textContent.trim(), 10);
+      return order === 'asc' ? stockA - stockB : stockB - stockA;
+    });
+
+    // Render ulang
+    tbody.innerHTML = '';
+    rows.forEach(row => tbody.appendChild(row));
+  });
+});
   </script>
 </div>
 </body>

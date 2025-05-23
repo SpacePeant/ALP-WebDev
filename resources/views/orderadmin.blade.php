@@ -193,93 +193,182 @@
     </div>
   </div>
 
-<div>
-  @foreach ($orders as $order)
-    <div class="order-card">
-      <div class="order-header mb-3 d-flex justify-content-between align-items-center">
+<div class="d-flex justify-content-between flex-wrap">
+<form method="GET" action="{{ route('admin.orders') }}" id="filterForm" class="d-flex justify-content-end mb-4 gap-3 flex-wrap" style="margin-top: 50px;">
+      <div class="col-auto">
+          <label for="start_date" class="form-label">From</label>
+          <input type="date" id="start_date" name="start_date" class="form-control"
+              value="{{ request('start_date') }}">
+      </div>
+      <div class="col-auto">
+          <label for="end_date" class="form-label">To</label>
+          <input type="date" id="end_date" name="end_date" class="form-control"
+              value="{{ request('end_date') }}">
+      </div>
+      <div class="col-auto d-flex align-items-end">
+          <button type="submit" class="btn btn-dark">Filter</button>
+      </div>
+</form>
+
+<form method="GET" action="{{ route('admin.orders') }}" id="searchForm" class="d-flex align-items-end gap-2 flex-wrap" style="margin-bottom: 20px">
+    <div class="d-flex align-items-end gap-2">
         <div>
-          <p class="mb-1">Order ID: {{ $order->id }}</p>
-          <p class="mb-1">Order Date: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
-          <p class="mb-1">Items: {{ $order->item_count }}</p>
-          <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p>
-          <div class="mb-1">
-              Status:
-              @if ($order->status == 'paid')
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-success">Paid</a>
-              @elseif ($order->status == 'pending')
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-pending">Pending</a>
-              @elseif ($order->status == 'failed' || $order->status == 'cancelled')
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-failed">Failed</a>
-              @elseif ($order->status == 'expired')
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-failed">Expired</a>
-              @else
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-unknown">{{ ucfirst($order->status) }}</a>
-              @endif
-          </div>
+            <label for="search_by" class="form-label">Search by</label>
+            <select name="search_by" id="search_by" class="form-select">
+                <option value="order_id" {{ request('search_by') == 'order_id' ? 'selected' : '' }}>Order ID</option>
+                <option value="customer_name" {{ request('search_by') == 'customer_name' ? 'selected' : '' }}>Customer Name</option>
+            </select>
         </div>
-        <div class="text-end">
-          <button class="view-order-toggle" type="button">
-            View Order <span class="dropdown-icon">▼</span>
-          </button>
+        <div>
+            <input type="text" name="search" id="search" class="form-control" placeholder="Search"
+                value="{{ request('search') }}">
         </div>
-      </div>
-
-      <!-- WRAPPER UNTUK ANIMASI -->
-      <div class="order-details-wrapper">
-        <div class="order-details-content">
-          <hr>
-          <p>Customer: {{ $order->customer_name }}</p>
-          <p>Phone No.: {{ $order->phone_number }}</p>
-          <p>Shipped To: {{ $order->customer_address }}</p>
-          <p>Payment Method: {{ $order->payment_method }}</p>
-          <hr>
-          <p class="mb-2">Products</p>
-
-          @foreach ($orderDetails[$order->id] ?? [] as $detail)
-            <div class="product-item d-flex align-items-center mb-2">
-              <img src="{{ asset('image/sepatu/kiri/' . $detail->image_kiri) }}" alt="{{ $detail->name }}" style="width: 80px; height:auto;">
-              <div class="product-info ms-3">
-                <p class="mb-0">{{ $detail->name }}</p>
-                <small class="text-muted">Color: {{ $detail->color_name }}</small><br>
-                <small class="text-muted">Size: {{ $detail->size }}</small>
-              </div>
-              <div class="product-qty-price ms-auto text-end">
-                <small>x {{ $detail->quantity }}</small><br>
-                Rp. {{ number_format($detail->price, 2, ',', '.') }}
-              </div>
-            </div>
-          @endforeach
-
-        </div>
-      </div>
     </div>
-  @endforeach
+
+    {{-- Hidden input agar tetap menyertakan filter tanggal saat search --}}
+    <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+    <input type="hidden" name="end_date" value="{{ request('end_date') }}">
+</form>
 </div>
 
+<ul class="nav nav-tabs mb-3" id="orderStatusTabs">
+  <li class="nav-item">
+    <a class="nav-link {{ $filter == null ? 'active' : '' }}" href="#" data-status="">All</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ $filter == 'Paid' ? 'active' : '' }}" href="#" data-status="Paid">Paid</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ $filter == 'Pending' ? 'active' : '' }}" href="#" data-status="Pending">Pending</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link {{ $filter == 'Expired' ? 'active' : '' }}" href="#" data-status="Expired">Expired</a>
+  </li>
+</ul>
+
+<div id="order-container">
+  @include('partials.order-filter', ['orders' => $orders, 'orderDetails' => $orderDetails])
+</div>
 
   <!-- Bootstrap JS -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-  <script>
-  document.querySelectorAll('.view-order-toggle').forEach(function(button) {
-    button.addEventListener('click', function () {
-      const orderCard = this.closest('.order-card');
-      const wrapper = orderCard.querySelector('.order-details-wrapper');
-      const icon = this.querySelector('.dropdown-icon');
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
-      // Tutup semua wrapper lain
-      document.querySelectorAll('.order-details-wrapper').forEach(function(w) {
-        if (w !== wrapper) {
-          w.classList.remove('open');
-          const otherIcon = w.closest('.order-card').querySelector('.dropdown-icon');
-          if (otherIcon) otherIcon.textContent = '▼';
-        }
+<script>
+  // Fungsi utama untuk toggle "View Order"
+  function toggleDropdown(e) {
+    const btn = e.currentTarget;
+    const orderCard = btn.closest('.order-card');
+    const wrapper = orderCard.querySelector('.order-details-wrapper');
+    const icon = btn.querySelector('.dropdown-icon');
+
+    // Tutup semua order lain
+    document.querySelectorAll('.order-details-wrapper').forEach(function(w) {
+      if (w !== wrapper) {
+        w.classList.remove('open');
+        const otherIcon = w.closest('.order-card')?.querySelector('.dropdown-icon');
+        if (otherIcon) otherIcon.textContent = '▼';
+      }
+    });
+
+    // Toggle current
+    wrapper.classList.toggle('open');
+    icon.textContent = wrapper.classList.contains('open') ? '▲' : '▼';
+  }
+
+  // Bind event listener ke semua tombol "View Order"
+  function bindDropdownToggle() {
+    const buttons = document.querySelectorAll('.view-order-toggle');
+    buttons.forEach(btn => {
+      btn.removeEventListener('click', toggleDropdown); // cegah dobel
+      btn.addEventListener('click', toggleDropdown);
+    });
+  }
+
+  // Inisialisasi setelah halaman pertama kali dimuat
+  document.addEventListener('DOMContentLoaded', function () {
+    bindDropdownToggle();
+
+    const form = document.getElementById('filterForm');
+    const orderContainer = document.getElementById('order-container');
+
+    // Handle filter form submit via AJAX
+    if (form) {
+      form.addEventListener('submit', function (e) {
+        e.preventDefault();
+        const url = "{{ route('admin.orders.filter') }}";
+        const formData = new FormData(form);
+        const params = new URLSearchParams(formData).toString();
+
+        fetch(`${url}?${params}`, {
+          headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(response => response.text())
+        .then(html => {
+          orderContainer.innerHTML = html;
+          bindDropdownToggle(); // rebinding tombol baru
+        })
+        .catch(error => console.error('AJAX error:', error));
+      });
+    }
+
+    // Handle search live filter
+    const searchInput = document.getElementById('search');
+    const searchBy = document.getElementById('search_by');
+    const startDate = document.getElementById('start_date');
+    const endDate = document.getElementById('end_date');
+
+    function doSearch() {
+      const url = "{{ route('admin.orders.filter') }}";
+
+      const params = new URLSearchParams({
+        search: searchInput?.value || '',
+        search_by: searchBy?.value || '',
+        start_date: startDate?.value || '',
+        end_date: endDate?.value || ''
       });
 
-      // Toggle current
-      wrapper.classList.toggle('open');
-      icon.textContent = wrapper.classList.contains('open') ? '▲' : '▼';
+      fetch(`${url}?${params.toString()}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(response => response.text())
+      .then(html => {
+        orderContainer.innerHTML = html;
+        bindDropdownToggle(); // rebinding tombol baru
+      })
+      .catch(err => console.error('AJAX error:', err));
+    }
+
+    if (searchInput) searchInput.addEventListener('input', doSearch);
+    if (searchBy) searchBy.addEventListener('change', doSearch);
+    if (startDate) startDate.addEventListener('change', doSearch);
+    if (endDate) endDate.addEventListener('change', doSearch);
+  });
+
+document.addEventListener('DOMContentLoaded', function () {
+  const tabs = document.querySelectorAll('#orderStatusTabs .nav-link');
+  const orderContainer = document.getElementById('order-container');
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', function(e) {
+      e.preventDefault();
+
+      // Toggle active class
+      tabs.forEach(t => t.classList.remove('active'));
+      this.classList.add('active');
+
+      const status = this.getAttribute('data-status');
+
+      fetch(`{{ route('admin.orders.filter') }}?status=${status}`, {
+        headers: { 'X-Requested-With': 'XMLHttpRequest' }
+      })
+      .then(res => res.text())
+      .then(html => {
+        orderContainer.innerHTML = html;
+      })
+      .catch(err => console.error(err));
     });
   });
+});
 </script>
 
 </body>

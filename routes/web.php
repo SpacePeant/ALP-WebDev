@@ -1,7 +1,9 @@
 <?php
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Request;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
@@ -138,3 +140,28 @@ Route::post('/articles/store', [ArticleController::class, 'store'])->name('artic
 Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
 Route::post('/articles/{id}/update', [ArticleController::class, 'update'])->name('articles.update');
    
+Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
+
+Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
+
+Route::get('/product-detail/{id}', function ($id) {
+    $details = DB::table('product as p')
+        ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')
+        ->join('product_color as pc', 'pv.color_id', '=', 'pc.id')
+        ->select('p.name', 'pc.color_name', 'pv.size', 'pv.stock')
+        ->where('p.id', $id)
+        ->get();
+
+    // Ambil nama produk dari data pertama (anggap pasti ada)
+    $productName = $details->isNotEmpty() ? $details[0]->name : 'Produk tidak ditemukan';
+
+    return response()->json([
+        'productName' => $productName,
+        'variants' => $details
+    ]);
+});
+
+Route::get('/api/user-name', function (Request $request) {
+    return response()->json(['name' => session('user_name', 'Guest')]);
+});
+

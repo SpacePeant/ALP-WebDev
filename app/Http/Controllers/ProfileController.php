@@ -6,6 +6,7 @@ use App\Models\Customer;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Session;
 
 class ProfileController extends Controller
 {
@@ -54,6 +55,9 @@ public function update(Request $request)
     $user->$field = $value;
     $user->save();
 
+     if ($field === 'name') {
+        $request->session()->put('user_name', $value);
+    }
     return response("Profile updated successfully.");
 }
 }
