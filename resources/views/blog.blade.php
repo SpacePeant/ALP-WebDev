@@ -3,9 +3,9 @@
 @section('title', 'Blog')
 
 @section('content')
-{{-- @php
+@php
     $isAdmin = session()->has('user_id') && !session()->has('user_email');
-@endphp --}}
+@endphp
   <!DOCTYPE html>
   <html lang="en">
   <head>
@@ -17,15 +17,15 @@
     @vite(['resources/css/blog.css', 'resources/js/app.js'])
 
   </head>
-  {{-- <?php
-    // if (Session::has('user_id') && !Session::has('user_email')) {
-    //     echo("admin");
-    // }
+  <?php
+    if (Session::has('user_id') && !Session::has('user_email')) {
+        echo("admin");
+    }
 
-    // if (Session::has('user_id') && Session::has('user_email')) {
-    //    echo("customer");
-    // }
-  ?> --}}
+    if (Session::has('user_id') && Session::has('user_email')) {
+       echo("customer");
+    }
+  ?>
   <body>
     
     <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
@@ -55,23 +55,109 @@
     <main>
       <section>
         <h3 class="articles-title">All articles</h3>
-          {{-- @if ($isAdmin)
+        
+          @if ($isAdmin)
             <div style="text-align: right; margin-bottom: 20px;">
-                <a href="{{ url('/articles/create') }}" class="btn btn-primary">Add Blog</a>
+              <button data-bs-toggle="modal" data-bs-target="#createArticleModal">Create Article</button>
             </div>
-          @endif --}}
-        <div class="grid" id="blogGrid">
-          @foreach ($articles->take(6) as $article)
-            <a href="{{ url('/articles/' . $article->id) }}" style="text-decoration: none; color: inherit;">
-              <article>
-                <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}">
-                <h4>{{ $article->title }}</h4>
-                <p>{{ $article->description }}</p>
-              </article>
-            </a>
-          @endforeach
-        </div>
+          @endif
 
+          <div class="grid" id="blogGrid">
+            @foreach ($articles->take(6) as $article)
+              <a href="{{ url('/articles/' . $article->id) }}" style="text-decoration: none; color: inherit; position: relative;">
+                <article>
+                  <div class="dots-container" tabindex="0" aria-label="More options" role="button" title="More options">
+                    <div class="dots-menu" aria-hidden="true">⋮</div>
+                    <div class="popup-menu" role="menu">
+                      <button class="edit-btn" type="button" role="menuitem" onclick="event.stopPropagation(); alert('Edit article {{ $article->id }}');">Edit</button>
+                      <button class="delete-btn" type="button" role="menuitem" onclick="event.stopPropagation(); alert('Delete article {{ $article->id }}');">Delete</button>
+                    </div>
+                  </div>
+                  <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}">
+                  <h4>{{ $article->title }}</h4>
+                  <p>{{ $article->description }}</p>
+                </article>
+              </a>
+            @endforeach
+          </div>
+
+        <!-- Modal -->
+          <div class="modal fade" id="createArticleModal" tabindex="-1">
+            <div class="modal-dialog">
+              <form method="POST" action="{{ route('articles.store') }}" enctype="multipart/form-data">
+                @csrf
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">New Article</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label>Title</label>
+                      <input type="text" name="title" class="form-control" required>
+                    </div>
+                    <div class="mb-3">
+                      <label>Description</label>
+                      <textarea name="description" class="form-control" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                      <label>Article</label>
+                      <textarea name="article" class="form-control" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                      <label>Image</label>
+                      <input type="file" name="image" class="form-control" accept="image/*" required>
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+
+        
+
+        <!-- Edit Article Modal -->
+        <div class="modal fade" id="editArticleModal" tabindex="-1" role="dialog">
+          <div class="modal-dialog" role="document">
+            <form id="editArticleForm" enctype="multipart/form-data">
+              @csrf
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Edit Article</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <input type="hidden" id="editArticleId" name="id">
+                  <div class="mb-3">
+                    <label>Title</label>
+                    <input type="text" name="title" id="editTitle" class="form-control" required>
+                  </div>
+                  <div class="mb-3">
+                    <label>Description</label>
+                    <textarea name="description" id="editDescription" class="form-control" required></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label>Article</label>
+                    <textarea name="article" id="editArticleText" class="form-control" required></textarea>
+                  </div>
+                  <div class="mb-3">
+                    <label>Image (optional)</label>
+                    <input type="file" name="image" class="form-control">
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-primary">Update</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                </div>
+              </div>
+            </form>
+          </div>
+        </div>
+        <!-- Edit Article Modal -->
 
         <div class="load-button">
           <button id="loadMoreBtn" data-offset="6">Load more</button>
@@ -82,3 +168,82 @@
   </body>
   </html>
 @endsection
+
+
+<script>
+
+function openEditModal(id) {
+    $.get(`/articles/${id}/edit`, function(data) {
+        $('#editArticleId').val(data.id);
+        $('#editTitle').val(data.title);
+        $('#editDescription').val(data.description);
+        $('#editArticleText').val(data.article);
+        $('#editArticleModal').modal('show');
+    });
+}
+
+$('#editArticleForm').on('submit', function(e) {
+    e.preventDefault();
+    let id = $('#editArticleId').val();
+    let formData = new FormData(this);
+
+    $.ajax({
+        url: `/articles/${id}/update`,
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+            $('#editArticleModal').modal('hide');
+            alert(response.message);
+            location.reload();
+        },
+        error: function(err) {
+            alert('Failed to update article');
+        }
+    });
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+  const dotsContainers = document.querySelectorAll('.dots-container');
+
+  function closeAllPopups(except = null) {
+    dotsContainers.forEach(container => {
+      if (container !== except) {
+        container.querySelector('.popup-menu').classList.remove('show');
+      }
+    });
+  }
+
+  dotsContainers.forEach(container => {
+    const popupMenu = container.querySelector('.popup-menu');
+
+    // Toggle popup menu on click
+    container.addEventListener('click', function (e) {
+      e.preventDefault();
+      e.stopPropagation();
+      const isShown = popupMenu.classList.contains('show');
+      closeAllPopups(container);
+      if (!isShown) {
+        popupMenu.classList.add('show');
+      } else {
+        popupMenu.classList.remove('show');
+      }
+    });
+
+    // Close popup on keyboard Escape key
+    container.addEventListener('keydown', function (e) {
+      if (e.key === "Escape") {
+        popupMenu.classList.remove('show');
+        container.blur();
+      }
+    });
+  });
+
+  // Close all popups if clicked outside
+  document.addEventListener('click', function () {
+    closeAllPopups();
+  });
+});
+
+</script>

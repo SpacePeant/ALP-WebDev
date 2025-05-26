@@ -198,8 +198,9 @@
       <div class="user-dropdown">
         <a href="#" id="userIconDesktop"><i data-feather="user"></i></a>
         <div class="user-dropdown-menu" id="userDropdownDesktop">
-          <p>Hi, {{ $user_name }}!</p>
-          <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+          {{-- <p>Hi, {{ $user_name }}!</p> --}}
+          <p id="greeting">Hi, {{ session('user_name', 'Guest') }}!</p>
+          <button onclick="window.location='{{ route('profile.edit') }}'">Account</button>
           <button onclick="window.location='{{ route('order') }}'">My Orders</button>
           <form action="{{ route('logout') }}" method="POST">
             @csrf
@@ -228,7 +229,8 @@
         <div class="user-dropdown">
           <a href="#" id="userIconMobile"><i data-feather="user"></i></a>
           <div class="user-dropdown-menu" id="userDropdownMobile">
-            <p>Hi, {{ $user_name }}!</p>
+            {{-- <p>Hi, {{ $user_name }}!</p> --}}
+            <p id="greeting">Hi, {{ session('user_name', 'Guest') }}!</p>
             <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
             <button onclick="window.location='{{ route('order') }}'">My Orders</button>
             <form action="{{ route('logout') }}" method="POST">

@@ -56,7 +56,7 @@ class CheckoutController extends Controller
         ->get();
 
     // Ambil data customer
-    $customer = DB::table('customers')->where('id', $user_id)->first();
+    $customer = DB::table('users')->where('id', $user_id)->first();
 
     return view('checkout', [
         'cartItems' => $cartItems,

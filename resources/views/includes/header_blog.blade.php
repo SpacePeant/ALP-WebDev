@@ -276,7 +276,7 @@ header.scrolled .layout-desktop .logo {
         <a href="#" id="userIconDesktop"><i data-feather="user"></i></a>
         <div class="user-dropdown-menu" id="userDropdownDesktop">
           <p>Hi, {{ Session::get('user_name', 'Guest') }}!</p>
-          <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+          <button onclick="window.location='{{ route('profile.edit') }}'">Account</button>
           <button onclick="window.location='{{ route('order') }}'">My Orders</button>
           <form method="POST" action="{{ route('logout') }}">
             @csrf
@@ -303,7 +303,7 @@ header.scrolled .layout-desktop .logo {
           <a href="#" id="userIconMobile"><i data-feather="user"></i></a>
           <div class="user-dropdown-menu" id="userDropdownMobile">
             <p>Hi, {{ Session::get('user_name', 'Guest') }}!</p>
-            <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+            <button onclick="window.location='{{ route('profile.edit') }}'">Account</button>
             <button onclick="window.location='{{ route('order') }}'">My Orders</button>
             <form method="POST" action="{{ route('logout') }}">
               @csrf
