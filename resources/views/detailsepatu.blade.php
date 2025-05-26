@@ -1155,6 +1155,7 @@ body {
           kiri: mobileThumbs[2].src,
           kanan: mobileThumbs[3].src
         };
+        
         const newSrc = imageSrcObj[activePosition] || mobileThumbs[0].src;
         // Update main image untuk kedua sisi
         const mobileMainImg = document.getElementById('mainImage');

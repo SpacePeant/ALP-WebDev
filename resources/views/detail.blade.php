@@ -58,9 +58,9 @@
     }
 
     .carousel-caption-center h2 {
-    font-family: 'Playfair Display', serif;
+    font-family: 'Red Hat Text', sans-serif;
     font-size: 3.5rem;
-    font-weight: 500;
+    font-weight: 510;
     margin-bottom: 30px;
     }
 
@@ -535,7 +535,6 @@ input[type="range"]::-webkit-slider-thumb {
     transition: transform 0.3s, background-color 0.3s;
     display: flex;
     flex-direction: column;
-    /* justify-content: space-between; */
 }
 
   </style>
@@ -545,8 +544,8 @@ input[type="range"]::-webkit-slider-thumb {
   <div id="carouselExample" class="carousel slide" data-bs-ride="carousel" data-bs-interval="5000">
     <div class="carousel-inner">
       <div class="carousel-item active">
-        <img src="{{ asset('image/image_carousel/running.png') }}" alt="Running">
-        <div class="carousel-caption-center" style="color: #5E4E47;">
+        <img src="{{ asset('image/image_carousel/runningcollection.png') }}" alt="Running">
+        <div class="carousel-caption-center" style="color: #ffffff;">
           <h2>Running</h2>
           <p>Nike running shoes combine lightweight design, responsive cushioning, and innovative technology for optimal running performance.</p>
           {{-- <a href="#" style="color: #5E4E47;">View Collection →</a> --}}
@@ -554,46 +553,46 @@ input[type="range"]::-webkit-slider-thumb {
       </div>
 
       <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/casual.png') }}" alt="Casual">
-        <div class="carousel-caption-center" style="color: #8C1D1D;">
+        <img src="{{ asset('image/image_carousel/casualcollection.png') }}" alt="Casual">
+        <div class="carousel-caption-center" style="color: #ffffff;">
           <h2>Casual</h2>
-          <p>Nike casual shoes blend sporty style with all-day comfort, making them perfect for everyday wear.</p>
+          <p>Nike casual shoes combine modern design, making them perfect for everything from running errands to meeting up with friends.</p>
           {{-- <a href="#" style="color: #8C1D1D;">View Collection →</a> --}}
         </div>
       </div>
 
       <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/basketball.png') }}" alt="Basketball">
-        <div class="carousel-caption-center" style="color: #303034;">
+        <img src="{{ asset('image/image_carousel/basketballcollection.png') }}" alt="Basketball">
+        <div class="carousel-caption-center" style="color: #ffffff;">
           <h2>Basketball</h2>
-          <p>Nike basketball shoes blend dynamic support, explosive cushioning, and cutting-edge innovation to elevate your game on every court.</p>
+          <p>Nike basketball shoes blend dynamic support, explosive cushioning, and cutting-edge innovation to elevate your game.</p>
           {{-- <a href="#" style="color: #303034;">View Collection →</a> --}}
         </div>
       </div>
 
       <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/training.png') }}" alt="Training">
-        <div class="carousel-caption-center" style="color: #23AA97;"> 
+        <img src="{{ asset('image/image_carousel/trainingcollection.png') }}" alt="Training">
+        <div class="carousel-caption-center" style="color: #ffffff;"> 
           <h2>Training</h2>
-          <p>Nike training shoes offer stability, support, and flexibility for a variety of workouts, from gym sessions to cross-training.</p>
+          <p>Nike training shoes deliver a perfect blend of stability, support, and flexibility, making them ideal for a wide range of workouts.</p>
           {{-- <a href="#" style="color: #23AA97;">View Collection →</a> --}}
         </div>
       </div>
 
       <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/soccer.png') }}" alt="Soccer">
-        <div class="carousel-caption-center" style="color: #035573;">
+        <img src="{{ asset('image/image_carousel/soccercollection.png') }}" alt="Soccer">
+        <div class="carousel-caption-center" style="color: #ffffff;">
           <h2>Soccer</h2>
-          <p>Nike soccer boots deliver precision touch, agile traction, and lightweight speed to dominate every match.</p>
+          <p>Nike soccer boots are engineered for precision touch, agile traction, and lightweight speed, giving players the control they need.</p>
           {{-- <a href="#" style="color: #035573;">View Collection →</a> --}}
         </div>
       </div>
 
       <div class="carousel-item">
-        <img src="{{ asset('image/image_carousel/sandals.png') }}" alt="Sandals">
-        <div class="carousel-caption-center" style="color: #6E5B59;">
+        <img src="{{ asset('image/image_carousel/sandalscollection.png') }}" alt="Sandals">
+        <div class="carousel-caption-center" style="color: #ffffff;">
           <h2>Sandals</h2>
-          <p>Nike sandals offer lightweight comfort and easy style, perfect for casual wear, lounging, or post-workout recovery.</p>
+          <p>Nike sandals provide lightweight comfort and effortless style, making them an excellent choice for casual wear and relaxing at home.</p>
           {{-- <a href="#" style="color: #6E5B59;">View Collection →</a> --}}
         </div>
       </div>
@@ -643,13 +642,6 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
 </div>
-{{-- Filter Icon untuk Mobile --}}
-{{-- <div class="d-flex justify-content-end d-md-none mb-3">
-    <button class="btn btn-outline-dark" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilter">
-        <i class="bi bi-filter"></i>
-    </button>
-</div> --}}
-
     <div class="d-flex justify-content-between align-items-center d-md-none mb-3" style="margin-left: 20px">
         <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilter">
             <i class="bi bi-filter"></i> Filter
@@ -657,9 +649,7 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
 <div class="product-container d-flex">
-    {{-- Sidebar (hanya tampil di desktop) --}}
     <aside class="filter-sidebar d-none d-md-block me-3">
-        {{-- Kategori --}}
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Category</div>
             <div class="filter-content">
@@ -673,7 +663,6 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
         </div>
 
-        {{-- Warna --}}
         <div class="filter-group warna">
             <div class="filter-title" onclick="toggleFilter(this)">Color</div>
             <div class="filter-content">
@@ -688,7 +677,6 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
         </div>
 
-        {{-- Ukuran --}}
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Size</div>
             <div class="filter-content">
@@ -702,7 +690,6 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
         </div>
 
-        {{-- Gender --}}
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
             <div class="filter-content">
@@ -717,20 +704,17 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
     </aside>
 
-    {{-- Product Results --}}
     <main id="productResults" class="flex-grow-1">
         @include('partials.product_list', ['products' => $products])
     </main>
 </div>
 
-{{-- Offcanvas untuk Mobile --}}
 <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilter">
     <div class="offcanvas-header">
         <h5 class="offcanvas-title">Filter</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
     </div>
     <div class="offcanvas-body">
-        {{-- COPY ISI FILTER DARI SIDEBAR --}}
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Category</div>
             <div class="filter-content">
