@@ -9,26 +9,6 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('customers', function (Blueprint $table) {
-            $table->id(); 
-            $table->string('name', 100);
-            $table->string('email', 100)->unique();
-            $table->string('password', 255);
-            $table->text('address')->nullable();
-            $table->string('phone_number', 15)->nullable();
-            $table->date('registration_date')->nullable();
-            $table->rememberToken();
-            $table->timestamps();
-        });
-
-        Schema::create('admins', function (Blueprint $table) {
-            $table->id();
-            $table->string('name', 100);
-            $table->string('email', 100)->unique();
-            $table->string('password');
-            $table->timestamps();
-        });
-
         Schema::create('articles', function (Blueprint $table) {
             $table->id();
             $table->string('title');
@@ -96,16 +76,16 @@ return new class extends Migration
 
         Schema::create('wishlists', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
             $table->timestamp('added_at')->nullable();
             $table->timestamps();
-            $table->unique(['customer_id', 'product_id']);
+            $table->unique(['user_id', 'product_id']);
         });
 
         Schema::create('product_reviews', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
             $table->tinyInteger('rating');
             $table->text('review_title');
@@ -116,7 +96,7 @@ return new class extends Migration
         
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->foreignId('product_id')->constrained('product')->onDelete('cascade');
             $table->foreignId('product_color_id')->constrained('product_color')->onDelete('cascade');
             $table->foreignId('product_variant_id')->constrained('product_variant')->onDelete('cascade');
@@ -128,7 +108,7 @@ return new class extends Migration
 
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->dateTime('order_date');
             $table->string('status', 20);
             $table->string('payment_method', 50)->nullable();
@@ -181,7 +161,7 @@ return new class extends Migration
 
         Schema::create('logs', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('admin_id')->constrained('admins'); 
+            $table->foreignId('user_id')->constrained('users'); 
             $table->string('action', 100);
             $table->string('target_table', 100);
             $table->text('description')->nullable();
@@ -190,7 +170,7 @@ return new class extends Migration
 
         Schema::create('api_tokens', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('customer_id')->constrained('customers')->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
             $table->string('access_token');
             $table->timestamp('expires_at')->nullable();
             $table->timestamps();
@@ -243,6 +223,17 @@ return new class extends Migration
                 END IF;
             END;
         ");
+
+        DB::unprepared('
+            CREATE TRIGGER reduce_stock
+            AFTER INSERT ON order_details
+            FOR EACH ROW
+            BEGIN
+                UPDATE product_variant
+                SET stock = stock - NEW.quantity
+                WHERE id = NEW.product_variant_id;
+            END
+        ');
     
     }
 
@@ -264,9 +255,10 @@ return new class extends Migration
         Schema::dropIfExists('category');
         Schema::dropIfExists('blog_image');
         Schema::dropIfExists('articles');
-        Schema::dropIfExists('admins');
-        Schema::dropIfExists('customers');
+        Schema::dropIfExists('users');
+        Schema::dropIfExists('users');
         DB::unprepared("DROP TRIGGER IF EXISTS before_insert_product_color;");
         DB::unprepared("DROP TRIGGER IF EXISTS before_update_product_color;");
+        DB::unprepared('DROP TRIGGER IF EXISTS reduce_stock');
     }
 };
