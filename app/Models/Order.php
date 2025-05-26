@@ -10,7 +10,7 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id',
+        'user_id',
         'order_date',
         'status',
         'total_amount',
@@ -18,9 +18,9 @@ class Order extends Model
     ];
 
     // Relasi ke Customer
-    public function customer()
+    public function user()
     {
-        return $this->belongsTo(Customer::class);
+        return $this->belongsTo(User::class);
     }
 
     // Relasi ke OrderDetail

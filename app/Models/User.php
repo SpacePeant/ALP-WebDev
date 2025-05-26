@@ -52,11 +52,11 @@ class User extends Authenticatable implements MustVerifyEmail
     }
     public function cartItems()
     {
-        return $this->hasMany(CartItem::class, 'customer_id');
+        return $this->hasMany(CartItem::class, 'user_id');
     }
 
     public function wishlists()
     {
-        return $this->hasMany(Wishlist::class, 'customer_id');
+        return $this->hasMany(Wishlist::class, 'user_id');
     }
 }

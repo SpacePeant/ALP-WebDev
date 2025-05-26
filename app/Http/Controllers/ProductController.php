@@ -115,12 +115,12 @@ class ProductController extends Controller
     // Cek wishlist user
     $isWishlisted = false;
     if ($userId) {
-        $isWishlisted = Wishlist::where('customer_id', $userId)
+        $isWishlisted = Wishlist::where('user_id', $userId)
                                 ->where('product_id', $id)
                                 ->exists();
     }
     $reviews = ProductReview::where('product_id', $id)
-    ->with('customer') // pastikan relasi di model
+    ->with('user') // pastikan relasi di model
     ->latest()
     ->get();
     
