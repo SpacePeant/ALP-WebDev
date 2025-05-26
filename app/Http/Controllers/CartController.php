@@ -43,7 +43,7 @@ class CartController extends Controller
             return response()->json(['success' => false, 'message' => 'Ukuran tidak ditemukan']);
         }
 
-        $item = CartItem::where('customer_id', $userId)
+        $item = CartItem::where('user_id', $userId)
                     ->where('product_id', $productId)
                     ->where('product_color_id', $color->id)
                     ->where('product_variant_id', $variant->id)
@@ -55,7 +55,7 @@ class CartController extends Controller
             return response()->json(['success' => true, 'message' => 'Jumlah diperbarui']);
         } else {
             CartItem::create([
-                'customer_id'        => $userId,
+                'user_id'        => $userId,
                 'product_id'         => $productId,
                 'product_color_id'   => $color->id,
                 'product_variant_id' => $variant->id,
@@ -72,7 +72,7 @@ class CartController extends Controller
         $cartItemId = $request->cart_item_id;
 
         $deleted = CartItem::where('id', $cartItemId)
-                    ->where('customer_id', $userId)
+                    ->where('user_id', $userId)
                     ->delete();
 
         if ($deleted) {
@@ -131,7 +131,7 @@ class CartController extends Controller
         ->join('product_color as pc', 'pc.id', '=', 'ci.product_color_id')
         ->join('product_color_image as pci', 'pci.color_id', '=', 'ci.product_color_id')
         ->join('product_variant as pv', 'pv.id', '=', 'ci.product_variant_id')
-        ->where('ci.customer_id', $user_id)
+        ->where('ci.user_id', $user_id)
         ->where('pc.status', 'active')
         ->select(
             'ci.id',

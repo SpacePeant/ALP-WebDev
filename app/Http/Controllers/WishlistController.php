@@ -21,7 +21,7 @@ class WishlistController extends Controller
             return response()->json(['success' => false, 'message' => 'Data tidak lengkap']);
         }
 
-        $exists = Wishlist::where('customer_id', $userId)
+        $exists = Wishlist::where('user_id', $userId)
                         ->where('product_id', $productId)
                         ->exists();
 
@@ -31,7 +31,7 @@ class WishlistController extends Controller
 
         try {
             Wishlist::create([
-                'customer_id' => $userId,
+                'user_id' => $userId,
                 'product_id' => $productId
             ]);
         } catch (\Exception $e) {
@@ -48,7 +48,7 @@ class WishlistController extends Controller
         $userId = Session::get('user_id', 1);
         $productId = $request->product_id;
 
-        $deleted = Wishlist::where('customer_id', $userId)
+        $deleted = Wishlist::where('user_id', $userId)
                            ->where('product_id', $productId)
                            ->delete();
 
@@ -64,7 +64,7 @@ class WishlistController extends Controller
     {
         $userId = Auth::id();
 
-        $exists = Wishlist::where('customer_id', $userId)
+        $exists = Wishlist::where('user_id', $userId)
                           ->where('product_id', $productId)
                           ->exists();
 

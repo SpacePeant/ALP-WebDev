@@ -18,7 +18,7 @@ class ReportController extends Controller
     if ($startDate && $endDate) {
         $sales = DB::select("
             SELECT 
-                c.name as customer_name,
+                u.name as customer_name,
                 p.name as product_name,
                 pc.color_name as color,
                 pv.size as size,
@@ -28,12 +28,12 @@ class ReportController extends Controller
                 (p.price * od.quantity) as total
             FROM order_details od
             LEFT JOIN orders o ON o.id = od.order_id
-            LEFT JOIN customers c ON c.id = o.customer_id
+            LEFT JOIN users u ON u.id = o.customer_id
             LEFT JOIN product p ON p.id = od.product_id
             LEFT JOIN product_color pc ON pc.id = od.product_color_id
             LEFT JOIN product_variant pv ON pv.id = od.product_variant_id
             WHERE od.created_at BETWEEN ? AND ?
-            GROUP BY c.name, p.name, pc.color_name, pv.size, date, od.quantity, p.price
+            GROUP BY u.name, p.name, pc.color_name, pv.size, date, od.quantity, p.price
             ORDER BY date
         ", [$startDate, $endDate]);
     }
@@ -112,7 +112,7 @@ public function downloadPDF(Request $request)
 
     $sql = "
         SELECT 
-            c.name as customer_name,
+            u.name as customer_name,
             p.name as product_name,
             pc.color_name as color,
             pv.size as size,
@@ -122,7 +122,7 @@ public function downloadPDF(Request $request)
             (p.price * od.quantity) as total
         FROM order_details od
         LEFT JOIN orders o ON o.id = od.order_id
-        LEFT JOIN customers c ON c.id = o.customer_id
+        LEFT JOIN users u ON u.id = o.customer_id
         LEFT JOIN product p ON p.id = od.product_id
         LEFT JOIN product_color pc ON pc.id = od.product_color_id
         LEFT JOIN product_variant pv ON pv.id = od.product_variant_id
@@ -137,7 +137,7 @@ public function downloadPDF(Request $request)
     }
 
     $sql .= "
-        GROUP BY c.name, p.name, pc.color_name, pv.size, date, od.quantity, p.price
+        GROUP BY u.name, p.name, pc.color_name, pv.size, date, od.quantity, p.price
         ORDER BY date
     ";
 
@@ -171,7 +171,7 @@ public function fetchSalesTable(Request $request)
 
     $sales = DB::select("
         SELECT 
-            c.name as customer_name,
+            u.name as customer_name,
             p.name as product_name,
             pc.color_name as color,
             pv.size as size,
@@ -181,12 +181,12 @@ public function fetchSalesTable(Request $request)
             (p.price * od.quantity) as total
         FROM order_details od
         LEFT JOIN orders o ON o.id = od.order_id
-        LEFT JOIN customers c ON c.id = o.customer_id
+        LEFT JOIN users c ON c.id = o.customer_id
         LEFT JOIN product p ON p.id = od.product_id
         LEFT JOIN product_color pc ON pc.id = od.product_color_id
         LEFT JOIN product_variant pv ON pv.id = od.product_variant_id
         WHERE od.created_at BETWEEN ? AND ?
-        GROUP BY c.name, p.name, pc.color_name, pv.size, date, od.quantity, p.price
+        GROUP BY u.name, p.name, pc.color_name, pv.size, date, od.quantity, p.price
         ORDER BY date
     ", [$start, $end]);
 
