@@ -309,24 +309,20 @@
               </div>
             </div>
             <div class="col-md-4">
-  <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
-    <div class="section-title d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
-      <span>Product Stock</span>
-      <select id="sortStock" class="form-select form-select-sm" style="width: auto;">
-        <option class="sort" value="" selected>Sort By</option>
-        <option value="desc">Stock: High to Low</option>
-        <option value="asc">Stock: Low to High</option>
-      </select>
-    </div>
-    <div style="overflow-y: auto; flex-grow: 1;">
-      <table class="table-custom">
-        <tbody id="productList">
-          @foreach($productStock as $p)
-            <tr onclick="fetchProductDetail('{{ $p->id }}')" style="cursor:pointer;">
-               <td class="d-flex justify-content-between align-items-center">
-  <span>{{ $p->name }}</span>
-  <span class="text-end">{{ $p->total_stock }}</span>
-</td>
+    <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
+      <div class="section-title d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
+        <span>Product Stock</span>
+
+      </div>
+      <div style="overflow-y: auto; flex-grow: 1;">
+        <table class="table-custom">
+          <tbody id="productList">
+            @foreach($productStock as $p)
+              <tr onclick="fetchProductDetail('{{ $p->id }}')" style="cursor:pointer;">
+                <td class="d-flex justify-content-between align-items-center">
+    <span>{{ $p->name }}</span>
+    <span class="text-end">{{ $p->total_stock }}</span>
+  </td>
             </tr>   
           @endforeach
         </tbody>
@@ -549,29 +545,27 @@
     .catch(err => console.error('Gagal mengambil detail produk:', err));
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-  console.log("DOM loaded");
-
-  const sortSelect = document.getElementById('sortStock');
-  const tbody = document.getElementById('productList');
-
-  sortSelect.addEventListener('change', function() {
+  sortSelect.addEventListener('change', function () {
     const order = this.value;
-    if (!order) return;
-
     const rows = Array.from(tbody.querySelectorAll('tr'));
 
-    rows.sort((a, b) => {
-      const stockA = parseInt(a.querySelector('td:last-child').textContent.trim(), 10);
-      const stockB = parseInt(b.querySelector('td:last-child').textContent.trim(), 10);
-      return order === 'asc' ? stockA - stockB : stockB - stockA;
+    const sortedRows = rows.sort((a, b) => {
+      const aStock = parseInt(a.querySelector('td span:last-child').textContent.trim());
+      const bStock = parseInt(b.querySelector('td span:last-child').textContent.trim());
+
+      if (order === 'asc') {
+        return aStock - bStock;
+      } else if (order === 'desc') {
+        return bStock - aStock;
+      } else {
+        return 0;
+      }
     });
 
-    // Render ulang
+    // Bersihkan dan tambahkan kembali baris yang sudah diurutkan
     tbody.innerHTML = '';
-    rows.forEach(row => tbody.appendChild(row));
+    sortedRows.forEach(row => tbody.appendChild(row));
   });
-});
   </script>
 </div>
 </body>

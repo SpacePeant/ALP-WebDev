@@ -2,62 +2,64 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Customer;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Redirect;
+use App\Http\Requests\ProfileUpdateRequest;
 
 class ProfileController extends Controller
 {
-public function show(Request $request)
-{
-    $userId = $request->session()->get('user_id', $request->query('user_id', 1)); // default ke 1
-    $user = \App\Models\Customer::find($userId);
-
-    if (!$user) {
-        return response("User not found", 404);
-    }
-
-    return view('profile', compact('user'));
-}
-public function update(Request $request)
-{
-    $userId = $request->session()->get('user_id', $request->query('user_id', 1));
-    $user = \App\Models\Customer::find($userId);
-
-    if (!$user) {
-        return response("User not found", 404);
-    }
-
-    if ($request->field === 'password') {
-        $request->validate([
-            'old_password' => 'required',
-            'new_password' => 'required|min:6|confirmed',
+    /**
+     * Display the user's profile form.
+     */
+    public function edit(Request $request): View
+    {
+        return view('profile.edit', [
+            'user' => $request->user(),
         ]);
+    }
 
-        if (!Hash::check($request->old_password, $user->password)) {
-            return response("Old password is incorrect.", 400);
+    /**
+     * Update the user's profile information.
+     */
+    public function update(ProfileUpdateRequest $request): RedirectResponse
+    {
+        $user = $request->user();
+        $user->fill($request->validated());
+
+        if ($user->isDirty('email')) {
+            $user->email_verified_at = null;
         }
 
-        $user->password = Hash::make($request->new_password);
         $user->save();
-        return response("Password updated successfully.");
+
+        Session::put('user_name', $user->name);
+        Session::put('user_email', $user->email);
+
+        return Redirect::route('profile.edit')->with('status', 'profile-updated');
     }
 
-    $field = $request->field;
-    $value = $request->value;
+    /**
+     * Delete the user's account.
+     */
+    public function destroy(Request $request): RedirectResponse
+    {
+        $request->validateWithBag('userDeletion', [
+            'password' => ['required', 'current_password'],
+        ]);
 
-    if (!in_array($field, ['name', 'phone_number', 'address'])) {
-        return response("Invalid field", 400);
+        $user = $request->user();
+
+        Auth::logout();
+
+        $user->delete();
+
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+
+        return Redirect::to('/');
     }
-
-    $user->$field = $value;
-    $user->save();
-
-     if ($field === 'name') {
-        $request->session()->put('user_name', $value);
-    }
-    return response("Profile updated successfully.");
-}
 }
