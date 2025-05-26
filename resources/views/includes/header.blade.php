@@ -200,7 +200,7 @@
         <div class="user-dropdown-menu" id="userDropdownDesktop">
           {{-- <p>Hi, {{ $user_name }}!</p> --}}
           <p id="greeting">Hi, {{ session('user_name', 'Guest') }}!</p>
-          <button onclick="window.location='{{ route('profile.show') }}'">Account</button>
+          <button onclick="window.location='{{ route('profile.edit') }}'">Account</button>
           <button onclick="window.location='{{ route('order') }}'">My Orders</button>
           <form action="{{ route('logout') }}" method="POST">
             @csrf
