@@ -6,9 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class ProductReview extends Model
 {
-    public function customer()
+    public function user()
 {
-    return $this->belongsTo(Customer::class);
+    return $this->belongsTo(User::class);
 }
 
 }

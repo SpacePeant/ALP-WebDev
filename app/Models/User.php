@@ -6,8 +6,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Contracts\Auth\MustVerifyEmail;
 
-class User extends Authenticatable
+class User extends Authenticatable implements MustVerifyEmail
 {
     /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
@@ -20,8 +21,12 @@ class User extends Authenticatable
     protected $fillable = [
         'name',
         'email',
+        'address',
+        'phone_number',
         'password',
+        'role',
     ];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -47,11 +52,11 @@ class User extends Authenticatable
     }
     public function cartItems()
     {
-        return $this->hasMany(CartItem::class, 'customer_id');
+        return $this->hasMany(CartItem::class, 'user_id');
     }
 
     public function wishlists()
     {
-        return $this->hasMany(Wishlist::class, 'customer_id');
+        return $this->hasMany(Wishlist::class, 'user_id');
     }
 }

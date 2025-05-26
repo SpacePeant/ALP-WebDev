@@ -31,7 +31,7 @@ class CheckoutController extends Controller
         ->join('product_color as pc', 'pc.id', '=', 'ci.product_color_id')
         ->join('product_color_image as pci', 'pci.color_id', '=', 'ci.product_color_id')
         ->join('product_variant as pv', 'pv.id', '=', 'ci.product_variant_id')
-        ->where('ci.customer_id', $user_id)
+        ->where('ci.user_id', $user_id)
         ->where('ci.is_pilih', 1)
         ->select(
             'ci.id',
@@ -56,7 +56,7 @@ class CheckoutController extends Controller
         ->get();
 
     // Ambil data customer
-    $customer = DB::table('customers')->where('id', $user_id)->first();
+    $customer = DB::table('users')->where('id', $user_id)->first();
 
     return view('checkout', [
         'cartItems' => $cartItems,
@@ -98,7 +98,7 @@ public function processCheckout(Request $request)
 
         try {
             $cartItems = CartItem::with('product')
-                ->where('customer_id', $customerId)
+                ->where('user_id', $customerId)
                 ->where('is_pilih', 1)
                 ->get();
 
@@ -109,7 +109,7 @@ public function processCheckout(Request $request)
             $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price);
 
             $order = Order::create([
-                'customer_id' => $customerId,
+                'user_id' => $customerId,
                 'order_date' => now(),
                 'status' => 'Pending',
                 'total_amount' => $totalAmount,
@@ -162,7 +162,7 @@ public function processCheckout(Request $request)
             DB::commit();
 
             session()->forget('cart');
-            CartItem::where('customer_id', $customerId)->where('is_pilih', 1)->delete();
+            CartItem::where('user_id', $customerId)->where('is_pilih', 1)->delete();
 
             return redirect()->away($snapUrl);
 

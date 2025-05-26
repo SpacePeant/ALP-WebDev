@@ -5,11 +5,15 @@ namespace App\Http\Controllers;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class ChartController extends Controller
 {
     public function index()
     {
+        if (Auth::user()->role !== 'admin') {
+            return redirect()->route('home');
+        }
             // Sales Chart Data
     $startDate = Carbon::now()->subDays(6)->startOfDay();
     $endDate = Carbon::now()->endOfDay();

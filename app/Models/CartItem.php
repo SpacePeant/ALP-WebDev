@@ -9,7 +9,7 @@ class CartItem extends Model
     protected $table = 'cart_items';
 
     protected $fillable = [
-        'customer_id',
+        'user_id',
         'product_id',
         'product_color_id',
         'product_variant_id',
@@ -17,9 +17,9 @@ class CartItem extends Model
     ];
 
     // Relasi ke Customer
-    public function customer()
+    public function user()
     {
-        return $this->belongsTo(User::class, 'customer_id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     // CartItem.php
