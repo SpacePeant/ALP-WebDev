@@ -731,7 +731,7 @@
     </div>
 
     <div class="top-product flex flex-col items-center justify-center text-center mt-10 mb-5">
-      <h2 class="text-xl font-semibold mb-4">Best Seller</h2>
+      <h2 class="text-xl font-bold mb-4" style = "margin-top: 60px;"><strong>Best Seller</strong></h2>
       <div class="horizontal-scroll-wrapper">
         @forelse ($topProduct as $related)
           <a href="{{ url('detail_sepatu/' . $related->product_id) }}" class="product-link">
@@ -750,7 +750,7 @@
     </div>
 
     <div class="ttop-product flex flex-col items-center justify-center text-center mt-10 mb-5">
-      <h2 class="text-xl font-semibold mb-4">Best Seller</h2>
+      <h2 class="text-xl font-semibold mb-4" style = "margin-top: 60px;"><strong>Best Seller</strong></h2>
       <div class="horizontal-scroll-wrapperr">
         @forelse ($topProduct as $related)
           <a href="{{ url('detail_sepatu/' . $related->product_id) }}" class="product-link">
