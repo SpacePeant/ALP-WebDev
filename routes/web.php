@@ -148,6 +148,10 @@ Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('art
 Route::post('/articles/{id}/update', [ArticleController::class, 'update'])->name('articles.update');
 Route::post('/articles/store', [ArticleController::class, 'store'])->name('articles.store');
 
+Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');
+Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+
+
 // ==============================
 // COLLECTION / DETAIL
 // ==============================

@@ -22,6 +22,17 @@ class ArticleController extends Controller
         return view('articles.articles', ['article' => $article]);
     }
 
+    public function showAdmin()
+    {
+        $articles = DB::table('articles')->orderBy('created_at', 'desc')->get();
+        $carouselImages = DB::table('blog_image')->get();
+    
+        return view('articles.adminblog', [
+            'articles' => $articles,
+            'carouselImages' => $carouselImages
+        ]);
+    }
+
    
     public function store(Request $request)
     {
@@ -47,35 +58,39 @@ class ArticleController extends Controller
     }
 
     public function edit($id)
-{
-    $article = Article::findOrFail($id);
-    return response()->json($article);
-}
-
-public function update(Request $request, $id)
-{
-    $validated = $request->validate([
-        'title' => 'required|string|max:255',
-        'description' => 'required',
-        'article' => 'required',
-        'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
-    ]);
-
-    $article = Article::findOrFail($id);
-    $article->title = $validated['title'];
-    $article->description = $validated['description'];
-    $article->article = $validated['article'];
-
-    if ($request->hasFile('image')) {
-        $imageName = time() . '.' . $request->image->extension();
-        $request->image->move(public_path('image/image_article'), $imageName);
-        $article->filename = $imageName;
+    {
+        $article = Article::findOrFail($id);
+        return response()->json($article);
     }
 
-    $article->save();
+    public function update(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'title' => 'required|string|max:255',
+            'description' => 'required',
+            'article' => 'required',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
 
-    return response()->json(['success' => true, 'message' => 'Article updated successfully!']);
-}
+        $article = Article::findOrFail($id);
+        $article->title = $validated['title'];
+        $article->description = $validated['description'];
+        $article->article = $validated['article'];
+
+        if ($request->hasFile('image')) {
+            $imageName = time() . '.' . $request->image->extension();
+            $request->image->move(public_path('image/image_article'), $imageName);
+            $article->filename = $imageName;
+        }
+
+        $article->save();
+
+        return response()->json(['success' => true, 'message' => 'Article updated successfully!']);
+    }
+    public function destroy($id) {
+        Article::findOrFail($id)->delete();
+        return redirect()->route('admin.blogs')->with('success', 'Article deleted successfully');
+    }
 
 }
 
