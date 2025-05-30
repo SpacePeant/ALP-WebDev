@@ -145,7 +145,8 @@ Route::get('/blog', [BlogController::class, 'showBlogPage'])->name('blog');
 Route::get('/load-more-blogs', [BlogController::class, 'loadMoreBlogs']);
 Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
-Route::post('/articles/{id}/update', [ArticleController::class, 'update'])->name('articles.update');
+Route::put('/admin/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+
 Route::post('/articles/store', [ArticleController::class, 'store'])->name('articles.store');
 
 Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');

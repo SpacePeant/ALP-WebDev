@@ -9,6 +9,10 @@ body {
   color: #1a1a1a;
 }
 
+
+#button-add, #button-edit{
+  background-color:#000;
+}
 /* Carousel Start */
 .carousel-inner {
     position: relative;

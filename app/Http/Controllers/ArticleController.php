@@ -87,9 +87,10 @@ class ArticleController extends Controller
 
         return response()->json(['success' => true, 'message' => 'Article updated successfully!']);
     }
+    
     public function destroy($id) {
         Article::findOrFail($id)->delete();
-        return redirect()->route('admin.blogs')->with('success', 'Article deleted successfully');
+        return redirect()->route('articles.destroy')->with('success', 'Article deleted successfully');
     }
 
 }

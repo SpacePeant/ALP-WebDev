@@ -24,7 +24,7 @@
       <section>
         <h3 class="articles-title">All articles</h3>
          <div class="d-flex justify-content-start mb-4">
-            <button class="btn btn-primary btn-lg px-4 shadow-sm" data-bs-toggle="modal" data-bs-target="#createArticleModal">
+            <button id = "button-add"class="btn btn-dark btn-lg px-4 shadow-sm rounded-0" data-bs-toggle="modal" data-bs-target="#createArticleModal">
                 <i class="bi bi-plus-lg me-2"></i> Create Article
             </button>
           </div>
@@ -68,7 +68,7 @@
 
         <!-- Modal -->
           <div class="modal fade" id="createArticleModal" tabindex="-1">
-            <div class="modal-dialog">
+            <div class="modal-dialog modal-dialog-centered">
               <form method="POST" action="{{ route('articles.store') }}" enctype="multipart/form-data">
                 @csrf
                 <div class="modal-content">
@@ -83,6 +83,7 @@
                     </div>
                     <div class="mb-3">
                       <label>Description</label>
+                      <p>short description/hook for about the article</p>
                       <textarea name="description" class="form-control" required></textarea>
                     </div>
                     <div class="mb-3">
@@ -107,9 +108,10 @@
 
         <!-- Edit Article Modal -->
         <div class="modal fade" id="editArticleModal" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered">
             <form id="editArticleForm" enctype="multipart/form-data">
               @csrf
+              @method('PUT')
               <div class="modal-content">
                 <div class="modal-header">
                   <h5 class="modal-title">Edit Article</h5>
@@ -183,7 +185,73 @@
               document.getElementById('editDescription').value = description;
               document.getElementById('editArticleText').value = article;
             });
+
         </script>
+
+        <script>
+          document.addEventListener('DOMContentLoaded', () => {
+            const editForm = document.getElementById('editArticleForm');
+            const errorBox = document.createElement('div');
+            errorBox.className = 'alert alert-danger d-none';
+            editForm.prepend(errorBox);
+          
+            const successBox = document.createElement('div');
+            successBox.className = 'alert alert-success d-none';
+            editForm.prepend(successBox);
+          
+            // Populate modal when Edit is clicked
+            document.querySelectorAll('.btn-edit').forEach(button => {
+              button.addEventListener('click', () => {
+                document.getElementById('editArticleId').value = button.dataset.id;
+                document.getElementById('editTitle').value = button.dataset.title;
+                document.getElementById('editDescription').value = button.dataset.description;
+                document.getElementById('editArticleText').value = button.dataset.article;
+                errorBox.classList.add('d-none');
+                successBox.classList.add('d-none');
+              });
+            });
+          
+            // Handle form submission
+            editForm.addEventListener('submit', async function (e) {
+              e.preventDefault();
+            
+              const formData = new FormData(this);
+              const articleId = formData.get('id');
+            
+              try {
+                const response = await fetch(`/admin/articles/${articleId}`, {
+                  method: 'POST', // Use POST for Laravel with _method = PUT
+                  headers: {
+                    'X-CSRF-TOKEN': document.querySelector('input[name="_token"]').value,
+                  },
+                  body: formData
+                });
+              
+                if (!response.ok) {
+                  const data = await response.json();
+                  let message = data.message || 'Update failed.';
+                  if (data.errors) {
+                    message += '\n' + Object.values(data.errors).flat().join('\n');
+                  }
+                  errorBox.textContent = message;
+                  errorBox.classList.remove('d-none');
+                  return;
+                }
+              
+                successBox.textContent = 'Article edited successfully!';
+                successBox.classList.remove('d-none');
+                errorBox.classList.add('d-none');
+                setTimeout(() => location.reload(), 1500);
+              
+              } catch (err) {
+                console.error(err);
+                errorBox.textContent = 'Something went wrong. Please try again.';
+                errorBox.classList.remove('d-none');
+              }
+            });
+          });
+        </script>
+
 
 
 
