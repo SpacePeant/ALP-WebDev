@@ -9,6 +9,7 @@ use App\Models\ProductColor;
 use Illuminate\Http\Request;
 use App\Models\ProductReview;
 use App\Models\ProductVariant;
+use App\Models\ProductColorImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -205,7 +206,7 @@ $averageRating = $totalReviews > 0
     {
         $validated = $request->validate([
             'name' => 'required',
-            'category' => 'required|exists:category,id',
+            'category' => 'required|exists:categories,id',
             'description' => 'required',
             'price' => 'required|numeric',
             'color' => 'required|array',
@@ -216,46 +217,55 @@ $averageRating = $totalReviews > 0
             'gender' => 'nullable|string'
         ]);
 
-        $product = Product::create([
-            'name' => $request->name,
-            'gender' => $request->gender ?? 'Unisex',
-            'description' => $request->description,
-            'price' => $request->price,
-            'status' => 1,
-            'category_id' => $request->category,
-        ]);
+    $product = Product::create([
+        'name' => $request->name,
+        'gender' => $request->gender ?? 'Unisex',
+        'description' => $request->description,
+        'price' => $request->price,
+        'status' => 'active',
+        'category_id' => $request->category,
+    ]);
 
-        foreach ($request->color as $index => $colorName) {
-            $color = ProductColor::create([
-                'product_id' => $product->id,
-                'color_name' => $colorName,
-                'color_code' => $request->color_code[$index],
-                'is_primary' => false,
-            ]);
+    $colors = [];
+    $imageData = json_decode($request->image_json, true);
 
-            // if ($request->size) {
-            //     foreach ($request->size as $size) {
-            //         ProductVariant::create([
-            //             'product_id' => $product->id,
-            //             'color_id' => $color->id,
-            //             'size' => $size,
-            //             'stock' => 0,
-            //         ]);
-            //     }
-            // }
+    foreach ($imageData as $entry) {
+        $colorIndex = $entry['colorIndex'];
+        $colorName = $entry['color_name'] ?? 'Unknown';
+        $colorCode = $entry['color_code'] ?? '#000000';
 
-            for ($size = 36; $size <= 45; $size++) {
-            ProductVariant::create([
+        // Simpan warna
+        $color = ProductColor::create([
             'product_id' => $product->id,
-            'color_id' => $color->id,
-            'size' => $size,
-            'stock' => 0,
+            'color_name' => $colorName,
+            'color_code' => $colorCode,
+            'status' => 'active'
         ]);
-    }
+        $colors[$colorIndex] = $color;
+
+        // Simpan variant ukuran (36 - 45)
+        for ($size = 36; $size <= 45; $size++) {
+            ProductVariant::create([
+                'product_id' => $product->id,
+                'color_id' => $color->id,
+                'size' => $size,
+                'stock' => 0,
+            ]);
         }
 
-        return redirect()->route('addproduct')->with('success', 'Product saved successfully!');
+        // Simpan gambar
+        $images = $entry['images'] ?? [];
+        ProductColorImage::create([
+            'color_id' => $color->id,
+            'image_kiri' => $images['kiri'] ?? '',
+            'image_kanan' => $images['kanan'] ?? '',
+            'image_atas' => $images['atas'] ?? '',
+            'image_bawah' => $images['bawah'] ?? '',
+        ]);
     }
+
+    return redirect()->route('addproduct')->with('success', 'Product saved successfully!');
+}
 
     public function edit($id, $color_id)
     {

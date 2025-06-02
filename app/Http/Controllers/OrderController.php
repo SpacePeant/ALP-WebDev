@@ -174,7 +174,7 @@ public function index(Request $request)
             'u.name as customer_name',
             'u.phone_number as customer_phone',
             'u.address as customer_address',
-            // 'o.payment_method',
+            'u.payment_method',
             DB::raw('COUNT(od.product_id) as item_count'),
             DB::raw('SUM(od.unit_price * od.quantity) as total')
         )
@@ -233,7 +233,7 @@ public function index(Request $request)
         return view('partials.ordercust', ['orders' => $orders])->render();
     }
 
-    return view('order', compact('orders', 'user_id', 'filter', 'startDate', 'endDate', 'search', 'perPage'));
+    return view('order', compact('orders', 'user_id', 'filter', 'startDate', 'endDate', 'search'));
 }
 
 public function boot()

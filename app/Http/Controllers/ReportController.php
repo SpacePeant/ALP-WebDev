@@ -28,7 +28,7 @@ class ReportController extends Controller
                 (p.price * od.quantity) as total
             FROM order_details od
             LEFT JOIN orders o ON o.id = od.order_id
-            LEFT JOIN users u ON u.id = o.customer_id
+            LEFT JOIN users u ON u.id = o.user_id
             LEFT JOIN product p ON p.id = od.product_id
             LEFT JOIN product_color pc ON pc.id = od.product_color_id
             LEFT JOIN product_variant pv ON pv.id = od.product_variant_id
@@ -122,7 +122,7 @@ public function downloadPDF(Request $request)
             (p.price * od.quantity) as total
         FROM order_details od
         LEFT JOIN orders o ON o.id = od.order_id
-        LEFT JOIN users u ON u.id = o.customer_id
+        LEFT JOIN users u ON u.id = o.user_id
         LEFT JOIN product p ON p.id = od.product_id
         LEFT JOIN product_color pc ON pc.id = od.product_color_id
         LEFT JOIN product_variant pv ON pv.id = od.product_variant_id
@@ -181,7 +181,7 @@ public function fetchSalesTable(Request $request)
             (p.price * od.quantity) as total
         FROM order_details od
         LEFT JOIN orders o ON o.id = od.order_id
-        LEFT JOIN users c ON c.id = o.customer_id
+        LEFT JOIN users c ON c.id = o.user_id
         LEFT JOIN product p ON p.id = od.product_id
         LEFT JOIN product_color pc ON pc.id = od.product_color_id
         LEFT JOIN product_variant pv ON pv.id = od.product_variant_id
