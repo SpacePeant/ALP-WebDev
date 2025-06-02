@@ -9,6 +9,7 @@ use App\Models\ProductColor;
 use Illuminate\Http\Request;
 use App\Models\ProductReview;
 use App\Models\ProductVariant;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -427,7 +428,28 @@ public function search(Request $request)
     return view('partials.admin-list', compact('products'));
 }
 
+public function addReview($id, Request $request)
+{
+    $request->validate([
+        'rating' => 'required|integer|min:1|max:5',
+        'review_title' => 'required|string|max:255',
+        'comment' => 'required|string',
+    ]);
 
+    $userId = Auth::id() ?? Session::get('user_id', 1); // fallback ke session jika belum pakai Auth
+
+    ProductReview::create([
+        'product_id' => $id,
+        'user_id' => $userId,
+        'rating' => $request->input('rating'),
+        'review_title' => $request->input('review_title'),
+        'comment' => $request->input('comment'),
+        'review_date' => Carbon::today(), 
+        'updated_at' => Carbon::now(),
+    ]);
+
+    return redirect()->back()->with('success', 'Your review has been submitted!');
+}
 }
 
 

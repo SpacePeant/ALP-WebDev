@@ -165,3 +165,6 @@ Route::match(['get', 'post'], '/detail', [CollectionController::class, 'detail']
 Route::get('/product-list', [CollectionController::class, 'productList'])->name('product.list');
 
 require __DIR__.'/auth.php';
+
+Route::post('/detail_sepatu/{id}/add-review', [ProductController::class, 'addReview'])->name('product.addReview');
+
