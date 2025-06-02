@@ -121,6 +121,7 @@ body {
   height: 320px;
   background-color: #791c24;
   border-radius: 50%;
+  opacity:80%;
   z-index: 1;
 }
 .thumbnail.active {

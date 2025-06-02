@@ -1,4 +1,4 @@
-@extends('base.baseadmin')
+@extends('base.base1')
 @section('content')
 <div class="ki"></div>
 <a href="{{ route('blog') }}" class="back-to-collection" title="Kembali ke koleksi">

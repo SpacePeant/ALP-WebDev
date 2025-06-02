@@ -163,6 +163,47 @@
     border-color: #d6d8db;
     }
 
+     .pagination {
+        display: flex;
+        justify-content: end;
+        gap: 6px;
+    }
+
+    .pagination li {
+        list-style: none;
+    }
+
+    .pagination li a,
+    .pagination li span {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #333;
+        border-radius: 4px;
+    }
+
+    .pagination li.active span {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+        .pagination-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .pagination .page-item .page-link {
+        /* padding: 0.375rem 0.75rem; */
+        font-size: 0.875rem;
+    }
+    .form-select-sm {
+        font-size: 0.875rem;
+        /* padding: 0.25rem 0.5rem; */
+    }
+
   </style>
 </head>
 <body>
@@ -254,122 +295,113 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-  // Fungsi utama untuk toggle "View Order"
-  function toggleDropdown(e) {
-    const btn = e.currentTarget;
-    const orderCard = btn.closest('.order-card');
-    const wrapper = orderCard.querySelector('.order-details-wrapper');
-    const icon = btn.querySelector('.dropdown-icon');
-
-    // Tutup semua order lain
-    document.querySelectorAll('.order-details-wrapper').forEach(function(w) {
-      if (w !== wrapper) {
-        w.classList.remove('open');
-        const otherIcon = w.closest('.order-card')?.querySelector('.dropdown-icon');
-        if (otherIcon) otherIcon.textContent = '▼';
-      }
-    });
-
-    // Toggle current
-    wrapper.classList.toggle('open');
-    icon.textContent = wrapper.classList.contains('open') ? '▲' : '▼';
-  }
-
-  // Bind event listener ke semua tombol "View Order"
-  function bindDropdownToggle() {
-    const buttons = document.querySelectorAll('.view-order-toggle');
-    buttons.forEach(btn => {
-      btn.removeEventListener('click', toggleDropdown); // cegah dobel
-      btn.addEventListener('click', toggleDropdown);
-    });
-  }
-
-  // Inisialisasi setelah halaman pertama kali dimuat
-  document.addEventListener('DOMContentLoaded', function () {
-    bindDropdownToggle();
-
-    const form = document.getElementById('filterForm');
+document.addEventListener('DOMContentLoaded', function () {
     const orderContainer = document.getElementById('order-container');
-
-    // Handle filter form submit via AJAX
-    if (form) {
-      form.addEventListener('submit', function (e) {
-        e.preventDefault();
-        const url = "{{ route('admin.orders.filter') }}";
-        const formData = new FormData(form);
-        const params = new URLSearchParams(formData).toString();
-
-        fetch(`${url}?${params}`, {
-          headers: { 'X-Requested-With': 'XMLHttpRequest' }
-        })
-        .then(response => response.text())
-        .then(html => {
-          orderContainer.innerHTML = html;
-          bindDropdownToggle(); // rebinding tombol baru
-        })
-        .catch(error => console.error('AJAX error:', error));
-      });
-    }
-
-    // Handle search live filter
+    const filterForm = document.getElementById('filterForm');
     const searchInput = document.getElementById('search');
     const searchBy = document.getElementById('search_by');
     const startDate = document.getElementById('start_date');
     const endDate = document.getElementById('end_date');
+    const statusTabs = document.querySelectorAll('#orderStatusTabs .nav-link');
 
+    // Toggle dropdown detail pesanan
+    function toggleDropdown(e) {
+        const btn = e.currentTarget;
+        const orderCard = btn.closest('.order-card');
+        const wrapper = orderCard.querySelector('.order-details-wrapper');
+        const icon = btn.querySelector('.dropdown-icon');
+
+        // Tutup semua yang lain
+        document.querySelectorAll('.order-details-wrapper').forEach(w => {
+            if (w !== wrapper) {
+                w.classList.remove('open');
+                const otherIcon = w.closest('.order-card')?.querySelector('.dropdown-icon');
+                if (otherIcon) otherIcon.textContent = '▼';
+            }
+        });
+
+        // Toggle yang dipilih
+        wrapper.classList.toggle('open');
+        icon.textContent = wrapper.classList.contains('open') ? '▲' : '▼';
+    }
+
+    // Bind dropdown button
+    function bindDropdownToggle() {
+        document.querySelectorAll('.view-order-toggle').forEach(btn => {
+            btn.removeEventListener('click', toggleDropdown);
+            btn.addEventListener('click', toggleDropdown);
+        });
+    }
+
+    // Fungsi AJAX utama
+    function fetchOrders(params = '') {
+        const url = "{{ route('admin.orders.filter') }}?" + params;
+        fetch(url, {
+            headers: { 'X-Requested-With': 'XMLHttpRequest' }
+        })
+        .then(res => res.text())
+        .then(html => {
+            orderContainer.innerHTML = html;
+            bindDropdownToggle();
+        })
+        .catch(err => console.error('AJAX error:', err));
+    }
+
+    // Handle pagination klik
+    document.addEventListener('click', function(e) {
+        if (e.target.matches('.pagination a')) {
+            e.preventDefault();
+            const url = new URL(e.target.href);
+            fetchOrders(url.searchParams.toString());
+        }
+    });
+
+    // Filter form submit
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            const formData = new FormData(filterForm);
+            const params = new URLSearchParams(formData).toString();
+            fetchOrders(params);
+        });
+    }
+
+    // Search realtime dengan debounce
+    let debounceTimeout;
     function doSearch() {
-      const url = "{{ route('admin.orders.filter') }}";
-
-      const params = new URLSearchParams({
-        search: searchInput?.value || '',
-        search_by: searchBy?.value || '',
-        start_date: startDate?.value || '',
-        end_date: endDate?.value || ''
-      });
-
-      fetch(`${url}?${params.toString()}`, {
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-      .then(response => response.text())
-      .then(html => {
-        orderContainer.innerHTML = html;
-        bindDropdownToggle(); // rebinding tombol baru
-      })
-      .catch(err => console.error('AJAX error:', err));
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            const params = new URLSearchParams({
+                search: searchInput?.value || '',
+                search_by: searchBy?.value || '',
+                start_date: startDate?.value || '',
+                end_date: endDate?.value || ''
+            });
+            fetchOrders(params.toString());
+        }, 300);
     }
 
     if (searchInput) searchInput.addEventListener('input', doSearch);
     if (searchBy) searchBy.addEventListener('change', doSearch);
     if (startDate) startDate.addEventListener('change', doSearch);
     if (endDate) endDate.addEventListener('change', doSearch);
-  });
 
-document.addEventListener('DOMContentLoaded', function () {
-  const tabs = document.querySelectorAll('#orderStatusTabs .nav-link');
-  const orderContainer = document.getElementById('order-container');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', function(e) {
-      e.preventDefault();
-
-      // Toggle active class
-      tabs.forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-
-      const status = this.getAttribute('data-status');
-
-      fetch(`{{ route('admin.orders.filter') }}?status=${status}`, {
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-      .then(res => res.text())
-      .then(html => {
-        orderContainer.innerHTML = html;
-      })
-      .catch(err => console.error(err));
+    // Tab status order
+    statusTabs.forEach(tab => {
+        tab.addEventListener('click', function(e) {
+            e.preventDefault();
+            statusTabs.forEach(t => t.classList.remove('active'));
+            this.classList.add('active');
+            const status = this.getAttribute('data-status');
+            fetchOrders('status=' + status);
+        });
     });
-  });
+
+    // Initial setup
+    bindDropdownToggle();
 });
 </script>
+
 
 </body>
 </html>

@@ -327,7 +327,7 @@
     </a>
   <h1>Add Product</h1>
 
-  <form method="POST" action="{{ route('addproduct.store') }}">
+  <form method="POST" action="{{ route('addproduct.store') }}" onsubmit="return prepareImageData()">
     @csrf
   <div class="main-container d-flex gap-4 flex-wrap">
     <div class="form-container">
@@ -353,17 +353,6 @@
         <input type="text" name="description" class="form-control" required>
       </div>
 
-      {{-- <div class="form-group">
-      <label>Size</label>
-      <div class="size-options">
-              @for ($i = 36; $i <= 45; $i++)
-              <div class="size-btn" data-size="{{ $i }}">
-              EU {{ $i }}
-          </div>
-            @endfor
-          </div>
-      </div> --}}
-
       <div class="form-group">
         <label>Gender</label>
         <div class="gender-options">
@@ -379,22 +368,10 @@
           <input type="number" name="price" required>
         </div>
       </div>
-
-      <!-- <div class="form-group price-stock">
-        <div>
-          <label>Color</label>
-          <input type="text" name="color" required>
-        </div>
-        <div>
-            <label>Selected Color (Hex)</label>
-        <input type="text" name="color_code" id="hexColor" value="#ff0000" required>
-        </div>
-        <div>
-            <label>Color Code (Hex)</label>
-            <input type="color" id="colorPicker" value="#ff0000">
-        </div>
-      </div> -->
+      <input type="hidden" name="image_json" id="imageJson">
       <button class="save-btn" type="submit" name="save">Save</button>
+      <button type="button" class="btn btn-secondary mt-3" onclick="printColorImagesJSON()">Show JSON</button>
+
     </form>
     </div>
 
@@ -414,39 +391,37 @@
       <div class="image-container">
         <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
 
-         <select name="position" class="form-select custom-select" required style="margin-bottom:10px;">
+        <select id="position-0" class="form-select custom-select" style="margin-bottom:10px;" onchange="enableFileInput(0)">
           <option value="">Select Position</option>
           <option value="atas">Top</option>
+          <option value="bawah">Bottom</option>
           <option value="kiri">Left</option>
           <option value="kanan">Right</option>
-          <option value="bawah">Bottom</option>
         </select>
 
-    <!-- Input File -->
-    <input type="file" name="image" accept="image/*" required style="margin-bottom:10px;"><br>
+        <input type="file" id="imageInput-0" accept="image/*" disabled style="margin-bottom:10px;" onchange="previewAndStoreImage(0)"><br>
 
-    <!-- Tombol Submit -->
-    <button type="submit" class="btn btn-black btn-sm">Upload</button>
         <img src="{{ asset('image/no_image.png')}}" class="main-image" id="mainImage-0">
-        <div class="thumbnails">
-          <img src="{{ asset('image/no_image.png')}}" class="active">
-          <img src="{{ asset('image/no_image.png')}}">
-          <img src="{{ asset('image/no_image.png')}}">
-          <img src="{{ asset('image/no_image.png')}}">
+
+        <div class="thumbnails" style="margin-top:10px;">
+          <img src="{{ asset('image/no_image.png')}}" id="thumb-0-atas" data-pos="atas"  class="active" onclick="showMainImage(0, 'atas')">
+          <img src="{{ asset('image/no_image.png')}}" id="thumb-0-bawah" data-pos="bawah"  onclick="showMainImage(0, 'bawah')">
+          <img src="{{ asset('image/no_image.png')}}" id="thumb-0-kiri" data-pos="kiri"  onclick="showMainImage(0, 'kiri')">
+          <img src="{{ asset('image/no_image.png')}}" id="thumb-0-kanan" data-pos="kanan"  onclick="showMainImage(0, 'kanan')">
         </div>
 
-        <div class="form-group price-stock mt-4">
+        <div class="form-group price-stock mt-4" id="color-content-0">
           <div style="margin-bottom: 10px;">
-            <label>Color</label>
-            <input type="text" name="color[]" required class="form-control">
+            <label>Color Name</label>
+            <input type="text" name="color_name[]" class="form-control" oninput="updateColorInfo(0)">
           </div>
           <div style="margin-bottom: 10px;">
-            <label>Selected Color (Hex)</label>
-            <input type="text" name="color_code[]" id="hexColor-0" value="#ff0000" required class="form-control">
+            <label>Color Code (Hex)</label>
+            <input type="text" name="color_code[]" id="hexColor-0" class="form-control" oninput="updateColorInfo(0)">
           </div>
           <div>
             <label>Color Picker</label>
-            <input type="color" id="colorPicker-0" value="#ff0000" class="form-control form-control-color" onchange="syncColor(0)">
+            <input type="color" id="colorPicker-0" value="#ff0000" class="form-control form-control-color" onchange="syncPicker(0)">
           </div>
         </div>
       </div>
@@ -458,139 +433,237 @@
 </div>
 
   </div>
+<script>
+const placeholderImage = "{{ asset('image/no_image.png') }}";
 
-  <script>
+let colorImages = [
+  {
+    colorIndex: 0,
+    color_name: "Red",
+    color_code: "#ff0000",
+    images: {
+      atas: placeholderImage,
+      bawah: placeholderImage,
+      kiri: placeholderImage,
+      kanan: placeholderImage
+    }
+  }
+];
 
-  let tabCount = 1;
+let tabCount = 1;
+
+function enableFileInput(index) {
+  const positionSelect = document.getElementById(`position-${index}`);
+  const fileInput = document.getElementById(`imageInput-${index}`);
+  fileInput.disabled = (positionSelect.value === '');
+}
+
+function previewAndStoreImage(index) {
+  const fileInput = document.getElementById(`imageInput-${index}`);
+  const position = document.getElementById(`position-${index}`).value;
+  const file = fileInput.files[0];
+  if (!position || !file) return;
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    // Update data JSON
+    if (!colorImages[index]) {
+      colorImages[index] = { colorIndex: index, images: {} };
+    }
+    colorImages[index].images[position] = e.target.result;
+
+    // Update thumbnail image sesuai posisi
+    const thumb = document.getElementById(`thumb-${index}-${position}`);
+    if (thumb) {
+      thumb.src = e.target.result;
+    }
+
+    // Jika posisi yang aktif sama dengan yang diupload, update main image juga
+    const mainImage = document.getElementById(`mainImage-${index}`);
+    const activeThumb = document.querySelector(`#color-content-${index} .thumbnails img.active`);
+    if (activeThumb && activeThumb.dataset.pos === position) {
+      mainImage.src = e.target.result;
+    }
+  };
+  reader.readAsDataURL(file);
+}
+
+function showMainImage(colorIndex, position) {
+  const mainImage = document.getElementById(`mainImage-${colorIndex}`);
+  const images = colorImages[colorIndex]?.images || {};
+
+  // Pakai gambar posisi yang sudah ada, kalau belum ada pakai placeholder
+  const imgSrc = images[position] || placeholderImage;
+  mainImage.src = imgSrc;
+
+  // Update border active thumbnail
+  const thumbnails = document.querySelectorAll(`#color-content-${colorIndex} .thumbnails img`);
+  thumbnails.forEach(thumb => {
+    if (thumb.dataset.pos === position) {
+      thumb.classList.add('active');
+      thumb.style.border = "2px solid #333";
+    } else {
+      thumb.classList.remove('active');
+      thumb.style.border = "2px solid transparent";
+    }
+  });
+}
+
+function updateColorInfo(index) {
+  const wrapper = document.getElementById(`color-content-${index}`);
+  const nameInput = wrapper.querySelector('input[name="color_name[]"]');
+  const codeInput = document.getElementById(`hexColor-${index}`);
+
+  if (!colorImages[index]) return;
+
+  colorImages[index].color_name = nameInput?.value || '';
+  colorImages[index].color_code = codeInput?.value || '';
+  
+  // Sinkronkan juga ke color picker
+  const picker = document.getElementById(`colorPicker-${index}`);
+  if (picker && codeInput) picker.value = codeInput.value;
+}
+
+function syncPicker(index) {
+  const picker = document.getElementById(`colorPicker-${index}`);
+  const hexInput = document.getElementById(`hexColor-${index}`);
+
+  if (picker && hexInput) {
+    hexInput.value = picker.value;
+    updateColorInfo(index);
+  }
+}
+
 
 function addNewTab() {
-  const tabId = `color-${tabCount}`;
+  const newIndex = tabCount;
 
-  // Create new tab button
+  // Tambah tab navigation
   const newTab = document.createElement('li');
   newTab.className = 'nav-item';
   newTab.role = 'presentation';
   newTab.innerHTML = `
-    <button class="nav-link" id="color-tab-${tabCount}" data-bs-toggle="tab" data-bs-target="#color-content-${tabCount}" type="button" role="tab">Color ${tabCount + 1}</button>
+    <button class="nav-link" id="color-tab-${newIndex}" data-bs-toggle="tab" data-bs-target="#color-content-${newIndex}" type="button" role="tab">
+      Color ${newIndex + 1}
+    </button>
   `;
   document.getElementById('colorTabs').appendChild(newTab);
 
-  // Create new tab content
+  // Tambah tab content
   const newContent = document.createElement('div');
   newContent.className = 'tab-pane fade';
-  newContent.id = `color-content-${tabCount}`;
+  newContent.id = `color-content-${newIndex}`;
   newContent.role = 'tabpanel';
   newContent.innerHTML = `
     <div class="image-container">
-        <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
-        <img src="{{ asset('image/no_image.png')}}" class="main-image" id="mainImage-0">
-        <div class="thumbnails">
-          <img src="{{ asset('image/no_image.png')}}" class="active">
-          <img src="{{ asset('image/no_image.png')}}">
-          <img src="{{ asset('image/no_image.png')}}">
-          <img src="{{ asset('image/no_image.png')}}">
-        </div>
+      <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
+      <select id="position-${newIndex}" class="form-select custom-select" style="margin-bottom:10px;" onchange="enableFileInput(${newIndex})">
+        <option value="">Select Position</option>
+        <option value="atas">Top</option>
+        <option value="bawah">Bottom</option>
+        <option value="kiri">Left</option>
+        <option value="kanan">Right</option>
+      </select>
 
-        <div class="form-group price-stock mt-4">
-          <div style="margin-bottom: 10px;">
-            <label>Color</label>
-            <input type="text" name="color[]" required class="form-control">
-          </div>
-          <div style="margin-bottom: 10px;">
-            <label>Selected Color (Hex)</label>
-            <input type="text" name="color_code[]" id="hexColor-0" value="#ff0000" required class="form-control">
-          </div>
-          <div>
-            <label>Color Picker</label>
-            <input type="color" id="colorPicker-0" value="#ff0000" class="form-control form-control-color" onchange="syncColor(0)">
-          </div>
-        </div>
+      <input type="file" id="imageInput-${newIndex}" accept="image/*" disabled style="margin-bottom:10px;" onchange="previewAndStoreImage(${newIndex})"><br>
+
+      <img src="${placeholderImage}" class="main-image" id="mainImage-${newIndex}" style="width:300px; height:auto; border:1px solid #ccc;">
+
+      <div class="thumbnails" style="margin-top:10px;">
+        <img src="${placeholderImage}" id="thumb-${newIndex}-atas" data-pos="atas"  class="active" onclick="showMainImage(${newIndex}, 'atas')">
+        <img src="${placeholderImage}" id="thumb-${newIndex}-bawah" data-pos="bawah"  onclick="showMainImage(${newIndex}, 'bawah')">
+        <img src="${placeholderImage}" id="thumb-${newIndex}-kiri" data-pos="kiri"  onclick="showMainImage(${newIndex}, 'kiri')">
+        <img src="${placeholderImage}" id="thumb-${newIndex}-kanan" data-pos="kanan"  onclick="showMainImage(${newIndex}, 'kanan')">
       </div>
+
+      <div class="form-group price-stock mt-4" id="color-content-0">
+  <div style="margin-bottom: 10px;">
+    <label>Color Name</label>
+    <input type="text" name="color_name[]" class="form-control" oninput="updateColorInfo(0)">
+  </div>
+  <div style="margin-bottom: 10px;">
+    <label>Color Code (Hex)</label>
+    <input type="text" name="color_code[]" id="hexColor-0" class="form-control" oninput="updateColorInfo(0)">
+  </div>
+  <div>
+    <label>Color Picker</label>
+    <input type="color" id="colorPicker-0" value="#ff0000" class="form-control form-control-color" onchange="syncPicker(0)">
+  </div>
+</div>
+    </div>
   `;
   document.getElementById('colorTabContent').appendChild(newContent);
 
-  tabCount++;
-  }
-
-  function syncColor(index) {
-    const picker = document.getElementById(`colorPicker-${index}`);
-    const hexInput = document.getElementById(`hexColor-${index}`);
-     if (picker && hexInput) hexInput.value = picker.value;
-  }
-
-  document.addEventListener('DOMContentLoaded', () => {
-  // Pasang listener di container tab-content
-  const tabContent = document.getElementById('colorTabContent');
-
-  tabContent.addEventListener('click', e => {
-    // Cegah kalau bukan klik di <img> dalam .thumbnails
-    if (!e.target.matches('.thumbnails img')) return;
-
-    const thumb     = e.target;
-    const pane      = thumb.closest('.image-container');
-    const mainImage = pane.querySelector('.main-image');
-
-    // Ganti src main image
-    mainImage.src = thumb.src;
-
-    // Reset dan set class active
-    pane.querySelectorAll('.thumbnails img')
-        .forEach(img => img.classList.remove('active'));
-    thumb.classList.add('active');
-  });
-});
-
-  // function setMainImage(thumbnail, tabIndex) {
-  //   const mainImage = document.getElementById(mainImage-${tabIndex});
-  //   if (!mainImage) return;
-
-  //   // Ganti src
-  //   mainImage.src = thumbnail.src;
-
-  //   // Update border active
-  //   const thumbs = thumbnail.parentNode.querySelectorAll('img');
-  //   thumbs.forEach(img => img.classList.remove('active'));
-  //   thumbnail.classList.add('active');
-  // }
-    // Mendapatkan elemen input color dan text
-    // const colorPicker = document.getElementById('colorPicker');
-    // const hexColor = document.getElementById('hexColor');
-
-    // // Menangani perubahan pada color picker
-    // colorPicker.addEventListener('input', function () {
-    //     // Ambil nilai hex dari color picker
-    //     const hexValue = colorPicker.value;
-        
-    //     // Update nilai hex ke input
-    //     hexColor.value = hexValue;
-    // });
-    // // Handle size button active state
-    // document.querySelectorAll('.size-btn').forEach(btn => {
-    //   btn.addEventListener('click', () => {
-    //     document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-    //     btn.classList.add('active');
-    //   });
-    // });
-
-    // Handle image preview
-    function setMainImage(thumbnail) {
-      document.getElementById('mainImage').src = thumbnail.src;
-      document.querySelectorAll('.thumbnails img').forEach(img => img.classList.remove('active'));
-      thumbnail.classList.add('active');
+  // Update colorImages array
+  colorImages[newIndex] = {
+    colorIndex: newIndex,
+    images: {
+      atas: placeholderImage,
+      bawah: placeholderImage,
+      kiri: placeholderImage,
+      kanan: placeholderImage
     }
+  };
 
-    document.querySelectorAll('.size-btn').forEach(btn => {
-  btn.addEventListener('click', () => {
-    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
+  // Aktifkan tab baru
+  const newTabBtn = document.getElementById(`color-tab-${newIndex}`);
+  newTabBtn.addEventListener('shown.bs.tab', function () {
+    // Show main image posisi atas default saat tab aktif
+    showMainImage(newIndex, 'atas');
   });
-});
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+
+  // Aktifkan tab baru secara manual
+  const tabTrigger = new bootstrap.Tab(newTabBtn);
+  tabTrigger.show();
+
+  tabCount++;
+}
+
+function printColorImagesJSON() {
+  console.log(JSON.stringify(colorImages, null, 2));
+}
+// function updateColorInfo(index) {
+//   const nameInput = document.querySelector(`#color-content-${index} input[name="color[]"]`);
+//   const codeInput = document.getElementById(`hexColor-${index}`);
+//   if (!colorImages[index]) return;
+
+//   colorImages[index].color_name = nameInput ? nameInput.value : '';
+//   colorImages[index].color_code = codeInput ? codeInput.value : '';
+// }
+</script>
+<script>
+function prepareImageData() {
+  // Ambil semua field warna dan hex
+  const colorNames = document.querySelectorAll('input[name="color[]"]');
+  const colorCodes = document.querySelectorAll('input[name="color_code[]"]');
+
+  colorNames.forEach((input, index) => {
+    if (!colorImages[index]) return;
+
+    colorImages[index].color_name = input.value;
+    colorImages[index].color_code = colorCodes[index].value;
+  });
+
+  // Simpan ke hidden input agar ikut terkirim
+  const json = JSON.stringify(colorImages);
+  document.getElementById('imageJson').value = json;
+
+  return true; // agar form tetap dikirim
+}
+
+
+function printColorImagesJSON() {
+  console.log(JSON.stringify(colorImages, null, 2));
+  alert("JSON data sudah dicetak ke console.");
+}
+
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://unpkg.com/feather-icons"></script>
 <script>
   feather.replace();
 </script>
+
+</body>
 </html>
 

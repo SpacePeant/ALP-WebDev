@@ -294,7 +294,7 @@
           <div class="row">
             <div class="col-12">
               <div class="card-box">
-                <div class="section-title">Best Seller Chart</div>
+                <div class="section-title">Daily Sales Chart</div>
                 <canvas id="salesChart"></canvas>
               </div>
             </div>
@@ -304,7 +304,7 @@
           <div class="row g-4 my-5">
             <div class="col-md-8">
               <div class="card-box">
-                <div class="section-title">Daily Sales Chart</div>
+                <div class="section-title">Best Seller Chart</div>
                 <canvas id="bestSellerChart"></canvas>
               </div>
             </div>
