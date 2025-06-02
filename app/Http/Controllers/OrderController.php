@@ -30,7 +30,7 @@ class OrderController extends Controller
             )
             ->groupBy(
                 'o.id', 'u.name', 'u.phone_number', 'o.status', 
-                'u.user_id', 'o.created_at', 'o.updated_at', 
+                'u.id', 'o.created_at', 'o.updated_at', 
                 'u.address', 'o.payment_method'
             )
             ->orderByDesc('o.id');
@@ -164,7 +164,7 @@ public function index(Request $request)
             'u.name as customer_name',
             'u.phone_number as customer_phone',
             'u.address as customer_address',
-            'u.payment_method',
+            'o.payment_method',
             DB::raw('COUNT(od.product_id) as item_count'),
             DB::raw('SUM(od.unit_price * od.quantity) as total')
         )

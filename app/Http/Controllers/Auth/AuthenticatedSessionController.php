@@ -9,7 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
-use App\Http\Requests\Auth\LoginRequest;
+use App\Http\Requests\Auth\LoginRequest;    
 
 class AuthenticatedSessionController extends Controller
 {

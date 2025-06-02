@@ -80,8 +80,8 @@ class WishlistController extends Controller
     ->join('product_color as pc', 'pc.product_id', '=', 'w.product_id')
     ->join('product_color_image as pci', 'pci.color_id', '=', 'pc.id')
     ->where('pc.is_primary', true)
-    ->where('w.customer_id', $customerId)
-    ->select('w.id', 'w.customer_id', 'w.product_id', 'p.name','p.price', 'pci.image_kiri')
+    ->where('w.user_id', $customerId)
+    ->select('w.id', 'w.user_id', 'w.product_id', 'p.name','p.price', 'pci.image_kiri')
     ->get();
 
 return view('wishlist', [

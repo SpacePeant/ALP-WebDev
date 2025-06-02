@@ -14,18 +14,71 @@ use Illuminate\Support\Facades\Session;
 class CartController extends Controller
 {
     // Tambah ke keranjang
-    public function addToCart(Request $request)
+    // public function addToCart(Request $request)
+    // {
+    //     $request->validate([
+    //         'product_id' => 'required|integer',
+    //         'size'       => 'required|string',
+    //         'color_code' => 'required|string',
+    //     ]);
+
+    //     $userId = Session::get('user_id', 1);
+    //     $productId = $request->product_id;
+    //     $size = $request->size;
+    //     $colorCode = $request->color_code;
+
+    //     $color = ProductColor::where('product_id', $productId)
+    //                 ->where('color_code', $colorCode)
+    //                 ->first();
+
+    //     if (!$color) {
+    //         return response()->json(['success' => false, 'message' => 'Warna tidak ditemukan']);
+    //     }
+
+    //     $variant = ProductVariant::where('product_id', $productId)
+    //                 ->where('size', $size)
+    //                 ->first();
+
+    //     if (!$variant) {
+    //         return response()->json(['success' => false, 'message' => 'Ukuran tidak ditemukan']);
+    //     }
+
+    //     $item = CartItem::where('user_id', $userId)
+    //                 ->where('product_id', $productId)
+    //                 ->where('product_color_id', $color->id)
+    //                 ->where('product_variant_id', $variant->id)
+    //                 ->first();
+
+    //     if ($item) {
+    //         $item->quantity += 1;
+    //         $item->save();
+    //         return response()->json(['success' => true, 'message' => 'Jumlah diperbarui']);
+    //     } else {
+    //         CartItem::create([
+    //             'user_id'        => $userId,
+    //             'product_id'         => $productId,
+    //             'product_color_id'   => $color->id,
+    //             'product_variant_id' => $variant->id,
+    //             'quantity'           => 1,
+    //         ]);
+    //         return response()->json(['success' => true, 'message' => 'Item ditambahkan ke keranjang']);
+    //     }
+    // }
+
+     public function addToCart(Request $request)
     {
         $request->validate([
             'product_id' => 'required|integer',
             'size'       => 'required|string',
             'color_code' => 'required|string',
+            'quantity'   => 'nullable|integer|min:1',
         ]);
 
         $userId = Session::get('user_id', 1);
         $productId = $request->product_id;
         $size = $request->size;
         $colorCode = $request->color_code;
+         $quantity = max((int)$request->input('quantity', 1), 1);
 
         $color = ProductColor::where('product_id', $productId)
                     ->where('color_code', $colorCode)
@@ -50,7 +103,7 @@ class CartController extends Controller
                     ->first();
 
         if ($item) {
-            $item->quantity += 1;
+            $item->quantity += $quantity;
             $item->save();
             return response()->json(['success' => true, 'message' => 'Jumlah diperbarui']);
         } else {
@@ -59,7 +112,7 @@ class CartController extends Controller
                 'product_id'         => $productId,
                 'product_color_id'   => $color->id,
                 'product_variant_id' => $variant->id,
-                'quantity'           => 1,
+                'quantity'           => $quantity,
             ]);
             return response()->json(['success' => true, 'message' => 'Item ditambahkan ke keranjang']);
         }
