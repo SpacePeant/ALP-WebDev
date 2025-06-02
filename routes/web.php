@@ -239,3 +239,6 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/admin/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
     Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
 });
+
+Route::post('/detail_sepatu/{id}/add-review', [ProductController::class, 'addReview'])->name('product.addReview');
+
