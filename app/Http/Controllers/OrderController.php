@@ -174,7 +174,7 @@ public function index(Request $request)
             'u.name as customer_name',
             'u.phone_number as customer_phone',
             'u.address as customer_address',
-            'u.payment_method',
+            // 'u.payment_method',
             DB::raw('COUNT(od.product_id) as item_count'),
             DB::raw('SUM(od.unit_price * od.quantity) as total')
         )
