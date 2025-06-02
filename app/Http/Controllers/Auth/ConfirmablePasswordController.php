@@ -38,6 +38,7 @@ class ConfirmablePasswordController extends Controller
         $user = Auth::user();
 
         if ($user->role === 'customer') {
+            
             return redirect()->route('home');
         } else {
             return redirect()->route('dashboard');

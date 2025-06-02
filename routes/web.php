@@ -108,13 +108,15 @@ Route::get('/order', [OrderController::class, 'index'])->name('order');
 // ==============================
 // CART ROUTES
 // ==============================
-Route::get('/cart', [CartController::class, 'index'])->name('cart');
-Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
-Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
-Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
-Route::post('/cart/update-pilih', [CartController::class, 'updatePilih'])->name('cart.update_pilih');
-Route::post('/cart/update-size', [CartController::class, 'updateSize'])->name('cart.updateSize');
-Route::get('/cart/sizes', [CartController::class, 'getAvailableSizes']);
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
+    Route::post('/cart/update-pilih', [CartController::class, 'updatePilih'])->name('cart.update_pilih');
+    Route::post('/cart/update-size', [CartController::class, 'updateSize'])->name('cart.updateSize');
+    Route::get('/cart/sizes', [CartController::class, 'getAvailableSizes']);
+});
 
 // ==============================
 // WISHLIST ROUTES
@@ -129,19 +131,24 @@ Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wi
 // ==============================
 // CHECKOUT & PAYMENT ROUTES
 // ==============================
-Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
-Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
 Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
-Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])->name('payment.return');
-Route::get('/payment/status/{order}', [PaymentController::class, 'checkStatus'])->name('payment.status');
+
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
+    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
+    Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])->name('payment.return');
+    Route::get('/payment/status/{order}', [PaymentController::class, 'checkStatus'])->name('payment.status');
+});
 
 // ==============================
 // REPORT & CHART ROUTES
 // ==============================
-Route::get('/report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
-Route::get('/report/sales/pdf', [ReportController::class, 'downloadPDF'])->name('report.sales.pdf');
-Route::get('/report/sales/data', [ReportController::class, 'fetchSalesTable'])->name('report.sales.data');
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    Route::get('/report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
+    Route::get('/report/sales/pdf', [ReportController::class, 'downloadPDF'])->name('report.sales.pdf');
+    Route::get('/report/sales/data', [ReportController::class, 'fetchSalesTable'])->name('report.sales.data');
+});
 
 // ==============================
 // BLOG & ARTICLE ROUTES
@@ -165,3 +172,70 @@ Route::match(['get', 'post'], '/detail', [CollectionController::class, 'detail']
 Route::get('/product-list', [CollectionController::class, 'productList'])->name('product.list');
 
 require __DIR__.'/auth.php';
+
+
+
+
+
+
+Route::middleware(['auth', 'role:customer'])->group(function () {
+    // Cart
+    Route::get('/cart', [CartController::class, 'index'])->name('cart');
+    Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add');
+    Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
+    Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
+    Route::post('/cart/update-pilih', [CartController::class, 'updatePilih'])->name('cart.update_pilih');
+    Route::post('/cart/update-size', [CartController::class, 'updateSize'])->name('cart.updateSize');
+    Route::get('/cart/sizes', [CartController::class, 'getAvailableSizes']);
+
+    // Wishlist
+    Route::get('/wishlist', [WishlistController::class, 'index'])->name('wishlist');
+    Route::post('/wishlist/add', [WishlistController::class, 'addToWishlist'])->name('wishlist.add');
+    Route::post('/wishlist/remove', [WishlistController::class, 'removeFromWishlist'])->name('wishlist.remove');
+    Route::post('/wishlist/delete', [WishlistController::class, 'removeFromWishlist']);
+    Route::get('/wishlist/check/{productId}', [WishlistController::class, 'isWishlisted'])->name('wishlist.check');
+    Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wishlist.toggle');
+
+    // Checkout & Payment
+    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+    Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
+    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
+    Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])->name('payment.return');
+    Route::get('/payment/status/{order}', [PaymentController::class, 'checkStatus'])->name('payment.status');
+
+    // Orders
+    Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+    Route::get('/order', [OrderController::class, 'index'])->name('order');
+});
+
+Route::middleware(['auth', 'role:admin'])->group(function () {
+    // Dashboard Features
+    Route::get('/dashboard', [ChartController::class, 'index'])->name('dashboard');
+    Route::get('/dashboard/filter', [ChartController::class, 'getData']);
+    Route::get('/dashboard/sort-stock', [ProductController::class, 'sortStock']);
+
+    // Product Management
+    Route::get('/products', [ProductController::class, 'index'])->name('productadmin');
+    Route::get('/products/create', [ProductController::class, 'create'])->name('addproduct');
+    Route::post('/products/store', [ProductController::class, 'store'])->name('addproduct.store');
+    Route::get('/products/delete/{id}', [ProductController::class, 'delete'])->name('productadmin.delete');
+    Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
+    Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
+    Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
+    Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
+
+    // Orders
+    Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
+    Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
+
+    // Report & Chart
+    Route::get('/report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
+    Route::get('/report/sales/pdf', [ReportController::class, 'downloadPDF'])->name('report.sales.pdf');
+    Route::get('/report/sales/data', [ReportController::class, 'fetchSalesTable'])->name('report.sales.data');
+
+    // Article (Admin View)
+    Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');
+    Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+    Route::put('/admin/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+    Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+});

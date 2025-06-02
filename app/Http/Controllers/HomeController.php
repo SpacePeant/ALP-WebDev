@@ -12,7 +12,7 @@ class HomeController extends Controller
 
         if (!session()->has('user_id')) {
         return redirect('/login');
-    }
+        }
     
         $topProducts = DB::table('order_details as od')
             ->leftJoin('product as p', 'p.id', '=', 'od.product_id')
