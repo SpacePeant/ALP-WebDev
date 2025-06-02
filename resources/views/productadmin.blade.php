@@ -58,6 +58,8 @@
       text-align: center;
       background-color: #fff;
       position: relative;
+      width: 220px; /* fixed width sesuai minmax di grid-template-columns */
+      box-sizing: border-box;
     }
 
     .product-card img {
@@ -79,8 +81,11 @@
 
     .product-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 20px;
+      grid-template-columns: repeat(5, 1fr); /* 5 card per row */
+      gap: 30px;
+      justify-content: center; /* supaya grid center */
+      max-width: calc(5 * 220px + 4 * 20px); /* lebar maksimal sesuai 5 card + gap */
+      margin: 0 auto; /* center grid secara horisontal */
     }
 
     .dropdown-toggle::after {
@@ -165,35 +170,36 @@
 <div class="container">
 <h1>Product</h1>
 
-  <a href="{{ route('addproduct') }}" class="add-product">
+<div class="d-flex justify-content-between flex-wrap align-items-end mb-4" style = "margin-left: 15px;">
+  <a href="{{ route('addproduct') }}" class="btn d-flex align-items-center gap-2 mb-2" style="height: fit-content;">
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
       <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0-1A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
     </svg>
-    <p>Add New Product</p>
+    <span>Add New Product</span>
   </a>
+        <div class="hahi">
+          
+    <div class="d-flex gap-3 align-items-end">
+<label for="search_by" class="form-label">Search by</label>
+      <select id="search_by" name="search_by" class="form-select">
+        <option value="product_id">Product ID</option>
+        <option value="product_name">Product Name</option>
+      </select>
 
-  <div class="product-grid mt-4">
-   @forelse ($products as $product)
-            <div class="product-card" onclick="showVariants({{ $product->color_id }})">
-                <div class="dropdown-container custom-dropdown">
-                    <button class="custom-dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(this)">
-                        <i class="bi bi-three-dots-vertical"></i>
-                    </button>
-                    <div class="custom-dropdown-menu">
-                        <a href="{{ route('product.edit', ['id' => $product->id, 'color_id' => $product->color_id]) }}" onclick="event.stopPropagation()">Edit</a>
-                        <a href="#" class="text-danger" onclick="event.stopPropagation(); confirmDelete({{ $product->color_id }})">Delete</a>
-                    </div>
-                </div>
+          <div>
+      <label for="search" class="form-label mb-1">&nbsp;</label> <!-- spacer supaya input rata bawah dengan select -->
+      <input type="text" id="search" name="search" class="form-control" placeholder="Search">
+    </div>
+    </div>
+        </div>
 
-                <img src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}" class="product-img me-3" alt="{{ $product->name }}">
-                <div class="product-name">{{ $product->name }}</div>
-                <div class="product-color">Color: {{ $product->color_name }}</div>
-            </div>
-        @empty
-            <p>No products found.</p>
-        @endforelse
-  </div>
+  
+</div>
+
+
+<div id="product-list">
+    @include('partials.admin-list', ['products' => $products])
 </div>
 
 <div id="variantModal" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50 overflow-y-auto">
@@ -328,6 +334,32 @@ function closeModal() {
     });
 }
 
+</script>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+<script>
+$(document).ready(function () {
+    $('#search').on('keyup', function () {
+        let search = $('#search').val();
+        let searchBy = $('#search_by').val();
+
+        $.ajax({
+            url: "{{ route('admin.products.search') }}",
+            type: "GET",
+            data: {
+                search: search,
+                search_by: searchBy
+            },
+            success: function (data) {
+                $('#product-list').html(data);
+            },
+            error: function () {
+                alert("Gagal mengambil data pencarian.");
+            }
+        });
+    });
+});
 </script>
 </body>
 </html>

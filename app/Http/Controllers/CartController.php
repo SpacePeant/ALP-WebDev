@@ -135,28 +135,83 @@ class CartController extends Controller
         ->where('pc.status', 'active')
         ->select(
             'ci.id',
+            'ci.product_id',
+            'ci.product_color_id',
             'p.price',
             'p.name',
             'ci.quantity',
             'pv.size',
             'pc.color_name',
             'pci.image_kiri',
-            'ci.is_pilih'
+            'ci.is_pilih',
+            'pv.stock' 
         )
         ->groupBy(
             'ci.id',
+            'ci.product_id',
+            'ci.product_color_id',
             'p.price',
             'p.name',
             'ci.quantity',
             'pv.size',
             'pc.color_name',
             'pci.image_kiri',
-            'ci.is_pilih'
+            'ci.is_pilih',
+            'pv.stock'
         )
         ->get();
 
+        foreach ($cartItems as $item) {
+                $item->availableSizes = ProductVariant::where('product_id', $item->product_id)
+                    ->where('color_id', $item->product_color_id)
+                    ->get();
+
+                $item->currentSize = $item->size; // asumsinya kolom size ada di cart_items
+        }
+
         return view('cart', [
             'cartItems' => $cartItems
+        ]);
+    }
+
+    public function getAvailableSizes(Request $request)
+    {
+        $productId = $request->input('product_id');
+        $colorId = $request->input('color_id');
+
+        $sizes = ProductVariant::where('product_id', $productId)
+            ->where('color_id', $colorId)
+            ->orderBy('size')
+            ->get(['id', 'size', 'stock']);
+
+        return response()->json($sizes);
+    }
+
+    public function updateSize(Request $request)
+    {
+        $request->validate([
+            'cart_id' => 'required|integer',
+            'variant_id' => 'required|integer',
+        ]);
+
+        $cartItem = CartItem::find($request->cart_id);
+        if (!$cartItem) {
+            return response()->json(['success' => false, 'message' => 'Item tidak ditemukan']);
+        }
+
+        $variant = ProductVariant::find($request->variant_id);
+        if (!$variant) {
+            return response()->json(['success' => false, 'message' => 'Variant tidak ditemukan']);
+        }
+
+        $cartItem->product_variant_id = $request->variant_id;
+        $cartItem->quantity = 1;  // reset quantity jadi 1
+        $cartItem->save();
+
+        return response()->json([
+            'success' => true,
+            'max_quantity' => $variant->stock,
+            'updated_quantity' => 1,
         ]);
     }
 }

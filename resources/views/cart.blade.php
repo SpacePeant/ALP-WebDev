@@ -5,7 +5,8 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
-</head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  </head>
 <div class="container my-5">
   <h2 id="my-cart-title" class="mb-4"><strong>My Cart</strong></h2>
   <div class="row">
@@ -22,7 +23,7 @@
         <tbody>
           @if($cartItems->count() > 0)
           @foreach($cartItems as $item)
-          <tr data-cart-id="{{ $item->id }}">
+          <tr data-cart-id="{{ $item->id }}" data-stock="{{ $item->stock }}">
               <td>
                   <label class="custom-checkbox me-3">
                       <input type="checkbox" {{ $item->is_pilih == 1 ? 'checked' : '' }}>
@@ -33,17 +34,58 @@
                   
                   <div class="d-inline-block align-items-center">
                       <p class="mb-1 fw-semibold">{{ $item->name }}</p>
-                      <small class="mb-1 text-muted">Size: {{ $item->size }}</small><br>
+                      <small class="mb-1 text-muted">Size:</small>
+            @php
+                $currentSize = $item->size;
+            @endphp
+            <select 
+                class="form-select size-select"  
+                style="width: 100px; margin-bottom: 5px; display: inline-block; font-size: 14px;"
+                data-product-id="{{ $item->product_id }}"
+                data-color-id="{{ $item->product_color_id }}"
+                data-cart-id="{{ $item->id }}"
+                data-current-size="{{ $currentSize }}">
+
+                      @foreach($item->availableSizes as $variant)
+                        <option 
+                            value="{{ $variant->id }}" 
+                            data-stock="{{ $variant->stock }}"
+                            data-size="{{ $variant->size }}"
+                            {{ $variant->size == $item->currentSize ? 'selected' : '' }}
+                        >
+                            {{ $variant->size }}
+                        </option>
+                      @endforeach
+            </select>
+
+                  <br>
                       <small class="mb-1 text-muted">Color: {{ $item->color_name }}</small>
                   </div>
               </td>
               <td>Rp. {{ number_format($item->price, 0, ',', '.') }}</td>
               <td>
                   <div class="qty-container">
-                      <div class="qty-btn">-</div>
-                      <span class="qty-value item-qty">{{ $item->quantity }}</span>
-                      <div class="qty-btn">+</div>
-                  </div>
+  <div class="qty-btn">-</div>
+  <span 
+    class="qty-value item-qty" 
+    data-cart-id="{{ $item->id }}" 
+    contenteditable="true" 
+    style="
+      display: inline-block; 
+      min-width: 60px; 
+      max-width: 60px;
+      white-space: nowrap; 
+      overflow-x: hidden; 
+      text-overflow: clip; 
+      border: none; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      user-select: text;
+      vertical-align: middle;
+    "
+  >{{ $item->quantity }}</span>
+  <div class="qty-btn">+</div>
+</div>
               </td>
               <td id="total-column">Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
           </tr>
@@ -72,6 +114,31 @@
     </div>
   </div>
 </div>
+
+<script>
+  document.querySelectorAll('.qty-value[contenteditable="true"]').forEach(span => {
+    span.addEventListener('keydown', function(e) {
+      // Cegah enter (baris baru)
+      if (e.key === 'Enter') {
+        e.preventDefault();
+      }
+    });
+
+    span.addEventListener('input', function(e) {
+      // Hanya izinkan angka saja
+      let clean = this.textContent.replace(/[^0-9]/g, '');
+      this.textContent = clean;
+
+      // Pindahkan kursor ke akhir setelah update textContent
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(this);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+  });
+</script>
 
 <style>
   body { 
@@ -200,101 +267,282 @@
 </style>
 
 <script>
-  function formatRupiah(number) {
+function formatRupiah(number) {
     return 'Rp. ' + number.toLocaleString('id-ID');
-  }
+}
 
-  function updateRowTotal(row) {
+function updateRowTotal(row) {
     const unitPriceText = row.querySelectorAll("td")[1].textContent;
     const unitPrice = parseInt(unitPriceText.replace('Rp. ', '').replace(/\./g, ''));
     const qty = parseInt(row.querySelector(".item-qty").textContent);
     const total = unitPrice * qty;
     row.querySelectorAll("td")[3].textContent = formatRupiah(total);
-  }
+}
 
-  function updateSummary() {
+function updateSummary() {
     let totalItems = 0;
     let totalPrice = 0;
     document.querySelectorAll("tbody tr").forEach(row => {
-      const checkbox = row.querySelector('input[type="checkbox"]');
-      if (!checkbox) return;
-      const qty = parseInt(row.querySelector(".item-qty").textContent);
-      const totalText = row.querySelectorAll("td")[3].textContent;
-      const numericPrice = parseInt(totalText.replace('Rp. ', '').replace(/\./g, ''));
-      if (checkbox.checked) {
-        totalItems += qty;
-        totalPrice += numericPrice;
-      }
+        const checkbox = row.querySelector('input[type="checkbox"]');
+        if (!checkbox) return;
+        const qty = parseInt(row.querySelector(".item-qty").textContent);
+        const totalText = row.querySelectorAll("td")[3].textContent;
+        const numericPrice = parseInt(totalText.replace('Rp. ', '').replace(/\./g, ''));
+        if (checkbox.checked) {
+            totalItems += qty;
+            totalPrice += numericPrice;
+        }
     });
     document.getElementById("summary-items").textContent = totalItems;
     document.getElementById("summary-total").textContent = formatRupiah(totalPrice);
-  }
+}
 
-  document.addEventListener("DOMContentLoaded", function() {
-    document.querySelectorAll('.qty-btn').forEach(btn => {
-      btn.addEventListener('click', function () {
-        const isIncrement = this.textContent === '+';
+function updatePlusButtonState(row) {
+    const stock = parseInt(row.getAttribute('data-stock'));
+    const currentQty = parseInt(row.querySelector('.item-qty').textContent);
+
+    const btns = row.querySelectorAll('.qty-btn');
+    btns.forEach(btn => {
+        if (btn.textContent.trim() === '+') {
+            btn.style.pointerEvents = currentQty >= stock ? 'none' : 'auto';
+            btn.style.opacity = currentQty >= stock ? '0.5' : '1';
+        }
+    });
+}
+
+document.addEventListener("DOMContentLoaded", function () {
+    // Inisialisasi row total & summary
+    document.querySelectorAll("tbody tr").forEach(row => {
+        updateRowTotal(row);
+        updatePlusButtonState(row);
+    });
+    updateSummary();
+
+    // Tombol + dan -
+   document.querySelectorAll('.qty-btn').forEach(btn => {
+    btn.addEventListener('click', function () {
+        const isIncrement = this.textContent.trim() === '+';
         const row = this.closest('tr');
         const qtySpan = row.querySelector('.item-qty');
         let currentQty = parseInt(qtySpan.textContent);
+        const stock = parseInt(row.getAttribute("data-stock"));
+
         if (isIncrement) {
-          currentQty++;
+            if (currentQty < stock) {
+                currentQty++;
+            }
         } else {
-          currentQty--;
-          if (currentQty === 0) {
-            row.remove();
-            updateSummary();
-          }
+            if (currentQty > 1) {
+                currentQty--;
+            } else {
+                row.remove();
+                updateSummary();
+                return;
+            }
         }
+
         qtySpan.textContent = currentQty;
         updateRowTotal(row);
         updateSummary();
+        updatePlusButtonState(row);
 
         const cartId = row.getAttribute("data-cart-id");
         fetch("{{ route('cart.update') }}", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-            "X-CSRF-TOKEN": "{{ csrf_token() }}"
-        },
-        body: `id=${cartId}&quantity=${currentQty}`
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: `id=${cartId}&quantity=${currentQty}`
         });
-      });
+    });
+});
+
+// Tambahkan event listener untuk input di contenteditable span
+document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan => {
+    let alreadyWarned = false;
+
+    qtySpan.addEventListener('input', function () {
+        const row = this.closest('tr');
+        const stock = parseInt(row.getAttribute("data-stock"));
+        let rawVal = this.textContent;
+        let val = rawVal.replace(/[^0-9]/g, ''); // hanya angka
+
+        if (val === '') {
+            return;
+        }
+
+        let numVal = parseInt(val);
+
+        // Minimal 1
+        if (isNaN(numVal) || numVal <= 0) numVal = 1;
+
+        // Kalau melebihi stok, beri popup dulu, baru ubah nilainya
+        if (numVal > stock) {
+            if (!alreadyWarned) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Limited Stock',
+                    text: `The maximum stock for this product is ${stock}`,
+                    confirmButtonColor: '#3085d6',
+                    confirmButtonText: 'OK'
+                });
+                alreadyWarned = true; // hanya muncul 1x saat edit ini
+            }
+            numVal = stock;
+        } else {
+            alreadyWarned = false; // reset kalau angka sudah masuk akal
+        }
+
+        // Update textContent
+        this.textContent = numVal;
+
+        // Pindahkan kursor ke akhir
+        const range = document.createRange();
+        const sel = window.getSelection();
+        range.selectNodeContents(this);
+        range.collapse(false);
+        sel.removeAllRanges();
+        sel.addRange(range);
+
+        updateRowTotal(row);
+        updateSummary();
+        updatePlusButtonState(row);
+
+        const cartId = row.getAttribute("data-cart-id");
+        fetch("{{ route('cart.update') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: `id=${cartId}&quantity=${numVal}`
+        });
     });
 
-    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-    checkbox.addEventListener('change', function () {
-        const isChecked = this.checked ? 1 : 0;
-        const row = this.closest('tr');
-        const cartId = row.dataset.cartId;
+    qtySpan.addEventListener('blur', function () {
+        if (this.textContent.trim() === '') {
+            this.textContent = '1';
 
-        fetch("{{ route('cart.update_pilih') }}", {
+            const row = this.closest('tr');
+            updateRowTotal(row);
+            updateSummary();
+            updatePlusButtonState(row);
+
+            const cartId = row.getAttribute("data-cart-id");
+            fetch("{{ route('cart.update') }}", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/x-www-form-urlencoded",
+                    "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                },
+                body: `id=${cartId}&quantity=1`
+            });
+        }
+    });
+
+    qtySpan.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+        }
+    });
+});
+
+    // Checkbox untuk pilih item
+    document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
+        checkbox.addEventListener('change', function () {
+            const isChecked = this.checked ? 1 : 0;
+            const row = this.closest('tr');
+            const cartId = row.dataset.cartId;
+
+            fetch("{{ route('cart.update_pilih') }}", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
+                },
+                body: `cart_id=${cartId}&is_pilih=${isChecked}`
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+
+            updateSummary();
+        });
+    });
+
+    // Size dropdown
+    document.querySelectorAll('.size-select').forEach(function (select) {
+        const productId = select.dataset.productId;
+        const colorId = select.dataset.colorId;
+        const cartId = select.dataset.cartId;
+
+        fetch(`/cart/sizes?product_id=${productId}&color_id=${colorId}`)
+            .then(res => res.json())
+            .then(sizes => {
+                select.innerHTML = '';
+                sizes.forEach(s => {
+                    const option = document.createElement('option');
+                    option.value = s.id;
+                    option.textContent = `${s.size} ${s.stock === 0 ? '(Out of stock)' : ''}`;
+                    option.disabled = s.stock === 0;
+                    if (parseInt(s.size) === parseInt(select.getAttribute('data-current-size'))) {
+                        option.selected = true;
+                    }
+                    option.setAttribute('data-stock', s.stock);
+                    select.appendChild(option);
+                });
+            });
+
+        select.addEventListener('change', function () {
+    const variantId = this.value;
+    const selectedOption = this.options[this.selectedIndex];
+    const stock = parseInt(selectedOption.getAttribute('data-stock'));
+
+    const row = this.closest('tr');
+    const qtySpan = row.querySelector('.item-qty');
+    const currentQty = parseInt(qtySpan.textContent) || 1;
+
+    // Update atribut data-stock
+    row.setAttribute('data-stock', stock);
+
+    // Logic: tetap pakai qty lama jika masih valid, atau ubah ke stock baru
+    let newQty = currentQty;
+    if (currentQty > stock) {
+        newQty = stock;
+        Swal.fire({
+            icon: 'info',
+            title: 'Limited Stock',
+            text: `The maximum stock for this product is ${maxStock}.`,
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'OK'
+        });
+    }
+
+    qtySpan.textContent = newQty;
+
+    updateRowTotal(row);
+    updateSummary();
+    updatePlusButtonState(row);
+
+    fetch('/cart/update-size', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
-            'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            'Content-Type': 'application/json',
+            'X-CSRF-TOKEN': '{{ csrf_token() }}'
         },
-        body: `cart_id=${cartId}&is_pilih=${isChecked}`
+        body: JSON.stringify({
+            cart_id: cartId,
+            variant_id: variantId
         })
-        .then(response => {
-        if (!response.ok) {
-            console.error('Failed to update is_pilih');
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (!data.success) {
+            console.error("Failed to Update Size.");
         }
-        })
-        .catch(error => {
-        console.error('Error:', error);
-        });
-
-        updateSummary();
     });
+});
     });
-
-    document.querySelectorAll("tbody tr").forEach(row => {
-      updateRowTotal(row);
-    });
-
-    updateSummary();
-  });
+});
 </script>
-
 @endsection

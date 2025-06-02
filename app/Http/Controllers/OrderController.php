@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Order;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Pagination\Paginator;
 
 class OrderController extends Controller
 {
@@ -30,7 +32,7 @@ class OrderController extends Controller
             )
             ->groupBy(
                 'o.id', 'u.name', 'u.phone_number', 'o.status', 
-                'u.user_id', 'o.created_at', 'o.updated_at', 
+                'o.user_id', 'o.created_at', 'o.updated_at', 
                 'u.address', 'o.payment_method'
             )
             ->orderByDesc('o.id');
@@ -147,6 +149,7 @@ public function index(Request $request)
 {
     $filter = $request->query('status'); // 'Paid', 'Pending', 'Expired', atau null
     $customer_id = Session::get('user_id');
+    $user_id = Session::get('user_id');
 
     if (!$customer_id) {
         return redirect('/login')->with('error', 'Session expired or not logged in.');
@@ -164,7 +167,7 @@ public function index(Request $request)
             'u.name as customer_name',
             'u.phone_number as customer_phone',
             'u.address as customer_address',
-            'u.payment_method',
+            // 'o.payment_method',
             DB::raw('COUNT(od.product_id) as item_count'),
             DB::raw('SUM(od.unit_price * od.quantity) as total')
         )
@@ -174,7 +177,7 @@ public function index(Request $request)
             'u.name',
             'u.phone_number',
             'u.address',
-            'o.payment_method',
+            // 'o.payment_method',
             'o.user_id',
             'o.status',
             'o.created_at',
@@ -204,7 +207,8 @@ public function index(Request $request)
         });
     }
 
-    $orders = $query->orderBy('o.order_date', 'desc')->get();
+    $perPage = $request->input('entries', 5); // default 5
+    $orders = $query->orderBy('o.order_date', 'desc')->paginate($perPage)->appends(['entries' => $perPage]);
 
     // Ambil detail produk tiap order
     foreach ($orders as $order) {
@@ -219,9 +223,15 @@ public function index(Request $request)
     }
 
     if ($request->ajax()) {
-        return view('partials.ordercust', ['orders' => $orders]);
+        return view('partials.ordercust', ['orders' => $orders])->render();
     }
 
-    return view('order', compact('orders', 'user_id', 'filter', 'startDate', 'endDate', 'search'));
+    return view('order', compact('orders', 'user_id', 'filter', 'startDate', 'endDate', 'search', 'perPage'));
 }
+
+public function boot()
+{
+    Paginator::useBootstrap(); // or Tailwind if you prefer
+}
+
 }

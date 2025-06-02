@@ -586,7 +586,7 @@
               <div class="besar">
                 <a href="{{ route('detail') }}">
                 <img
-                  src="image/carostyle1.png"
+                  src="image/carohome1.png"
                   alt="Gambar 1"
                   class="carousel-image-large"
                 />
@@ -597,7 +597,7 @@
                   <div class="">
                     <a href="{{ route('detail') }}">
                     <img
-                      src="image/carosports1.png"
+                      src="image/carohome4.png"
                       alt="Gambar 2"
                       class="carousel-image-small"
                     />
@@ -608,7 +608,7 @@
                   <div class="">
                     <a href="{{ route('detail') }}">
                     <img
-                      src="image/carofashion1.png"
+                      src="image/carohome7.png"
                       alt="Gambar 3"
                       class="carousel-image-small"
                     />
@@ -624,7 +624,7 @@
               <div class="besar">
                 <a href="{{ route('detail') }}">
                 <img
-                  src="image/carostyle2.png"
+                  src="image/carohome2.png"
                   alt="Gambar 1"
                   class="carousel-image-large"
                 />
@@ -635,7 +635,7 @@
                   <div class="">
                     <a href="{{ route('detail') }}">
                     <img
-                      src="image/carosports2.png"
+                      src="image/carohome5.png"
                       alt="Gambar 2"
                       class="carousel-image-small"
                     />
@@ -646,7 +646,7 @@
                   <div class="">
                     <a href="{{ route('detail') }}">
                     <img
-                      src="image/carofashion2.png"
+                      src="image/carohome8.png"
                       alt="Gambar 3"
                       class="carousel-image-small"
                     />
@@ -662,7 +662,7 @@
               <div class="besar">
                 <a href="{{ route('detail') }}">
                 <img
-                  src="image/carostyle3.png"
+                  src="image/carohome3.png"
                   alt="Gambar 1"
                   class="carousel-image-large"
                 />
@@ -673,7 +673,7 @@
                   <div class="">
                     <a href="{{ route('detail') }}">
                     <img
-                      src="image/carosports3.png"
+                      src="image/carohome6.png"
                       alt="Gambar 2"
                       class="carousel-image-small"
                     />
@@ -684,7 +684,7 @@
                   <div class="">
                     <a href="{{ route('detail') }}">
                     <img
-                      src="image/carofashion3.png"
+                      src="image/carohome9.png"
                       alt="Gambar 3"
                       class="carousel-image-small"
                     />
