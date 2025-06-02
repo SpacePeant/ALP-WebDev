@@ -155,88 +155,6 @@ $averageRating = $totalReviews > 0
         'averageRating' => $averageRating,
     ]);
 }
-// public function show($id, Request $request)
-//     {
-//         $product = DB::table('product as p')
-//             ->select(
-//                 'p.id as product_id',
-//                 'p.name as product_name',
-//                 'p.gender',
-//                 'p.price',
-//                 'c.name as category_name',
-//                 'pc.color_code',
-//                 'pc.color_name',
-//                 'pc.color_code_bg',
-//                 'pci.image_atas',
-//                 'pci.image_bawah',
-//                 'pci.image_kiri',
-//                 'pci.image_kanan'
-//             )
-//             ->leftJoin('category as c', 'p.category_id', '=', 'c.id')
-//             ->leftJoin('product_color as pc', function ($join) {
-//                 $join->on('p.id', '=', 'pc.product_id')
-//                      ->where('pc.is_primary', true);
-//             })
-//             ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
-//             ->where('p.status', 'active')
-//             ->where('p.id', $id)
-//             ->first();
-
-//         if (!$product) {
-//             abort(404, 'Produk tidak ditemukan.');
-//         }
-
-//         $color_options = DB::table('product_color')
-//             ->leftJoin('product_color_image', 'product_color.id', '=', 'product_color_image.color_id')
-//             ->where('product_color.product_id', $id)
-//             ->select(
-//                 'product_color.id',
-//                 'product_color.color_name',
-//                 'product_color.color_code',
-//                 'product_color.is_primary',
-//                 'product_color_image.image_atas',
-//                 'product_color_image.image_bawah',
-//                 'product_color_image.image_kiri',
-//                 'product_color_image.image_kanan'
-//             )
-//             ->get();
-
-
-//         $size_options = DB::table('product_variant as pv')
-//             ->join('product_color as pc', 'pc.id', '=', 'pv.color_id')
-//             ->where('pv.product_id', $id)
-//             ->select('pv.size')
-//             ->groupBy('pv.size')
-//             ->orderBy('pv.size')
-//             ->get();
-
-//         $size_stock = DB::table('product_variant as pv')
-//             ->join('product_color as pc', 'pc.id', '=', 'pv.color_id')
-//             ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
-//             ->where('pv.product_id', $id)
-//             ->select(
-//                 'pv.size',
-//                 'pv.stock',
-//                 'pc.color_code',
-//                 'pc.color_code_bg',
-//                 'pci.image_atas',
-//                 'pci.image_bawah',
-//                 'pci.image_kanan',
-//                 'pci.image_kiri'
-//             )
-//             ->orderBy('pv.size')
-//             ->get();
-
-//         $user_id = Auth::id() ?? $request->query('user_id', 1);
-
-//         return view('detailsepatu', [
-//             'product' => $product,
-//             'color_options' => $color_options,
-//             'size_options' => $size_options,
-//             'size_stock' => $size_stock,
-//             'user_id' => $user_id,
-//         ]);
-//     }
 
     public function index()
     {
@@ -284,16 +202,20 @@ $averageRating = $totalReviews > 0
         return view('addproduct', compact('categories'));
     }
 
-public function store(Request $request)
-{
-    $validated = $request->validate([
-        'name' => 'required',
-        'category' => 'required|exists:category,id',
-        'description' => 'required',
-        'price' => 'required|numeric',
-        'gender' => 'nullable|string',
-        'image_json' => 'required|json', // Hanya ini yang dipakai untuk warna + gambar
-    ]);
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required',
+            'category' => 'required|exists:categories,id',
+            'description' => 'required',
+            'price' => 'required|numeric',
+            'color' => 'required|array',
+            'color.*' => 'required|string',
+            'color_code' => 'required|array',
+            'color_code.*' => 'required|string',
+            'size' => 'nullable|array',
+            'gender' => 'nullable|string'
+        ]);
 
     $product = Product::create([
         'name' => $request->name,
@@ -395,7 +317,7 @@ public function update(Request $request, $id)
         'nama_produk' => 'required|string|max:255',
         'gender' => 'required|in:Men,Women,Unisex',
         'deskripsi' => 'nullable|string',
-        'kategori' => 'required|integer|exists:categories,id',
+        'kategori' => 'required|integer|exists:category,id',
         'harga' => 'required|integer',
         'color_id' => 'required|integer',
         'stocks_json' => 'required|json',
@@ -488,6 +410,34 @@ public function getVariants($color_id)
 return response()->json($variants);
 
 }
+
+public function search(Request $request)
+{
+    $searchBy = $request->input('search_by');
+    $search = $request->input('search');
+
+    $query = DB::table('product as p')
+        ->leftJoin('product_color as pc', 'p.id', '=', 'pc.product_id')
+        ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
+        ->select('p.id', 'pc.id as color_id', 'p.name', 'pc.color_name', 'pci.image_kiri')
+        ->where('pc.status', 'active')
+        ->groupBy('p.id', 'pc.id', 'p.name', 'pc.color_name', 'pci.image_kiri');
+
+    if ($search && trim($search) !== '') {
+        if ($searchBy === 'product_id') {
+            $query->where('p.id', $search);
+        } elseif ($searchBy === 'product_name') {
+            $query->where('p.name', 'LIKE', '%' . $search . '%');
+        }
+    }
+    // else tidak ditambah where, jadi ambil semua data
+
+    $products = $query->get();
+
+    return view('partials.admin-list', compact('products'));
+}
+
+
 }
 
 

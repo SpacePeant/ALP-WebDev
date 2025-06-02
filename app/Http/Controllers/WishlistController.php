@@ -18,7 +18,7 @@ class WishlistController extends Controller
         $productId = $request->product_id;
 
         if (!$userId || !$productId) {
-            return response()->json(['success' => false, 'message' => 'Data tidak lengkap']);
+            return response()->json(['success' => false, 'message' => 'Data not complete']);
         }
 
         $exists = Wishlist::where('user_id', $userId)
@@ -26,7 +26,7 @@ class WishlistController extends Controller
                         ->exists();
 
         if ($exists) {
-            return response()->json(['success' => false, 'message' => 'Sudah ada di wishlist']);
+            return response()->json(['success' => false, 'message' => 'Already added to wishlist']);
         }
 
         try {
@@ -36,10 +36,10 @@ class WishlistController extends Controller
             ]);
         } catch (\Exception $e) {
             Log::error('Error saat create wishlist: ' . $e->getMessage());
-            return response()->json(['success' => false, 'message' => 'Gagal menambah wishlist']);
+            return response()->json(['success' => false, 'message' => 'Failed to add to wishlist']);
         }
 
-        return response()->json(['success' => true, 'message' => 'Ditambahkan ke wishlist']);
+        return response()->json(['success' => true, 'message' => 'Added to wishlist']);
     }
 
     // Hapus dari wishlist
@@ -53,9 +53,9 @@ class WishlistController extends Controller
                            ->delete();
 
         if ($deleted) {
-            return response()->json(['success' => true, 'message' => 'Dihapus dari wishlist']);
+            return response()->json(['success' => true, 'message' => 'Removed from wishlist']);
         } else {
-            return response()->json(['success' => false, 'message' => 'Gagal menghapus']);
+            return response()->json(['success' => false, 'message' => 'Failed to remove from wishlist']);
         }
     }
 
@@ -73,14 +73,14 @@ class WishlistController extends Controller
 
     public function index(Request $request)
 {
-    $customerId = session('user_id', $request->query('user_id', 1));
+    $userId = session('user_id', $request->query('user_id', 1));
 
     $wishlists = DB::table('wishlists as w')
     ->join('product as p', 'p.id', '=', 'w.product_id')
     ->join('product_color as pc', 'pc.product_id', '=', 'w.product_id')
     ->join('product_color_image as pci', 'pci.color_id', '=', 'pc.id')
     ->where('pc.is_primary', true)
-    ->where('w.user_id', $customerId)
+    ->where('w.user_id', $userId)
     ->select('w.id', 'w.user_id', 'w.product_id', 'p.name','p.price', 'pci.image_kiri')
     ->get();
 

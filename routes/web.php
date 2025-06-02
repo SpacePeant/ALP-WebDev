@@ -33,9 +33,9 @@ Route::get('/forgotpassword', fn() => view('forgotpassword'));
 // ==============================
 // AUTH & USER ROUTES
 // ==============================
-Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
-Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+// Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+// Route::post('/login', [AuthController::class, 'login'])->name('login.submit');
+// Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::get('/signup', [RegisterController::class, 'show'])->name('signup.form');
 Route::post('/signup', [RegisterController::class, 'register'])->name('signup.submit');
@@ -92,6 +92,8 @@ Route::get('/product-detail/{id}', function ($id) {
 });
 Route::get('/product/{productId}', [ProductController::class, 'show'])->name('product.detail');
 Route::get('detail_sepatu/{id}', [ProductController::class, 'show'])->name('detail_sepatu.show');
+Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
+
 
 // ==============================
 // ORDER ROUTES
@@ -102,6 +104,7 @@ Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/order', [OrderController::class, 'index'])->name('order');
 
+
 // ==============================
 // CART ROUTES
 // ==============================
@@ -110,6 +113,8 @@ Route::post('/cart/add', [CartController::class, 'addToCart'])->name('cart.add')
 Route::post('/cart/remove', [CartController::class, 'removeFromCart'])->name('cart.remove');
 Route::post('/cart/update', [CartController::class, 'updateCart'])->name('cart.update');
 Route::post('/cart/update-pilih', [CartController::class, 'updatePilih'])->name('cart.update_pilih');
+Route::post('/cart/update-size', [CartController::class, 'updateSize'])->name('cart.updateSize');
+Route::get('/cart/sizes', [CartController::class, 'getAvailableSizes']);
 
 // ==============================
 // WISHLIST ROUTES
@@ -145,8 +150,13 @@ Route::get('/blog', [BlogController::class, 'showBlogPage'])->name('blog');
 Route::get('/load-more-blogs', [BlogController::class, 'loadMoreBlogs']);
 Route::get('/articles/{id}', [ArticleController::class, 'show']);
 Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
-Route::post('/articles/{id}/update', [ArticleController::class, 'update'])->name('articles.update');
+Route::put('/admin/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+
 Route::post('/articles/store', [ArticleController::class, 'store'])->name('articles.store');
+
+Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');
+Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+
 
 // ==============================
 // COLLECTION / DETAIL

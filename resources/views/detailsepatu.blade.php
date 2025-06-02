@@ -219,7 +219,7 @@ body {
 }
 
 .buy-now,
-.add-cart {
+.add-cart, #confirmAddToCart {
   padding: 10px 20px;
   color: white;
   border: none;
@@ -227,12 +227,12 @@ body {
   cursor: pointer;
 }
 
-.add-cart {
+.add-cart, #confirmAddToCart {
   background: #444;
   transition: background-color 0.3s;
 }
 
-.add-cart:hover{
+.add-cart:hover, #confirmAddToCart:hover {
   background:black;
 }
 
@@ -609,15 +609,6 @@ body {
   background-color: black;
 }
 
-
-
-
-
-
-
-
-
-
   /* product-page mobile style */
 .mobile-product-wrapper {
   margin-top:60px;
@@ -785,6 +776,80 @@ body {
 .mobile-product-wrapper {
   display: none;
 }
+.qty-selector {
+  display: flex;
+  align-items: center;
+}
+
+.qty-btn {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 30px;
+  height: 30px;
+  border-radius: 6px;
+  border: 2px solid #ddd;
+  background-color: transparent;
+  font-size: 20px;
+  font-weight: 300;
+  color: #555;
+  transition: all 0.2s ease;
+  padding: 0;
+  cursor: pointer;
+}
+
+.qty-btn:hover {
+  background-color: #f0f0f0;
+}
+
+.qty-value {
+  width: 50px;
+  height: 30px;
+  font-size: 18px;
+  font-weight: 500;
+  text-align: center;
+  padding: 0;
+  margin: 0;
+  appearance: textfield;
+}
+
+.qty-value:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+.qty-value::-webkit-inner-spin-button,
+.qty-value::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Base bottom sheet style */
+.modal.modal-bottom .modal-dialog {
+  position: fixed;
+  bottom: 0;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 600px; /* LIMIT width on desktop */
+  transform: translateY(100%);
+  transition: transform 0.3s ease-out;
+  left: 0;
+  right: 0;
+}
+
+.modal.modal-bottom.show .modal-dialog {
+  transform: translateY(0);
+}
+
+.modal-content {
+  border-radius: 12px 12px 0 0;
+  padding: 16px;
+}
+
+/* Optional shadow effect */
+.modal.modal-bottom .modal-dialog {
+  box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
+}
 
 @media screen and (max-width: 768px) {
   .product-wrapper {
@@ -862,6 +927,7 @@ body {
                   @foreach ($color_options as $index => $color)
                       <div 
                           class="color-circle{{ $index === 0 ? ' selected' : '' }}"
+                          data-color-name="{{ $color->color_name }}"
                           data-color-code="{{ $color->color_code }}"
                           data-color-code-bg="{{ $color->color_code }}"
                           data-image-atas="{{ asset('image/sepatu/atas/' . $color->image_atas) }}"
@@ -889,12 +955,17 @@ body {
               <p id="stockInfo" class="stock-info">Stock: -</p>
 
               <div class="actions">
-                <button class="add-cart"
+                {{-- <button class="add-cart"
                         id="addToCartBtn"
                         data-product-id="{{ $product->product_id ?? request()->get('id') }}">
                     Add To Cart
-                </button>
+                </button> --}}
 
+                <button class="add-cart"
+        id="addToCartBtn"
+        data-product-id="{{ $product->product_id }}">
+    Add To Cart
+</button>
                 {{-- <p>User ID: {{ $user_id = Session::get('user_id', 'Guest') }}</p>
                 <p>Product ID: {{ $product->product_id }}</p>
                 <p>Wishlisted: {{ $isWishlisted ? 'YES' : 'NO' }}</p> --}}
@@ -991,12 +1062,17 @@ body {
     <p id="stockIn" class="mobile-stock-info">Stock: -</p>
 
     <div class="mobile-actions">
-      <button class="mobile-add-cart"
+      {{-- <button class="mobile-add-cart"
               id="addToCartBtn"
               data-product-id="{{ $product->product_id ?? request()->get('id') }}">
           Add To Cart
-      </button>
+      </button> --}}
 
+<button class="mobile-add-cart"
+        id="addToCartBtn"
+        data-product-id="{{ $product->product_id }}">
+    Add To Cart
+</button>
       <button class="mobile-wishlist-btn" id="wishlistBtn" data-product-id="{{ $product->product_id }}">
         <i class="bi {{ $isWishlisted ? 'bi-heart-fill' : 'bi-heart' }}"></i>
       </button>
@@ -1006,6 +1082,132 @@ body {
     @endif
   </div>
 </div>
+
+{{-- <div class="modal fade" id="cartModal" tabindex="-1">
+  <div class="modal-dialog modal-bottom">
+    <div class="modal-content p-3">
+      <div class="d-flex align-items-center">
+        <img id="modalShoeImageKiri" src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}" alt="{{ $product->product_name }}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+        <div>
+          <p class="mb-1 fw-semibold">{{ $product->product_name }}</p>
+          <small class="text-muted">Size: <span id="modalSelectedSize">-</span></small><br>
+          <small class="text-muted">Color: <span id="modalSelectedColor">{{ $product->color_name ?? '-' }}</span></small><br>
+          <small class="text-muted">Stock: <span id="modalSelectedStock">-</span></small>
+        </div>
+      </div>
+      <div class="d-flex align-items-center mt-3 justify-content-between">
+        <span class="fw-semibold">Quantity:</span>
+        <div class="qty-selector">
+          <button class="qty-btn" id="btnMinus">-</button>
+          <input id="inputQuantity" class="qty-value" type="number" value="1" min="1" readonly>
+          <button class="qty-btn" id="btnPlus">+</button>
+        </div>
+      </div>
+
+      <!-- Confirm Button -->
+      <div class="mt-3 text-center">
+        <button type="button" class="btn" id="confirmAddToCart">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div> --}}
+
+<div class="modal fade modal-bottom" id="cartModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="d-flex">
+        <!-- Product image on left -->
+        <img id="modalShoeImageKiri" src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}" alt="{{ $product->product_name }}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 8px; margin-right: 15px;">
+        
+        <!-- Product details on right -->
+        <div class="flex-grow-1">
+          <p class="mb-1 fw-semibold">{{ $product->product_name }}</p>
+          <small class="text-muted">Size: <span id="modalSelectedSize">-</span></small><br>
+          <small class="text-muted">Color: <span id="modalSelectedColor">{{ $product->color_name ?? '-' }}</span></small><br>
+          <small class="text-muted">Stock: <span id="modalSelectedStock">-</span></small>
+        </div>
+      </div>
+
+      <div class="d-flex align-items-center justify-content-between mt-3">
+        <span class="fw-semibold">Quantity:</span>
+        <div class="qty-selector d-flex align-items-center">
+          <button class="qty-btn" id="btnMinus">-</button>
+          <input id="inputQuantity" class="qty-value" type="number" value="1" min="1">
+          <button class="qty-btn" id="btnPlus">+</button>
+        </div>
+      </div>
+
+      <!-- Confirm Button -->
+      <div class="mt-3 text-center">
+        <button type="button" class="btn btn-dark w-100" id="confirmAddToCart">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  // Fungsi untuk update qty dengan batasan stok
+  function updateQuantityButtons() {
+    const btnMinus = document.getElementById('btnMinus');
+    const btnPlus = document.getElementById('btnPlus');
+    const inputQty = document.getElementById('inputQuantity');
+    const stockText = document.getElementById('modalSelectedStock').textContent.trim();
+
+    const maxStock = parseInt(stockText) || 0;
+
+    if (!btnMinus || !btnPlus || !inputQty || maxStock <= 0) return;
+
+    // Reset quantity ke 1 saat modal muncul
+    inputQty.value = 1;
+
+    // Hapus event listener sebelumnya biar gak dobel
+    const newBtnMinus = btnMinus.cloneNode(true);
+    const newBtnPlus = btnPlus.cloneNode(true);
+    btnMinus.parentNode.replaceChild(newBtnMinus, btnMinus);
+    btnPlus.parentNode.replaceChild(newBtnPlus, btnPlus);
+
+    newBtnMinus.addEventListener('click', () => {
+      let current = parseInt(inputQty.value) || 1;
+      if (current > 1) {
+        inputQty.value = current - 1;
+      }
+    });
+
+    newBtnPlus.addEventListener('click', () => {
+      let current = parseInt(inputQty.value) || 1;
+      if (current < maxStock) {
+        inputQty.value = current + 1;
+      }
+    });
+
+    inputQty.addEventListener('input', () => {
+  let current = parseInt(inputQty.value);
+
+  // Biarkan kosong saat sedang diketik (jangan paksa jadi 1)
+  if (inputQty.value === '') return;
+
+  if (isNaN(current) || current < 1) {
+    inputQty.value = 1;
+  } else if (current > maxStock) {
+    inputQty.value = maxStock;
+  }
+});
+
+// ✅ Tambahan: kalau keluar dari input, kosong → balik ke 1
+inputQty.addEventListener('blur', () => {
+  if (inputQty.value === '') {
+    inputQty.value = 1;
+  }
+});
+  }
+
+  // Jalankan saat modal selesai tampil
+  const cartModalElem = document.getElementById('cartModal');
+  if (cartModalElem) {
+    cartModalElem.addEventListener('shown.bs.modal', () => {
+      updateQuantityButtons();
+    });
+  }
+</script>
 
 
 <script>
@@ -1077,6 +1279,7 @@ body {
         const stock = match ? match.stock : 0;
         document.getElementById('stockIn').textContent = 'Stock: ' + stock;
         document.getElementById('stockInfo').textContent = 'Stock: ' + stock;
+        document.getElementById('modalSelectedStock').textContent = stock;
       } else {
         document.getElementById('stockIn').textContent = 'Stock: -';
         document.getElementById('stockInfo').textContent = 'Stock: -';
@@ -1334,142 +1537,6 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
   });
 });
 
-  
-    // -------------------------------
-    // Add to Cart (menggunakan mobile sebagai basis)
-    // -------------------------------
-    document.querySelectorAll('.mobile-add-cart').forEach(button => {
-      button.addEventListener('click', function () {
-        const productId = this.dataset.productId;
-        const selectedSize = document.querySelector('.mobile-size-btn.selected')?.dataset.size;
-        const selectedColorCode = document.querySelector('.mobile-color-circle.selected')?.dataset.colorCode;
-  
-        if (!selectedSize || !selectedColorCode) {
-          Swal.fire({
-            icon: 'warning',
-            title: 'Oops!',
-            text: 'Please select the size and color first',
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'OK'
-          });
-          return;
-        }
-  
-        const formData = new FormData();
-        formData.append('product_id', productId);
-        formData.append('size', selectedSize);
-        formData.append('color_code', selectedColorCode);
-  
-        fetch('/cart/add', {
-          method: 'POST',
-          headers: {
-            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-          },
-          body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.success) {
-            Swal.fire({
-              icon: 'success',
-              title: 'Success!',
-              text: 'Product successfully added to the cart!',
-              confirmButtonColor: '#000000',
-              confirmButtonText: 'OK'
-            });
-          } else {
-            Swal.fire({
-              icon: 'error',
-              title: 'Failed!',
-              text: data.message || 'Failed to add the product to the cart',
-              confirmButtonColor: '#d33',
-              confirmButtonText: 'OK'
-            });
-          }
-        })
-        .catch(error => {
-          console.error(error);
-          Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'An Error Occured While Adding to Cart',
-            confirmButtonColor: '#d33',
-            confirmButtonText: 'OK'
-          });
-        });
-      });
-    });
-
-    document.querySelectorAll('.add-cart').forEach(button => {
-    button.addEventListener('click', function () {
-        const productId = this.dataset.productId;
-        const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
-        const selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
-
-        if (!selectedSize || !selectedColorCode) {
-            Swal.fire({
-                icon: 'warning',
-                title: 'Oops!',
-                text: 'Please select the size and color first',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append('product_id', productId);
-        formData.append('size', selectedSize);
-        formData.append('color_code', selectedColorCode);
-
-        fetch('/cart/add', {
-            method: 'POST',
-            headers: {
-                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-            },
-            body: formData
-        })
-        .then(res => res.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Success!',
-                    text: 'Product successfully added to the cart!',
-                    showCancelButton: true,
-                    confirmButtonColor: '#000000',
-                    cancelButtonColor: '#3085d6',
-                    confirmButtonText: 'Continue Shopping',
-                    cancelButtonText: 'View Cart'
-                }).then((result) => {
-                    if (result.dismiss === Swal.DismissReason.cancel) {
-                        window.location.href = '/cart';
-                    }
-                    // Jika pilih "Continue Shopping", tidak perlu aksi apa-apa
-                });
-            } else {
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Failed!',
-                    text: data.message || 'An error occurred while adding to cart',
-                    confirmButtonColor: '#d33',
-                    confirmButtonText: 'Try Again'
-                });
-            }
-        })
-        .catch(err => {
-            console.error('Fetch Error:', err);
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: 'A connection error occurred',
-                confirmButtonColor: '#d33',
-                confirmButtonText: 'OK'
-            });
-        });
-    });
-});
-  
     // -------------------------------
     // Replace Feather Icons (jika digunakan)
     // -------------------------------
@@ -1588,7 +1655,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
   data-rating="{{ round($review->rating) }}"
 >
   <div class="flex items-center justify-between mb-1">
-    <div class="font-semibold text-gray-800">{{ maskedName($review->customer->name) }}</div>
+    <div class="font-semibold text-gray-800">{{ maskedName($review->user->name) }}</div>
     <div class="product-rating text-yellow-500 text-sm flex items-center" title="{{ $review->rating }} out of 5 stars ">
       @php
         $fullStars = round($review->rating);
@@ -1795,4 +1862,204 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
 <script>
   feather.replace();
 </script>
+
+<script>
+document.querySelectorAll('.add-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+        cartModal.show();
+    });
+});
+
+document.querySelectorAll('.mobile-add-cart').forEach(button => {
+    button.addEventListener('click', function() {
+        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+        cartModal.show();
+    });
+});
+
+let selectedSize = null;
+let selectedColor = null;
+
+// Update size saat diklik
+document.querySelectorAll('.size-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    selectedSize = btn.getAttribute('data-size');
+
+    const modalSizeElem = document.getElementById('modalSelectedSize');
+    if (modalSizeElem) {
+      modalSizeElem.textContent = selectedSize;
+    }
+  });
+});
+
+// Update color saat diklik
+document.querySelectorAll('.color-circle').forEach(circle => {
+  circle.addEventListener('click', () => {
+    document.querySelectorAll('.color-circle').forEach(c => c.classList.remove('selected'));
+    circle.classList.add('selected');
+
+    selectedColor = circle.getAttribute('data-color-name');
+
+    // Update teks color di modal
+    const modalColorElem = document.getElementById('modalSelectedColor');
+    if (modalColorElem) {
+      modalColorElem.textContent = selectedColor;
+    }
+
+    // Update gambar modal berdasarkan warna terpilih
+    const modalImgKiri = document.getElementById('modalShoeImageKiri');
+    if (modalImgKiri) {
+      modalImgKiri.src = circle.getAttribute('data-image-kiri');
+    }
+
+    // Kalau mau update gambar lain, contoh:
+    // const modalImgAtas = document.getElementById('modalShoeImageAtas');
+    // if(modalImgAtas) modalImgAtas.src = circle.getAttribute('data-image-atas');
+  });
+});
+
+// Saat tombol Add To Cart diklik
+const addToCartBtn = document.getElementById('addToCartBtn');
+if (addToCartBtn) {
+  addToCartBtn.addEventListener('click', () => {
+    // Auto-select default size jika belum dipilih
+    if (!selectedSize) {
+      const firstSizeBtn = document.querySelector('.size-btn');
+      if (firstSizeBtn) {
+        firstSizeBtn.classList.add('selected');
+        selectedSize = firstSizeBtn.getAttribute('data-size');
+      }
+    }
+
+    // Auto-select default color jika belum dipilih
+    if (!selectedColor) {
+      const firstColorCircle = document.querySelector('.color-circle');
+      if (firstColorCircle) {
+        firstColorCircle.classList.add('selected');
+        selectedColor = firstColorCircle.getAttribute('data-color-name');
+        selectedColorCode = firstColorCircle.getAttribute('data-color-code');
+
+        // Update gambar modal juga
+        const modalImgKiri = document.getElementById('modalShoeImageKiri');
+        if (modalImgKiri) {
+          modalImgKiri.src = firstColorCircle.getAttribute('data-image-kiri');
+        }
+      }
+    }
+
+    const match = stockData.find(item =>
+      item.size.toString() === selectedSize?.toString() &&
+      item.color_code.toLowerCase() === selectedColorCode?.toLowerCase()
+    );
+    selectedStock = match ? match.stock : 0;
+
+    // Update teks modal size, color, dan stock
+    const modalSizeElem = document.getElementById('modalSelectedSize');
+    if (modalSizeElem) modalSizeElem.textContent = selectedSize || '-';
+
+    const modalColorElem = document.getElementById('modalSelectedColor');
+    if (modalColorElem) modalColorElem.textContent = selectedColor || '-';
+
+    const modalStockElem = document.getElementById('modalSelectedStock');
+    if (modalStockElem) modalStockElem.textContent = selectedStock ?? '-';
+
+    // Tampilkan modal bootstrap
+    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+    cartModal.show();
+  });
+}
+
+const confirmAddToCartBtn = document.getElementById('confirmAddToCart');
+if (confirmAddToCartBtn) {
+  confirmAddToCartBtn.addEventListener('click', () => {
+    const productId = document.getElementById('addToCartBtn').dataset.productId;
+    const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
+    const selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
+    const quantity = document.getElementById('inputQuantity')?.value || 1;
+    const modalStockElem = document.getElementById('modalSelectedStock');
+    const availableStock = modalStockElem ? parseInt(modalStockElem.textContent) : 0;
+
+    if (!selectedSize || !selectedColorCode) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops!',
+        text: 'Please select the size and color first',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append('product_id', productId);
+    formData.append('size', selectedSize);
+    formData.append('color_code', selectedColorCode);
+    formData.append('quantity', quantity);
+
+    fetch('/cart/add', {
+      method: 'POST',
+      headers: {
+        'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: formData
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        // ✅ Tutup modal
+        const modalElem = document.getElementById('cartModal');
+        if (modalElem) {
+          // const bootstrapModal = bootstrap.Modal.getInstance(modalElem);
+          // if (bootstrapModal) bootstrapModal.hide();
+          const bootstrapModal = bootstrap.Modal.getOrCreateInstance(modalElem);
+          bootstrapModal.hide();
+        }
+        // ✅ Tunggu 300ms biar animasi modal selesai
+        setTimeout(() => {
+          Swal.fire({
+            icon: 'success',
+            title: 'Success!',
+            text: 'Product successfully added to the cart!',
+            showCancelButton: true,
+            confirmButtonColor: '#000000',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Continue Shopping',
+            cancelButtonText: 'View Cart'
+          }).then((result) => {
+            if (result.dismiss === Swal.DismissReason.cancel) {
+              window.location.href = '/cart';
+            }
+            // Kalau pilih "Continue Shopping", nggak perlu aksi apa-apa
+          });
+        }, 300);  // delay 300ms
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed!',
+          text: data.message || 'An error occurred while adding to cart',
+          confirmButtonColor: '#d33',
+          confirmButtonText: 'Try Again'
+        });
+      }
+    })
+    .catch(err => {
+      console.error('Fetch Error:', err);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'A connection error occurred',
+        confirmButtonColor: '#d33',
+        confirmButtonText: 'OK'
+      });
+    });
+  });
+}
+
+</script>
+
+
 @endsection
