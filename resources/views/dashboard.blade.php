@@ -272,7 +272,7 @@
           <div class="row g-4 mb-5">
             <div class="col-md-4">
               <div class="card-stat">
-                <div class="card-title">Balance</div>
+                <div class="card-title">Total Revenue</div>
                 <div class="stat-value">Rp. ${formatNumber(balance)}</div>
               </div>
             </div>

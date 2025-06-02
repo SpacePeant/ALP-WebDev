@@ -23,7 +23,7 @@
               value="{{ request('end_date') }}">
       </div>
       <div class="col-auto d-flex align-items-end">
-          <button type="submit" class="btn btn-dark">Filter</button>
+          <button type="submit" class="btn btn-filter">Filter</button>
       </div>
 </form>
 
@@ -59,7 +59,7 @@
 <div id="orderResults">
   @include('partials.ordercust', ['orders' => $orders])
 </div>
-  
+
 @endsection
 
 @push('styles')
@@ -67,6 +67,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 
 <style>
    body {
@@ -147,6 +148,16 @@
       color: #fff;
     }
 
+    .btn-filter {
+      background-color: #444;
+      color: #fff;
+    }
+
+    .btn-filter:hover {
+      background-color: black;
+      color: #fff;
+    }
+
   .view-order-toggle {
     font-weight: 500;
     color: #6c757d;
@@ -204,111 +215,169 @@
   .order-details-wrapper.open {
     max-height: 1000px;
   }
+
+ .pagination {
+        display: flex;
+        justify-content: end;
+        gap: 6px;
+    }
+
+    .pagination li {
+        list-style: none;
+    }
+
+    .pagination li a,
+    .pagination li span {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #333;
+        border-radius: 4px;
+    }
+
+    .pagination li.active span {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+        .pagination-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+    .pagination .page-item .page-link {
+        /* padding: 0.375rem 0.75rem; */
+        font-size: 0.875rem;
+    }
+    .form-select-sm {
+        font-size: 0.875rem;
+        /* padding: 0.25rem 0.5rem; */
+    }
 </style>
 @endpush
 
 @push('scripts')
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 <script>
-  // Fungsi toggle dropdown
-  function toggleDropdown(e) {
-    const btn = e.currentTarget;
-    const orderCard = btn.closest('.order-card');
-    const wrapper = orderCard.querySelector('.order-details-wrapper');
-    const icon = btn.querySelector('.dropdown-icon');
+$(document).ready(function () {
+    // Toggle detail pesanan
+    function toggleDropdown(e) {
+        const btn = e.currentTarget;
+        const orderCard = btn.closest('.order-card');
+        const wrapper = orderCard.querySelector('.order-details-wrapper');
+        const icon = btn.querySelector('.dropdown-icon');
 
-    // Tutup semua order lain
-    document.querySelectorAll('.order-details-wrapper').forEach(function(w) {
-      if (w !== wrapper) {
-        w.classList.remove('open');
-        const otherIcon = w.closest('.order-card')?.querySelector('.dropdown-icon');
-        if (otherIcon) otherIcon.textContent = '▼';
-      }
+        // Tutup semua yang lain
+        document.querySelectorAll('.order-details-wrapper').forEach(function(w) {
+            if (w !== wrapper) {
+                w.classList.remove('open');
+                const otherIcon = w.closest('.order-card')?.querySelector('.dropdown-icon');
+                if (otherIcon) otherIcon.textContent = '▼';
+            }
+        });
+
+        // Toggle yang dipilih
+        wrapper.classList.toggle('open');
+        icon.textContent = wrapper.classList.contains('open') ? '▲' : '▼';
+    }
+
+    function bindDropdownToggle() {
+        const buttons = document.querySelectorAll('.view-order-toggle');
+        buttons.forEach(btn => {
+            btn.removeEventListener('click', toggleDropdown); // hindari dobel bind
+            btn.addEventListener('click', toggleDropdown);
+        });
+    }
+
+    // Fungsi AJAX load orders
+    function fetchOrders(params = '') {
+        $.ajax({
+            url: "{{ route('order') }}?" + params,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            type: "GET",
+            success: function (response) {
+                $('#paginationWrapper').remove();
+                $('#orderResults').html(response);
+                bindDropdownToggle(); // rebind setelah load
+            },
+            error: function () {
+                alert('Failed to load orders.');
+            }
+        });
+    }
+
+    // Pagination
+    $(document).on('click', '.pagination a', function (e) {
+        e.preventDefault();
+        const url = $(this).attr('href');
+        const params = url.split('?')[1];
+        fetchOrders(params);
     });
 
-    // Toggle current
-    wrapper.classList.toggle('open');
-    icon.textContent = wrapper.classList.contains('open') ? '▲' : '▼';
-  }
+    // Ganti jumlah entries
+    window.changeEntries = function(value) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('entries', value);
 
-  // Bind event listener ke semua tombol "View Order"
-  function bindDropdownToggle() {
-    const buttons = document.querySelectorAll('.view-order-toggle');
-    buttons.forEach(btn => {
-      btn.removeEventListener('click', toggleDropdown); // cegah dobel
-      btn.addEventListener('click', toggleDropdown);
+        // Include filter & search
+        const search = $('#search').val();
+        const start = $('#start_date').val();
+        const end = $('#end_date').val();
+
+        if (search) url.searchParams.set('search', search);
+        if (start) url.searchParams.set('start_date', start);
+        if (end) url.searchParams.set('end_date', end);
+
+        fetchOrders(url.searchParams.toString());
+    };
+
+    // Submit filter form
+    $('#filterForm').on('submit', function (e) {
+        e.preventDefault();
+
+        const params = new URLSearchParams();
+        const search = $('#search').val();
+        const start = $('#start_date').val();
+        const end = $('#end_date').val();
+
+        if (search) params.append('search', search);
+        if (start) params.append('start_date', start);
+        if (end) params.append('end_date', end);
+
+        fetchOrders(params.toString());
     });
-  }
 
-  // Fungsi fetch orders dengan filter & search via AJAX
-  function fetchOrders() {
-    // Ambil value filter dan search
-    const startDate = document.querySelector('#start_date').value;
-    const endDate = document.querySelector('#end_date').value;
-    const search = document.querySelector('#search').value;
+    // Search dengan debounce
+    let debounceTimeout;
+    $('#search').on('input', function () {
+        clearTimeout(debounceTimeout);
+        debounceTimeout = setTimeout(() => {
+            $('#filterForm').submit();
+        }, 300);
+    });
 
-    // Buat URL dengan query param
-    const params = new URLSearchParams();
-    if (startDate) params.append('start_date', startDate);
-    if (endDate) params.append('end_date', endDate);
-    if (search) params.append('search', search);
+    // Tab status order
+    $('#orderStatusTabs .nav-link').on('click', function (e) {
+        e.preventDefault();
 
-    fetch(`{{ route('order') }}?${params.toString()}`, {
-      headers: {
-        'X-Requested-With': 'XMLHttpRequest'
-      }
-    })
-    .then(response => response.text())
-    .then(html => {
-      document.querySelector('#orderResults').innerHTML = html;
-      bindDropdownToggle(); // Pasang ulang event toggle dropdown setelah update konten
-    })
-    .catch(err => console.error('Fetch error:', err));
-  }
+        $('#orderStatusTabs .nav-link').removeClass('active');
+        $(this).addClass('active');
 
-  // Event listener untuk filter tanggal - submit form filter tanpa reload page
-  document.querySelector('#filterForm').addEventListener('submit', function(e) {
-    e.preventDefault();
-    fetchOrders();
-  });
+        const status = $(this).data('status');
+        const params = new URLSearchParams();
+        params.set('status', status);
 
-  // Event listener untuk input search - debounce agar tidak spam request
-  let debounceTimeout;
-  document.querySelector('#search').addEventListener('input', function() {
-    clearTimeout(debounceTimeout);
-    debounceTimeout = setTimeout(fetchOrders, 300);
-  });
+        fetchOrders(params.toString());
+    });
 
-  // Pasang toggle dropdown saat halaman pertama load
-  document.addEventListener('DOMContentLoaded', function() {
+    // Initial toggle setup
     bindDropdownToggle();
-  });
-
-  document.addEventListener('DOMContentLoaded', function () {
-  const tabs = document.querySelectorAll('#orderStatusTabs .nav-link');
-  const orderContainer = document.getElementById('orderResults');
-
-  tabs.forEach(tab => {
-    tab.addEventListener('click', function(e) {
-      e.preventDefault();
-
-      // Toggle active class
-      tabs.forEach(t => t.classList.remove('active'));
-      this.classList.add('active');
-
-      const status = this.getAttribute('data-status');
-
-      fetch(`{{ route('order') }}?status=${status}`, {
-        headers: { 'X-Requested-With': 'XMLHttpRequest' }
-      })
-      .then(res => res.text())
-      .then(html => {
-        orderContainer.innerHTML = html;
-      })
-      .catch(err => console.error(err));
-    });
-  });
 });
 </script>
 @endpush
+

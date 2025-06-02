@@ -537,6 +537,49 @@ input[type="range"]::-webkit-slider-thumb {
     flex-direction: column;
 }
 
+
+
+.pagination {
+        display: flex;
+        justify-content: end;
+        gap: 6px;
+    }
+
+    .pagination li {
+        list-style: none;
+    }
+
+    .pagination li a,
+    .pagination li span {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #333;
+        border-radius: 4px;
+    }
+
+    .pagination li.active span {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+        .pagination-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-right: 30px;
+    }
+    .pagination .page-item .page-link {
+        /* padding: 0.375rem 0.75rem; */
+        font-size: 0.875rem;
+    }
+    .form-select-sm {
+        font-size: 0.875rem;
+        /* padding: 0.25rem 0.5rem; */
+    }
   </style>
 </head>
 <body>
@@ -630,17 +673,18 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 
     <div class="price-filter">
-        <label>Price</label>
-        <div class="slider-values">
-          <span>Rp <span id="minPriceVal">500k</span></span>
-          <span>Rp <span id="maxPriceVal">8000k</span></span>
-        </div>
-        <div class="slider-container">
-          <input type="range" name="min" id="minPrice" min="500" max="10000" value="500" step="100">
-          <input type="range" name="max" id="maxPrice" min="500" max="10000" value="8000" step="100">
-          <div class="slider-track"></div>
-        </div>
-      </div>
+    <label>Price</label>
+    <div class="slider-values">
+      <span>Rp <span id="minPriceVal">{{ $minPrice }}k</span></span>
+      <span>Rp <span id="maxPriceVal">{{ $maxPrice }}k</span></span>
+    </div>
+    <div class="slider-container">
+      <input type="range" name="min" id="minPrice" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ $minPrice }}" step="100">
+      <input type="range" name="max" id="maxPrice" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ $maxPrice }}" step="100">
+      <div class="slider-track"></div>
+    </div>
+</div>
+
 </div>
     <div class="d-flex justify-content-between align-items-center d-md-none mb-3" style="margin-left: 20px">
         <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilter">
@@ -668,14 +712,15 @@ input[type="range"]::-webkit-slider-thumb {
             <div class="filter-content">
                 @foreach ($colors as $color)
                     <label>
-                        <input type="checkbox" name="color[]" value="{{ $color->color_code }}"
-                            {{ in_array($color->color_code, request()->input('color', [])) ? 'checked' : '' }}>
+                        <input type="checkbox" name="color[]" value="{{ $color->color_name }}"
+                            {{ in_array($color->color_name, request()->input('color', [])) ? 'checked' : '' }}>
                         <span class="color-box" style="background-color: {{ $color->color_code }};"></span>
                         {{ $color->color_name }}
                     </label><br>
                 @endforeach
             </div>
         </div>
+
 
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Size</div>
@@ -733,8 +778,8 @@ input[type="range"]::-webkit-slider-thumb {
             <div class="filter-content">
                 @foreach ($colors as $color)
                     <label>
-                        <input type="checkbox" name="color[]" value="{{ $color->color_code }}"
-                            {{ in_array($color->color_code, request()->input('color', [])) ? 'checked' : '' }}>
+                        <input type="checkbox" name="color[]" value="{{ $color->color_name }}"
+                            {{ in_array($color->color_name, request()->input('color', [])) ? 'checked' : '' }}>
                         <span class="color-box" style="background-color: {{ $color->color_code }};"></span>
                         {{ $color->color_name }}
                     </label><br>
@@ -773,7 +818,20 @@ input[type="range"]::-webkit-slider-thumb {
 
     <button type="submit" style="display:none;"></button>
 </form>
-    
+    <script>
+  // fungsi untuk log semua warna yang dicentang
+  function logCheckedColors() {
+    const checkedColors = Array.from(document.querySelectorAll('input[name="color[]"]:checked'))
+                               .map(el => el.value);
+    console.log('Checked colors:', checkedColors);
+  }
+
+  // pasang event listener ke semua checkbox color
+  document.querySelectorAll('input[name="color[]"]').forEach(checkbox => {
+    checkbox.addEventListener('change', logCheckedColors);
+  });
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -804,20 +862,40 @@ $(document).ready(function() {
 
     updateValues(); 
 
-    function fetchData() {
-        $.ajax({
-            url: '{{ route("product.list") }}', 
-            method: 'GET',
-            data: $('#filterForm').serialize(),
-            success: function(response) {
-                $('#productResults').html(response);
-            }
-        });
-    }
+    function fetchData(url = '{{ route("product.list") }}') {
+    $.ajax({
+        url: url,
+        method: 'GET',
+        data: $('#filterForm').serialize(),
+        success: function(response) {
+            $('#productResults').html(response);
 
-    $('#filterForm input, #filterForm select').not('#minPrice, #maxPrice').on('input change', fetchData);
+            // Re-attach pagination click handler (karena kontennya di-replace)
+            attachPaginationEvents();
+        },
+        error: function() {
+            alert('Gagal memuat produk. Coba lagi.');
+        }
+    });
+}
 
+// Untuk semua input dan select (termasuk minPrice dan maxPrice)
+$('#filterForm input, #filterForm select').on('input change', function () {
     fetchData();
+});
+
+// Saat pertama kali halaman dimuat
+fetchData();
+
+// Fungsi untuk handle klik pagination (harus dipanggil ulang setiap fetchData)
+function attachPaginationEvents() {
+    $('#productResults .pagination a').off('click').on('click', function (e) {
+        e.preventDefault();
+        const url = $(this).attr('href');
+        if (url) fetchData(url);
+    });
+}
+
 
     document.querySelectorAll('.product-card').forEach(card => {
         card.addEventListener('mouseenter', function() {
