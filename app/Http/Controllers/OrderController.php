@@ -33,6 +33,7 @@ class OrderController extends Controller
             ->groupBy(
                 'o.id', 'u.name', 'u.phone_number', 'o.status', 
                 'o.user_id', 'o.created_at', 'o.updated_at', 
+                'u.id', 'o.created_at', 'o.updated_at', 
                 'u.address', 'o.payment_method'
             )
             ->orderByDesc('o.id');
