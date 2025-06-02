@@ -28,13 +28,14 @@ class OrderController extends Controller
                 'u.phone_number',
                 DB::raw('COUNT(od.product_id) as item_count'),
                 DB::raw('SUM(od.unit_price * od.quantity) as total'),
-                'o.payment_method'
+                // 'o.payment_method'
             )
             ->groupBy(
                 'o.id', 'u.name', 'u.phone_number', 'o.status', 
                 'o.user_id', 'o.created_at', 'o.updated_at', 
                 'u.id', 'o.created_at', 'o.updated_at', 
-                'u.address', 'o.payment_method'
+                'u.address', 
+                // 'o.payment_method'
             )
             ->orderByDesc('o.id');
 
@@ -53,7 +54,10 @@ class OrderController extends Controller
                 $query->whereRaw('LOWER(u.name) LIKE ?', ['%' . strtolower($keyword) . '%']);
             }
         }
-        $orders = $query->get();
+        // $orders = $query->get();
+
+        $perPage = $request->input('entries', 5); // default 5
+        $orders = $query->orderBy('o.order_date', 'desc')->paginate($perPage)->appends(['entries' => $perPage]);
 
             $orderDetails = [];
 
@@ -76,12 +80,14 @@ class OrderController extends Controller
                 $orderId = null; 
             }
 
-
             // Stat count
             $completedOrders = DB::table('orders')->where('status', 'Completed')->count();
             $pendingOrders = DB::table('orders')->where('status', 'Pending')->count();
-
-            return view('orderadmin', compact('orders', 'orderDetails', 'completedOrders', 'pendingOrders', 'orderId', 'filter', 'startDate', 'endDate'));
+            
+            if ($request->ajax()) {
+                return view('partials.order-filter', ['orders' => $orders])->render();
+            }
+            return view('orderadmin', compact('orders', 'orderDetails', 'completedOrders', 'pendingOrders', 'orderId', 'filter', 'startDate', 'endDate', 'perPage'));
     }
 
 public function filterAjax(Request $request)
@@ -232,7 +238,7 @@ public function index(Request $request)
 
 public function boot()
 {
-    Paginator::useBootstrap(); // or Tailwind if you prefer
+    Paginator::useBootstrap();
 }
 
 }
