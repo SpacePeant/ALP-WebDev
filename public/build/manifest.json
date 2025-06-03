@@ -1,7 +1,32 @@
 {
+  "resources/css/AdminBlog.css": {
+    "file": "assets/AdminBlog-BCUalwFL.css",
+    "src": "resources/css/AdminBlog.css",
+    "isEntry": true
+  },
   "resources/css/app.css": {
     "file": "assets/app-CN-4c2qy.css",
     "src": "resources/css/app.css",
+    "isEntry": true
+  },
+  "resources/css/articles.css": {
+    "file": "assets/articles-D8sj3fHq.css",
+    "src": "resources/css/articles.css",
+    "isEntry": true
+  },
+  "resources/css/blog.css": {
+    "file": "assets/blog-BhOKMpq1.css",
+    "src": "resources/css/blog.css",
+    "isEntry": true
+  },
+  "resources/css/home.css": {
+    "file": "assets/home-C4x0CBi8.css",
+    "src": "resources/css/home.css",
+    "isEntry": true
+  },
+  "resources/css/login.css": {
+    "file": "assets/login-Df2z2dE0.css",
+    "src": "resources/css/login.css",
     "isEntry": true
   },
   "resources/js/app.js": {
