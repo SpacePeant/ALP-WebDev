@@ -9,6 +9,7 @@ use App\Models\ProductColor;
 use Illuminate\Http\Request;
 use App\Models\ProductReview;
 use App\Models\ProductVariant;
+use App\Models\ProductColorImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Session;
@@ -196,16 +197,16 @@ $averageRating = $totalReviews > 0
 
     public function create()
     {
-        $categories = Category::all();
+        $category = Category::all();
         // dd($categories);
-        return view('addproduct', compact('categories'));
+        return view('addproduct', compact('category'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'name' => 'required',
-            'category' => 'required|exists:categories,id',
+            'category' => 'required|exists:category,id',
             'description' => 'required',
             'price' => 'required|numeric',
             'color' => 'required|array',

@@ -338,10 +338,10 @@
 
       <div class="form-group">
         <label>Category</label>
-        {{-- <pre>{{ print_r($categories, true) }}</pre> --}}
+        
             <select class="form-select custom-select" name="category" required>
         <option value="">Select Category</option>
-        <?php foreach ($categories as $category): ?>
+        <?php foreach ($category as $category): ?>
           <option value="<?php echo $category->id; ?>"><?php echo $category->name; ?></option>
         <?php endforeach; ?>
       </select>
