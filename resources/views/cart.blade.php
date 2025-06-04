@@ -494,55 +494,46 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
             });
 
         select.addEventListener('change', function () {
-    const variantId = this.value;
-    const selectedOption = this.options[this.selectedIndex];
-    const stock = parseInt(selectedOption.getAttribute('data-stock'));
+          const row = this.closest('tr');
+          const qtySpan = row.querySelector('.item-qty');
 
-    const row = this.closest('tr');
-    const qtySpan = row.querySelector('.item-qty');
-    const currentQty = parseInt(qtySpan.textContent) || 1;
+          const variantId = this.value;
+          const selectedOption = this.options[this.selectedIndex];
+          const stock = parseInt(selectedOption.getAttribute('data-stock'));
 
-    // Update atribut data-stock
-    row.setAttribute('data-stock', stock);
+          const currentQty = parseInt(qtySpan.textContent) || 1;
 
-    // Logic: tetap pakai qty lama jika masih valid, atau ubah ke stock baru
-    let newQty = currentQty;
-    if (currentQty > stock) {
-        newQty = stock;
-        Swal.fire({
-            icon: 'info',
-            title: 'Limited Stock',
-            text: `The maximum stock for this product is ${maxStock}.`,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
+          // sesuaikan quantity: min antara quantity lama dan stock size baru
+          const newQty = currentQty > stock ? stock : currentQty;
+
+          // update quantity di UI dan data-stock
+          qtySpan.textContent = newQty;
+          row.setAttribute('data-stock', stock);
+
+          updateRowTotal(row);
+          updateSummary();
+          updatePlusButtonState(row);
+
+          fetch('/cart/update-size', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
+              },
+              body: JSON.stringify({
+                  cart_id: cartId,
+                  variant_id: variantId,
+                  quantity: newQty
+              })
+          })
+          .then(res => res.json())
+          .then(data => {
+              if (!data.success) {
+                  console.error("Failed to Update Size.");
+              }
+          });
         });
-    }
-
-    qtySpan.textContent = newQty;
-
-    updateRowTotal(row);
-    updateSummary();
-    updatePlusButtonState(row);
-
-    fetch('/cart/update-size', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({
-            cart_id: cartId,
-            variant_id: variantId
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (!data.success) {
-            console.error("Failed to Update Size.");
-        }
-    });
-});
-    });
+      });
 });
 </script>
 @endsection

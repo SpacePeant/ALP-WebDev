@@ -96,8 +96,12 @@ class CollectionController extends Controller
         $query->orderBy('p.created_at', 'desc');
     }
 
-     $perPage = $request->input('entries', 8); 
+    $perPage = $request->input('entries', 8); 
     $products = $query->paginate($perPage)->appends(['entries' => $perPage]);
+
+    if ($request->ajax()) {
+        return view('partials.product_list', ['products' => $products])->render();
+    }
 
     $categories = DB::table('category')->pluck('name');
 
@@ -202,7 +206,7 @@ if (!empty($colors)) {
     }
 
 
-    $perPage = $request->input('entries', 8);
+$perPage = $request->input('entries', 8);
 $products = $query->paginate($perPage)->appends(['entries' => $perPage]);
 
 if ($request->ajax()) {

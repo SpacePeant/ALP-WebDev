@@ -14,7 +14,8 @@
     @endforelse
 </div> --}}
 
-<div class="container">
+<div class="container" id="productContainer" data-total-products="{{ $products->total() }}">
+
     <div class="row">
         @forelse ($products as $product)
             <div class="col-6 col-sm-6 col-md-4 col-lg-3 d-flex justify-content-center mb-4">
@@ -31,10 +32,9 @@
                 </a>
             </div>
         @empty
-            <p class="text-center">Tidak ada produk tersedia.</p>
+            <p class="text-center">No product available.</p>
         @endforelse
     </div>
-</div>
 
 <div id="paginationWrapper" class="pagination-wrapper mt-4">
     {{-- Show Entries --}}
@@ -117,12 +117,8 @@
         </nav>
     @endif
 </div>
+</div>
 
-<script>
-    function changeEntries(value) {
-        const url = new URL(window.location.href);
-        url.searchParams.set('entries', value);
-        url.searchParams.set('page', 1); // reset ke halaman 1 pas entries berubah
-        window.location.href = url.toString();
-    }
-</script>
+{{-- <script>
+    window.totalProducts = {{ $products->total() }};
+</script> --}}

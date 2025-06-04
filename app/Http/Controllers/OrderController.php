@@ -3,10 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use App\Models\OrderDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Session;
 use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Facades\Session;
 
 class OrderController extends Controller
 {
@@ -31,7 +32,8 @@ class OrderController extends Controller
                 // 'o.payment_method'
             )
             ->groupBy(
-                'o.id', 'u.name', 'u.phone_number', 'o.status', 
+                'o.id', 'o.cust_name', 'o.cust_phone_number',
+                'o.cust_address','u.name', 'u.phone_number', 'o.status', 
                 'o.user_id', 'o.created_at', 'o.updated_at', 
                 'u.id', 'o.created_at', 'o.updated_at', 
                 'u.address', 
@@ -81,11 +83,11 @@ class OrderController extends Controller
             }
 
             // Stat count
-            $completedOrders = DB::table('orders')->where('status', 'Completed')->count();
+            $completedOrders = DB::table('orders')->where('status', 'Paid')->count();
             $pendingOrders = DB::table('orders')->where('status', 'Pending')->count();
             
             if ($request->ajax()) {
-                return view('partials.order-filter', ['orders' => $orders])->render();
+                return view('partials.order-filter', compact('orders', 'orderDetails'))->render(); // ✅
             }
             return view('orderadmin', compact('orders', 'orderDetails', 'completedOrders', 'pendingOrders', 'orderId', 'filter', 'startDate', 'endDate', 'perPage'));
     }
@@ -108,12 +110,13 @@ public function filterAjax(Request $request)
             'u.phone_number',
             DB::raw('COUNT(od.product_id) as item_count'),
             DB::raw('SUM(od.unit_price * od.quantity) as total'),
-            'o.payment_method'
+            //'o.payment_method'
         )
         ->groupBy(
             'o.id', 'u.name', 'u.phone_number', 'o.status',
             'o.user_id', 'o.created_at', 'o.updated_at',
-            'u.address', 'o.payment_method'
+            'u.address', 
+            //'o.payment_method'
         )
         ->orderByDesc('o.id');
 
@@ -132,8 +135,9 @@ public function filterAjax(Request $request)
             $query->whereRaw('LOWER(u.name) LIKE ?', ['%' . strtolower($keyword) . '%']);
         }
     }
-
-    $orders = $query->get();
+    
+    $perPage = $request->input('entries', 5);
+    $orders = $query->orderBy('order_date', 'desc')->paginate($perPage);
 
     $orderDetails = [];
     foreach ($orders as $order) {
@@ -147,6 +151,10 @@ public function filterAjax(Request $request)
             ->get();
 
         $orderDetails[$order->id] = $details;
+    }
+
+    if ($request->ajax()) {
+        return view('partials.order-filter', compact('orders', 'orderDetails'))->render(); // ✅
     }
 
     return view('partials.order-filter', compact('orders', 'orderDetails'));
@@ -181,6 +189,9 @@ public function index(Request $request)
         ->where('o.user_id', $customer_id)
         ->groupBy(
             'o.id',
+            'o.cust_name',
+            'o.cust_phone_number',
+            'o.cust_address',
             'u.name',
             'u.phone_number',
             'u.address',

@@ -522,6 +522,42 @@ input[type="range"]::-webkit-slider-thumb {
     }
 }
 
+@media (max-width: 576px) { /* Mobile kecil */
+    .product-card {
+        height: 280px;
+    }
+}
+
+@media (min-width: 577px) and (max-width: 768px) { /* Mobile gede / Tablet kecil */
+    .product-card {
+        height: 300px;
+    }
+}
+
+@media (min-width: 769px) and (max-width: 992px) { /* Tablet besar */
+    .product-card {
+        height: 270px;
+    }
+}
+
+@media (min-width: 993px) and (max-width: 1200px) { /* Laptop */
+    .product-card {
+        height: 280px;
+    }
+}
+
+@media (min-width: 1201px) and (max-width: 1400px) { /* Desktop medium */
+    .product-card {
+        height: 330px;
+    }
+}
+
+@media (min-width: 1401px) { /* Desktop besar */
+    .product-card {
+        height: 330px;
+    }
+}
+
 .product-card {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -837,11 +873,17 @@ input[type="range"]::-webkit-slider-thumb {
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
 <script>
-$(document).ready(function() {
+$(document).ready(function () {
     const minSlider = document.getElementById("minPrice");
     const maxSlider = document.getElementById("maxPrice");
     const minVal = document.getElementById("minPriceVal");
     const maxVal = document.getElementById("maxPriceVal");
+    const searchToggle = document.getElementById('searchToggle');
+    const filterBar = document.querySelector('.filter-bar');
+    const searchInput = document.getElementById('searchInput');
+
+    let currentPage = 1;
+    let currentEntries = parseInt($('#entries').val()) || 8;
 
     function updateValues() {
         if (parseInt(minSlider.value) > parseInt(maxSlider.value)) {
@@ -851,83 +893,107 @@ $(document).ready(function() {
         maxVal.textContent = maxSlider.value + 'k';
     }
 
-    minSlider.addEventListener("input", function() {
-        updateValues();
-        fetchData(); 
+    function fetchData(url = null, forcePageCheck = false) {
+        if (!url) {
+            url = new URL("{{ route('product.list') }}", window.location.origin);
+            url.searchParams.set('entries', currentEntries);
+            url.searchParams.set('page', currentPage);
+        } else {
+            url = new URL(url, window.location.origin);
+            currentPage = parseInt(url.searchParams.get('page')) || 1;
+            currentEntries = parseInt(url.searchParams.get('entries')) || currentEntries;
+        }
+
+        $.ajax({
+            url: url.toString(),
+            method: 'GET',
+            data: $('#filterForm').serialize(),
+            success: function (response) {
+                $('#productResults').html(response);
+
+                const container = document.getElementById('productContainer');
+                let totalProducts = parseInt(container?.dataset.totalProducts || 0);
+                let maxPage = Math.ceil(totalProducts / currentEntries);
+
+                if (forcePageCheck && currentPage > maxPage) {
+                    currentPage = maxPage;
+                    fetchData(null, false);
+                    return;
+                }
+
+                attachPaginationEvents();
+                rebindProductEvents();
+            },
+            error: function () {
+                alert('Gagal memuat produk. Silakan coba lagi.');
+            }
+        });
+    }
+
+    function attachPaginationEvents() {
+        $('#productResults .pagination a').off('click').on('click', function (e) {
+            e.preventDefault();
+            const url = $(this).attr('href');
+            if (url) fetchData(url);
+        });
+    }
+
+    function rebindProductEvents() {
+        document.querySelectorAll('.product-card').forEach(card => {
+            card.addEventListener('mouseenter', function () {
+                const bgColor = this.getAttribute('data-bg-color');
+                this.style.backgroundColor = bgColor;
+            });
+            card.addEventListener('mouseleave', function () {
+                this.style.backgroundColor = '';
+            });
+        });
+    }
+
+    // Fungsi ubah entries
+    window.changeEntries = function (newEntries) {
+        currentEntries = parseInt(newEntries);
+
+        const container = document.getElementById('productContainer');
+        const totalProducts = parseInt(container?.dataset.totalProducts || 0);
+        const maxPage = Math.ceil(totalProducts / currentEntries);
+
+        if (currentPage > maxPage) {
+            currentPage = maxPage;
+        }
+
+        fetchData(null, true);
+    };
+
+    window.toggleFilter = function (element) {
+        const group = element.parentElement;
+        group.classList.toggle('active');
+    }
+
+    searchToggle?.addEventListener('click', () => {
+        filterBar?.classList.toggle('show-search');
+        if (filterBar?.classList.contains('show-search')) {
+            searchInput?.focus();
+        }
     });
-    maxSlider.addEventListener("input", function() {
+
+    minSlider?.addEventListener("input", function () {
         updateValues();
         fetchData();
     });
 
-    updateValues(); 
-
-    function fetchData(url = '{{ route("product.list") }}') {
-    $.ajax({
-        url: url,
-        method: 'GET',
-        data: $('#filterForm').serialize(),
-        success: function(response) {
-            $('#productResults').html(response);
-
-            // Re-attach pagination click handler (karena kontennya di-replace)
-            attachPaginationEvents();
-        },
-        error: function() {
-            alert('Gagal memuat produk. Coba lagi.');
-        }
+    maxSlider?.addEventListener("input", function () {
+        updateValues();
+        fetchData();
     });
-}
 
-// Untuk semua input dan select (termasuk minPrice dan maxPrice)
-$('#filterForm input, #filterForm select').on('input change', function () {
+    $('#filterForm input, #filterForm select').on('input change', function () {
+        fetchData();
+    });
+
+    updateValues();
     fetchData();
 });
-
-// Saat pertama kali halaman dimuat
-fetchData();
-
-// Fungsi untuk handle klik pagination (harus dipanggil ulang setiap fetchData)
-function attachPaginationEvents() {
-    $('#productResults .pagination a').off('click').on('click', function (e) {
-        e.preventDefault();
-        const url = $(this).attr('href');
-        if (url) fetchData(url);
-    });
-}
-
-
-    document.querySelectorAll('.product-card').forEach(card => {
-        card.addEventListener('mouseenter', function() {
-            const bgColor = this.getAttribute('data-bg-color');
-            this.style.backgroundColor = bgColor;  
-        });
-        card.addEventListener('mouseleave', function() {
-            this.style.backgroundColor = ''; 
-        });
-    });
-});
-
-function toggleFilter(element) {
-    const parent = element.parentElement;
-    parent.classList.toggle('active');
-}
-function toggleFilter(element) {
-    const group = element.parentElement;
-    group.classList.toggle('active');
-}
-
-const searchToggle = document.getElementById('searchToggle');
-const filterBar = document.querySelector('.filter-bar');
-const searchInput = document.getElementById('searchInput');
-
-searchToggle.addEventListener('click', () => {
-    filterBar.classList.toggle('show-search');
-    if (filterBar.classList.contains('show-search')) {
-        searchInput.focus();
-    }
-});
-
 </script>
 
 </body>

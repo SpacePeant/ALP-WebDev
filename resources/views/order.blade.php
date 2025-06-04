@@ -256,6 +256,7 @@
         font-size: 0.875rem;
         /* padding: 0.25rem 0.5rem; */
     }
+
 </style>
 @endpush
 
@@ -265,14 +266,13 @@
 
 <script>
 $(document).ready(function () {
-    // Toggle detail pesanan
+    // Toggle detail pesanan (sama kaya kamu)
     function toggleDropdown(e) {
         const btn = e.currentTarget;
         const orderCard = btn.closest('.order-card');
         const wrapper = orderCard.querySelector('.order-details-wrapper');
         const icon = btn.querySelector('.dropdown-icon');
 
-        // Tutup semua yang lain
         document.querySelectorAll('.order-details-wrapper').forEach(function(w) {
             if (w !== wrapper) {
                 w.classList.remove('open');
@@ -281,7 +281,6 @@ $(document).ready(function () {
             }
         });
 
-        // Toggle yang dipilih
         wrapper.classList.toggle('open');
         icon.textContent = wrapper.classList.contains('open') ? '▲' : '▼';
     }
@@ -289,13 +288,13 @@ $(document).ready(function () {
     function bindDropdownToggle() {
         const buttons = document.querySelectorAll('.view-order-toggle');
         buttons.forEach(btn => {
-            btn.removeEventListener('click', toggleDropdown); // hindari dobel bind
+            btn.removeEventListener('click', toggleDropdown);
             btn.addEventListener('click', toggleDropdown);
         });
     }
 
     // Fungsi AJAX load orders
-    function fetchOrders(params = '') {
+    function fetchOrders(params = '', pushState = true) {
         $.ajax({
             url: "{{ route('order') }}?" + params,
             headers: { 'X-Requested-With': 'XMLHttpRequest' },
@@ -303,7 +302,13 @@ $(document).ready(function () {
             success: function (response) {
                 $('#paginationWrapper').remove();
                 $('#orderResults').html(response);
-                bindDropdownToggle(); // rebind setelah load
+                bindDropdownToggle();
+
+                // Update URL browser supaya query param sinkron
+                if(pushState) {
+                    const newUrl = window.location.pathname + '?' + params;
+                    history.pushState(null, '', newUrl);
+                }
             },
             error: function () {
                 alert('Failed to load orders.');
@@ -311,20 +316,36 @@ $(document).ready(function () {
         });
     }
 
-    // Pagination
+    // Pagination klik
     $(document).on('click', '.pagination a', function (e) {
         e.preventDefault();
         const url = $(this).attr('href');
         const params = url.split('?')[1];
-        fetchOrders(params);
+
+        fetchOrders(params, true); // update URL browser
     });
 
     // Ganti jumlah entries
-    window.changeEntries = function(value) {
+    window.changeEntries = function (newEntries) {
         const url = new URL(window.location.href);
-        url.searchParams.set('entries', value);
+        newEntries = parseInt(newEntries);
 
-        // Include filter & search
+        // Ambil parameter page dari URL (yang sudah terupdate saat klik pagination)
+        let currentPage = parseInt(url.searchParams.get('page') || 1);
+
+        // Ambil total order dari elemen di halaman
+        const totalOrders = parseInt($('#total-orders').text() || 0);
+
+        const maxPage = Math.max(1, Math.ceil(totalOrders / newEntries));
+
+        // Jika currentPage melebihi maxPage, set ke maxPage
+        if (currentPage > maxPage) currentPage = maxPage;
+
+        // Update URL param entries dan page
+        url.searchParams.set('entries', newEntries);
+        url.searchParams.set('page', currentPage);
+
+        // Ambil filter lain jika ada
         const search = $('#search').val();
         const start = $('#start_date').val();
         const end = $('#end_date').val();
@@ -333,10 +354,11 @@ $(document).ready(function () {
         if (start) url.searchParams.set('start_date', start);
         if (end) url.searchParams.set('end_date', end);
 
-        fetchOrders(url.searchParams.toString());
+        // Fetch data dan update URL browser
+        fetchOrders(url.searchParams.toString(), true);
     };
 
-    // Submit filter form
+    // Submit filter form (sama seperti kamu)
     $('#filterForm').on('submit', function (e) {
         e.preventDefault();
 
@@ -349,10 +371,10 @@ $(document).ready(function () {
         if (start) params.append('start_date', start);
         if (end) params.append('end_date', end);
 
-        fetchOrders(params.toString());
+        fetchOrders(params.toString(), true);
     });
 
-    // Search dengan debounce
+    // Search dengan debounce (sama seperti kamu)
     let debounceTimeout;
     $('#search').on('input', function () {
         clearTimeout(debounceTimeout);
@@ -361,7 +383,7 @@ $(document).ready(function () {
         }, 300);
     });
 
-    // Tab status order
+    // Tab status order (sama seperti kamu)
     $('#orderStatusTabs .nav-link').on('click', function (e) {
         e.preventDefault();
 
@@ -372,12 +394,13 @@ $(document).ready(function () {
         const params = new URLSearchParams();
         params.set('status', status);
 
-        fetchOrders(params.toString());
+        fetchOrders(params.toString(), true);
     });
 
-    // Initial toggle setup
+    // Initial bind
     bindDropdownToggle();
 });
+
 </script>
 @endpush
 
