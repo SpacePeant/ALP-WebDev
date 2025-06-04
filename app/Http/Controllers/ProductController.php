@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use Exception;
+use Carbon\Carbon;
 use App\Models\Product;
 use App\Models\Category;
 use App\Models\Wishlist;
+use Illuminate\Support\Str;
 use App\Models\ProductColor;
 use Illuminate\Http\Request;
 use App\Models\ProductReview;
@@ -13,6 +16,7 @@ use Illuminate\Support\Carbon;
 use App\Models\ProductColorImage;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Session;
 
 class ProductController extends Controller
@@ -206,75 +210,141 @@ $averageRating = $totalReviews > 0
 
     public function create()
     {
-        $categories = Category::all();
+        $category = Category::all();
         // dd($categories);
-        return view('addproduct', compact('categories'));
+        return view('addproduct', compact('category'));
     }
 
     public function store(Request $request)
-    {
+{
+    // Validasi semua inputan
+    try{
         $validated = $request->validate([
-            'name' => 'required',
-            'category' => 'required|exists:categories,id',
-            'description' => 'required',
-            'price' => 'required|numeric',
-            'color' => 'required|array',
-            'color.*' => 'required|string',
-            'color_code' => 'required|array',
-            'color_code.*' => 'required|string',
-            'size' => 'nullable|array',
-            'gender' => 'nullable|string'
-        ]);
+        'name' => 'required|string|max:100',
+        'category' => 'required|exists:category,id',
+        'description' => 'required|string',
+        'price' => 'required|numeric',
+        'size' => 'nullable|array',
+        'gender' => 'nullable|string',
+        'image_json' => 'required|json',
+    ]);
+    }
+    catch(Exception $g){
 
+    }
+
+    // Parse dan validasi isi image_json
+    $imageData = json_decode($validated['image_json'], true);
+
+    $defaultImage = 'http://alp-webdev-5.test/image/no_image.png';
+
+foreach ($imageData as $index => $color) {
+    $requiredPositions = ['atas', 'bawah', 'kiri', 'kanan'];
+    foreach ($requiredPositions as $pos) {
+        if (!isset($color[$pos]) || $color[$pos] === $defaultImage) {
+            return response()->json([
+                'message' => "Gambar <b>{$pos}</b> untuk warna <b>" . htmlspecialchars($color['color_name']) . "</b> belum diganti dari default.",
+            ], 422);
+        }
+    }
+}
+
+    // Simpan produk utama
     $product = Product::create([
-        'name' => $request->name,
-        'gender' => $request->gender ?? 'Unisex',
-        'description' => $request->description,
-        'price' => $request->price,
+        'name' => $validated['name'],
+        'gender' => $validated['gender'] ?? 'Unisex',
+        'description' => $validated['description'],
+        'price' => $validated['price'],
         'status' => 'active',
-        'category_id' => $request->category,
+        'category_id' => $validated['category'],
     ]);
 
     $colors = [];
-    $imageData = json_decode($request->image_json, true);
+    $imageData = json_decode($validated['image_json'], true);
 
     foreach ($imageData as $entry) {
-        $colorIndex = $entry['colorIndex'];
-        $colorName = $entry['color_name'] ?? 'Unknown';
-        $colorCode = $entry['color_code'] ?? '#000000';
+    $colorIndex = $entry['colorIndex'];
+    $colorName = $entry['color_name'] ?? 'Unknown';
+    $colorCode = $entry['color_code'] ?? '#000000';
 
-        // Simpan warna
-        $color = ProductColor::create([
+    // Simpan warna
+    $color = ProductColor::create([
+    'product_id' => $product->id,
+    'color_name' => $colorName,
+    'color_code_bg' => $colorCode,
+    'color_code' => $colorCode,
+    'is_primary' => ($colorIndex == 0) ? 1 : 0,
+    'status' => 'active'
+]);
+
+    $colors[$colorIndex] = $color;
+
+    // Simpan variasi ukuran (36 - 45)
+    for ($size = 36; $size <= 45; $size++) {
+        ProductVariant::create([
             'product_id' => $product->id,
-            'color_name' => $colorName,
-            'color_code' => $colorCode,
-            'status' => 'active'
+            'color_id' => $color->id,
+            'size' => $size,
+            'stock' => 0,
         ]);
-        $colors[$colorIndex] = $color;
+    }
 
-        // Simpan variant ukuran (36 - 45)
-        for ($size = 36; $size <= 45; $size++) {
-            ProductVariant::create([
-                'product_id' => $product->id,
-                'color_id' => $color->id,
-                'size' => $size,
-                'stock' => 0,
-            ]);
+    // Simpan gambar (mengambil dari URL JSON, bukan file upload)
+     $imagePositions = ['kiri', 'kanan', 'atas', 'bawah'];
+        $savedImages = [];
+
+        foreach ($imagePositions as $position) {
+            $imageBase64 = $entry[$position] ?? '';
+
+            if (empty($imageBase64)) {
+                continue; // Lewati jika tidak ada data gambar di posisi ini
+            }
+
+            // Cek apakah ini base64 image dengan case-insensitive
+            if (preg_match('/^data:image\/(\w+);base64,/i', $imageBase64, $matches)) {
+                $imageEncoded = substr($imageBase64, strpos($imageBase64, ',') + 1);
+                $imageDecoded = base64_decode($imageEncoded);
+
+                if ($imageDecoded === false) {
+                    // Jika gagal decode base64, lewati posisi ini
+                    continue;
+                }
+
+                // Ambil nama file asli dari frontend, kalau tidak ada buat UUID + extension dari tipe
+                $originalFileName = $entry[$position . '_filename'] ?? null;
+
+                if ($originalFileName) {
+                    // Hanya ambil basename agar aman
+                    $fileName = basename($originalFileName);
+                    // Sanitasi nama file, ganti karakter aneh jadi underscore
+                    $fileName = preg_replace('/[^a-zA-Z0-9_\.\-]/', '_', $fileName);
+                } else {
+                    // Gunakan UUID + extensi dari tipe mime
+                    $extension = strtolower($matches[1]) === 'jpeg' ? 'jpg' : strtolower($matches[1]);
+                    $fileName = (string) Str::uuid() . '.' . $extension;
+                }
+
+                // Simpan file ke public/images/sepatu/{posisi}
+                $path = public_path("image/sepatu/{$position}");
+                if (!File::exists($path)) {
+                    File::makeDirectory($path, 0755, true);
+                }
+
+                file_put_contents("{$path}/{$fileName}", $imageDecoded);
+
+                $savedImages["image_$position"] = $fileName;
+            }
         }
 
-        // Simpan gambar
-        $images = $entry['images'] ?? [];
-        ProductColorImage::create([
-            'color_id' => $color->id,
-            'image_kiri' => $images['kiri'] ?? '',
-            'image_kanan' => $images['kanan'] ?? '',
-            'image_atas' => $images['atas'] ?? '',
-            'image_bawah' => $images['bawah'] ?? '',
-        ]);
+        ProductColorImage::create(array_merge(
+            ['color_id' => $color->id],
+            $savedImages
+        ));
     }
 
     return redirect()->route('addproduct')->with('success', 'Product saved successfully!');
 }
+
 
     public function edit($id, $color_id)
     {
@@ -472,7 +542,6 @@ public function search(Request $request)
     return view('partials.admin-list', compact('products'));
 }
 
-
 public function addReview($id, Request $request)
 {
     $request->validate([
@@ -496,3 +565,5 @@ public function addReview($id, Request $request)
     return redirect()->back()->with('success', 'Your review has been submitted!');
 }
 }
+
+

@@ -174,6 +174,7 @@
                 <small>{{ $user->email }}</small>
             </div>
         </div>
+        
 
         <div class="info-row">
             <div>

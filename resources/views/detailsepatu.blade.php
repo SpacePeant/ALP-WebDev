@@ -8,6 +8,12 @@
     $user_id = Session::get('user_id',1)
 @endphp
 
+@if (session('success'))
+    <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
+        {{ session('success') }}
+    </div>
+@endif
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -219,7 +225,7 @@ body {
 }
 
 .buy-now,
-.add-cart, #confirmAddToCart {
+.add-cart, #confirmAddToCart, #add-review-btn, #submitReview {
   padding: 10px 20px;
   color: white;
   border: none;
@@ -227,12 +233,12 @@ body {
   cursor: pointer;
 }
 
-.add-cart, #confirmAddToCart {
+.add-cart, #confirmAddToCart, #add-review-btn {
   background: #444;
   transition: background-color 0.3s;
 }
 
-.add-cart:hover, #confirmAddToCart:hover {
+.add-cart:hover, #confirmAddToCart:hover, #add-review-btn:hover {
   background:black;
 }
 
@@ -281,6 +287,9 @@ body {
   display: none;
 }
 
+#submitReview {
+  background-color: #3085d6;
+}
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -850,6 +859,40 @@ body {
 .modal.modal-bottom .modal-dialog {
   box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.2);
 }
+
+.star-rating input {
+    display: none;
+}
+.star-rating label {
+    color: #ccc;
+}
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+}
+
+/* .star-rating {
+    direction: rtl;
+    font-size: 2rem;
+    unicode-bidi: bidi-override;
+    display: inline-flex;
+}
+
+.star-rating input {
+    display: none;
+}
+
+.star-rating label {
+    color: #ccc;
+    cursor: pointer;
+}
+
+.star-rating input:checked ~ label,
+.star-rating label:hover,
+.star-rating label:hover ~ label {
+    color: gold;
+} */
 
 @media screen and (max-width: 768px) {
   .product-wrapper {
@@ -1641,6 +1684,43 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
   </div>
 </div>
 
+<button id="add-review-btn">
+    Add Review
+</button>
+<div id="review-form" class="mt-4 hidden">
+    <form action="{{ route('product.addReview', $product->product_id) }}" method="POST">
+        @csrf
+
+        <div class="mb-2">
+        <label class="block text-sm font-medium">Rating</label>
+        <div class="star-rating flex flex-row-reverse justify-end text-5xl">
+            <input type="radio" id="star5" name="rating" value="5" required>
+            <label for="star5" class="cursor-pointer text-5xl text-gray-300 hover:text-yellow-400">&#9733;</label>
+            <input type="radio" id="star4" name="rating" value="4">
+            <label for="star4" class="cursor-pointer text-5xl text-gray-300 hover:text-yellow-400">&#9733;</label>
+            <input type="radio" id="star3" name="rating" value="3">
+            <label for="star3" class="cursor-pointer text-5xl text-gray-300 hover:text-yellow-400">&#9733;</label>
+            <input type="radio" id="star2" name="rating" value="2">
+            <label for="star2" class="cursor-pointer text-5xl text-gray-300 hover:text-yellow-400">&#9733;</label>
+            <input type="radio" id="star1" name="rating" value="1">
+            <label for="star1" class="cursor-pointer text-5xl text-gray-300 hover:text-yellow-400">&#9733;</label>
+        </div>
+    </div>
+
+        <div class="mb-2">
+            <label for="review_title" class="block text-sm font-medium">Review Title</label>
+            <input type="text" name="review_title" id="review_title" class="border rounded w-full px-2 py-1" required>
+        </div>
+        <div class="mb-2">
+            <label for="comment" class="block text-sm font-medium">Review</label>
+            <textarea name="comment" id="comment" rows="3" class="border rounded w-full px-2 py-1" required></textarea>
+        </div>
+        <button type="submit" id="submitReview">
+            Submit Review
+        </button>
+    </form>
+</div>
+
   @php
     function maskedName($name) {
       $visible = substr($name, 0, 3);
@@ -1654,6 +1734,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
   class="review-item py-4 border-b last:border-b-0 border-gray-300 {{ $index >= 3 ? 'hidden' : '' }}"
   data-rating="{{ round($review->rating) }}"
 >
+
   <div class="flex items-center justify-between mb-1">
     <div class="font-semibold text-gray-800">{{ maskedName($review->user->name) }}</div>
     <div class="product-rating text-yellow-500 text-sm flex items-center" title="{{ $review->rating }} out of 5 stars ">
@@ -2018,7 +2099,7 @@ if (confirmAddToCartBtn) {
           const bootstrapModal = bootstrap.Modal.getOrCreateInstance(modalElem);
           bootstrapModal.hide();
         }
-        // ✅ Tunggu 300ms biar animasi modal selesai
+     
         setTimeout(() => {
           Swal.fire({
             icon: 'success',
@@ -2058,6 +2139,10 @@ if (confirmAddToCartBtn) {
     });
   });
 }
+
+    document.getElementById('add-review-btn').addEventListener('click', function() {
+        document.getElementById('review-form').classList.toggle('hidden');
+    });
 
 </script>
 

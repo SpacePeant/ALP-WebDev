@@ -234,11 +234,6 @@
         </div>
   </div>
 
-  <!-- Chart / Dashboard Container (tambahkan kontenmu di sini) -->
-  <div id="dashboard-content">
-    <!-- Misal: chart canvas, summary data, dll -->
-  </div>
-
   <div id="dashboardContent"></div>
 
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -267,18 +262,19 @@
 let bestSellerChartInstance; // Tambahkan ini
 
     function fetchDashboardData(year, month = '') {
-      let url = `/report/data?year=${year}`;
-      if (month) url += `&month=${month}`;
+  let url = `/report?year=${year}`;
+  if (month) url += `&month=${month}`;
 
-      fetch(url)
-        .then(res => res.json())
-        .then(data => {
-          renderDashboard(data);
-          renderSalesChart(data.data.labels, data.data.sales.map(Number));
-          renderBestSellerChart(data.bestSellers);
-        })
-        .catch(err => console.error('Error fetching dashboard data:', err));
-    }
+  fetch(url)
+    .then(res => res.json())
+    .then(data => {
+      console.log('Fetched data:', data);
+      renderDashboard(data);
+      renderSalesChart(data.data.labels, data.data.sales.map(Number));
+      renderBestSellerChart(data.bestSellers);
+    })
+    .catch(err => console.error('Error fetching dashboard data:', err));
+}
 
     function renderDashboard(data) {
       const { balance, totalSold, stockAvailable, productStock, bestSellers } = data;
@@ -486,6 +482,7 @@ document.addEventListener('DOMContentLoaded', function () {
     monthSelect.addEventListener('change', updatePDFButton);
 });
 </script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </body>
 </html>
 @endsection
