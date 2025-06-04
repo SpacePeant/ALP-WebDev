@@ -255,42 +255,50 @@
 <script>
   feather.replace();
 
-  // Burger menu toggle
-  const burger = document.getElementById('burger');
-  const mobileMenu = document.getElementById('mobileMenu');
+  // Cegah duplikasi inisialisasi
+  if (!window.headerScriptsInitialized) {
+    const burger = document.getElementById('burger');
+    const mobileMenu = document.getElementById('mobileMenu');
 
-  burger.addEventListener('click', function() {
-    mobileMenu.classList.toggle('show');
-  });
-
-  // User dropdown desktop
-  const userIconDesktop = document.getElementById('userIconDesktop');
-  const userDropdownDesktop = document.getElementById('userDropdownDesktop');
-
-  userIconDesktop.addEventListener('click', function(e) {
-    e.preventDefault();
-    userDropdownDesktop.classList.toggle('show');
-  });
-
-  document.addEventListener('click', function(e) {
-    if (!userIconDesktop.contains(e.target) && !userDropdownDesktop.contains(e.target)) {
-      userDropdownDesktop.classList.remove('show');
+    if (burger && mobileMenu) {
+      burger.addEventListener('click', function () {
+        mobileMenu.classList.toggle('show');
+      });
     }
-  });
 
-  // User dropdown mobile
-  const userIconMobile = document.getElementById('userIconMobile');
-  const userDropdownMobile = document.getElementById('userDropdownMobile');
+    const userIconDesktop = document.getElementById('userIconDesktop');
+    const userDropdownDesktop = document.getElementById('userDropdownDesktop');
 
-  userIconMobile.addEventListener('click', function(e) {
-    e.preventDefault();
-    userDropdownMobile.classList.toggle('show');
-  });
+    if (userIconDesktop && userDropdownDesktop) {
+      userIconDesktop.addEventListener('click', function (e) {
+        e.preventDefault();
+        userDropdownDesktop.classList.toggle('show');
+      });
 
-  document.addEventListener('click', function(e) {
-    if (!userIconMobile.contains(e.target) && !userDropdownMobile.contains(e.target)) {
-      userDropdownMobile.classList.remove('show');
+      document.addEventListener('click', function (e) {
+        if (!userIconDesktop.contains(e.target) && !userDropdownDesktop.contains(e.target)) {
+          userDropdownDesktop.classList.remove('show');
+        }
+      });
     }
-  });
+
+    const userIconMobile = document.getElementById('userIconMobile');
+    const userDropdownMobile = document.getElementById('userDropdownMobile');
+
+    if (userIconMobile && userDropdownMobile) {
+      userIconMobile.addEventListener('click', function (e) {
+        e.preventDefault();
+        userDropdownMobile.classList.toggle('show');
+      });
+
+      document.addEventListener('click', function (e) {
+        if (!userIconMobile.contains(e.target) && !userDropdownMobile.contains(e.target)) {
+          userDropdownMobile.classList.remove('show');
+        }
+      });
+    }
+
+    window.headerScriptsInitialized = true;
+  }
 </script>
 @endpush
