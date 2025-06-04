@@ -2099,7 +2099,7 @@ if (confirmAddToCartBtn) {
           const bootstrapModal = bootstrap.Modal.getOrCreateInstance(modalElem);
           bootstrapModal.hide();
         }
-        // ✅ Tunggu 300ms biar animasi modal selesai
+     
         setTimeout(() => {
           Swal.fire({
             icon: 'success',

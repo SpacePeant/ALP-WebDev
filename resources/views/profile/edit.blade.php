@@ -96,6 +96,18 @@
                             @endif
                         </div>
 
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Address</label>
+                            <input class="form-control" id="address" name="address" type="text" value="{{ old('address', $user->address) }}" required autofocus autocomplete="address">
+                            @error('address') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="name" class="form-label">Phone Number</label>
+                            <input class="form-control" id="phone_number" name="phone_number" type="text" value="{{ old('phone_number', $user->phone_number) }}" required autofocus autocomplete="phone_number">
+                            @error('phone_number') <div class="text-danger">{{ $message }}</div> @enderror
+                        </div>
+
                         <button type="submit" class="btn btn-primary">Save</button>
                         @if (session('status') === 'profile-updated')
                             <span class="ms-3 text-success">Saved.</span>

@@ -59,7 +59,7 @@
       <input type="hidden" name="token" value="{{ $request->route('token') }}">
 
       <div class="form-group text-start">
-        <input type="email" name="email" class="form-control" placeholder="Email" required value="{{ old('email', $request->email) }}">
+        <input type="email" name="email" class="form-control" placeholder="Email" required value="{{ old('email', $request->email) }}" readonly>
       </div>
       <div class="form-group text-start">
         <input type="password" name="password" class="form-control" placeholder="New Password" required>

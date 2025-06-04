@@ -7,7 +7,7 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Display:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
-  
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <style>
     * {
       box-sizing: border-box;
@@ -316,6 +316,9 @@
 .back-to-collection:hover {
     background: #f0f0f0;
 }
+#colorTabContent{
+  margin-right: 50px;
+}
   </style>
 </head>
 <body>
@@ -327,7 +330,7 @@
     </a>
   <h1>Add Product</h1>
 
-  <form method="POST" action="{{ route('addproduct.store') }}" onsubmit="return prepareImageData()">
+  <form method="POST" action="{{ route('addproduct.store') }}" onsubmit="return prepareImageData()" enctype="multipart/form-data">
     @csrf
   <div class="main-container d-flex gap-4 flex-wrap">
     <div class="form-container">
@@ -338,10 +341,10 @@
 
       <div class="form-group">
         <label>Category</label>
-        {{-- <pre>{{ print_r($categories, true) }}</pre> --}}
+        
             <select class="form-select custom-select" name="category" required>
         <option value="">Select Category</option>
-        <?php foreach ($categories as $category): ?>
+        <?php foreach ($category as $category): ?>
           <option value="<?php echo $category->id; ?>"><?php echo $category->name; ?></option>
         <?php endforeach; ?>
       </select>
@@ -371,7 +374,6 @@
       <input type="hidden" name="image_json" id="imageJson">
       <button class="save-btn" type="submit" name="save">Save</button>
       <button type="button" class="btn btn-secondary mt-3" onclick="printColorImagesJSON()">Show JSON</button>
-
     </form>
     </div>
 
@@ -429,9 +431,9 @@
   </div>
 
   <!-- Button to Add Tab -->
-  <button class="btn mt-3" onclick="addNewTab()">+ Add Color Tab</button>
-</div>
+  <button class="btn mt-3" type="button" onclick="addNewTab()">+ Add Color Tab</button>
 
+</div>
   </div>
 <script>
 const placeholderImage = "{{ asset('image/no_image.png') }}";
@@ -441,12 +443,10 @@ let colorImages = [
     colorIndex: 0,
     color_name: "Red",
     color_code: "#ff0000",
-    images: {
       atas: placeholderImage,
       bawah: placeholderImage,
       kiri: placeholderImage,
       kanan: placeholderImage
-    }
   }
 ];
 
@@ -464,21 +464,34 @@ function previewAndStoreImage(index) {
   const file = fileInput.files[0];
   if (!position || !file) return;
 
+  if (!file.type.startsWith("image/")) {
+    alert("File harus berupa gambar (jpeg, png, webp, dll).");
+    return;
+  }
+
+  const maxSize = 2 * 1024 * 1024; // 2MB
+  if (file.size > maxSize) {
+    alert("Ukuran gambar maksimal 2MB.");
+    return;
+  }
+
   const reader = new FileReader();
   reader.onload = function(e) {
-    // Update data JSON
     if (!colorImages[index]) {
       colorImages[index] = { colorIndex: index, images: {} };
     }
-    colorImages[index].images[position] = e.target.result;
 
-    // Update thumbnail image sesuai posisi
+    // Simpan base64 dan nama file asli ke struktur JSON
+    colorImages[index][position] = e.target.result;
+    colorImages[index][`${position}_filename`] = file.name;
+
+    // Update thumbnail
     const thumb = document.getElementById(`thumb-${index}-${position}`);
     if (thumb) {
       thumb.src = e.target.result;
     }
 
-    // Jika posisi yang aktif sama dengan yang diupload, update main image juga
+    // Update main image jika sesuai
     const mainImage = document.getElementById(`mainImage-${index}`);
     const activeThumb = document.querySelector(`#color-content-${index} .thumbnails img.active`);
     if (activeThumb && activeThumb.dataset.pos === position) {
@@ -488,12 +501,12 @@ function previewAndStoreImage(index) {
   reader.readAsDataURL(file);
 }
 
+
 function showMainImage(colorIndex, position) {
   const mainImage = document.getElementById(`mainImage-${colorIndex}`);
-  const images = colorImages[colorIndex]?.images || {};
-
-  // Pakai gambar posisi yang sudah ada, kalau belum ada pakai placeholder
-  const imgSrc = images[position] || placeholderImage;
+  
+  // Ambil gambar base64 langsung dari colorImages[colorIndex][position]
+  const imgSrc = colorImages[colorIndex]?.[position] || placeholderImage;
   mainImage.src = imgSrc;
 
   // Update border active thumbnail
@@ -508,6 +521,7 @@ function showMainImage(colorIndex, position) {
     }
   });
 }
+
 
 function updateColorInfo(index) {
   const wrapper = document.getElementById(`color-content-${index}`);
@@ -555,54 +569,55 @@ function addNewTab() {
   newContent.id = `color-content-${newIndex}`;
   newContent.role = 'tabpanel';
   newContent.innerHTML = `
-    <div class="image-container">
-      <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
-      <select id="position-${newIndex}" class="form-select custom-select" style="margin-bottom:10px;" onchange="enableFileInput(${newIndex})">
-        <option value="">Select Position</option>
-        <option value="atas">Top</option>
-        <option value="bawah">Bottom</option>
-        <option value="kiri">Left</option>
-        <option value="kanan">Right</option>
-      </select>
+  <div class="image-container">
+    <label style="display:block; margin-bottom:10px; font-weight:500;">Upload New Image</label>
+    <select id="position-${newIndex}" class="form-select custom-select" style="margin-bottom:10px;" onchange="enableFileInput(${newIndex})">
+      <option value="">Select Position</option>
+      <option value="atas">Top</option>
+      <option value="bawah">Bottom</option>
+      <option value="kiri">Left</option>
+      <option value="kanan">Right</option>
+    </select>
 
-      <input type="file" id="imageInput-${newIndex}" accept="image/*" disabled style="margin-bottom:10px;" onchange="previewAndStoreImage(${newIndex})"><br>
+    <input type="file" id="imageInput-${newIndex}" accept="image/*" disabled style="margin-bottom:10px;" onchange="previewAndStoreImage(${newIndex})"><br>
 
-      <img src="${placeholderImage}" class="main-image" id="mainImage-${newIndex}" style="width:300px; height:auto; border:1px solid #ccc;">
+    <img src="${placeholderImage}" class="main-image" id="mainImage-${newIndex}">
 
-      <div class="thumbnails" style="margin-top:10px;">
-        <img src="${placeholderImage}" id="thumb-${newIndex}-atas" data-pos="atas"  class="active" onclick="showMainImage(${newIndex}, 'atas')">
-        <img src="${placeholderImage}" id="thumb-${newIndex}-bawah" data-pos="bawah"  onclick="showMainImage(${newIndex}, 'bawah')">
-        <img src="${placeholderImage}" id="thumb-${newIndex}-kiri" data-pos="kiri"  onclick="showMainImage(${newIndex}, 'kiri')">
-        <img src="${placeholderImage}" id="thumb-${newIndex}-kanan" data-pos="kanan"  onclick="showMainImage(${newIndex}, 'kanan')">
-      </div>
-
-      <div class="form-group price-stock mt-4" id="color-content-0">
-  <div style="margin-bottom: 10px;">
-    <label>Color Name</label>
-    <input type="text" name="color_name[]" class="form-control" oninput="updateColorInfo(0)">
-  </div>
-  <div style="margin-bottom: 10px;">
-    <label>Color Code (Hex)</label>
-    <input type="text" name="color_code[]" id="hexColor-0" class="form-control" oninput="updateColorInfo(0)">
-  </div>
-  <div>
-    <label>Color Picker</label>
-    <input type="color" id="colorPicker-0" value="#ff0000" class="form-control form-control-color" onchange="syncPicker(0)">
-  </div>
-</div>
+    <div class="thumbnails" style="margin-top:10px;">
+      <img src="${placeholderImage}" id="thumb-${newIndex}-atas" data-pos="atas" class="active" onclick="showMainImage(${newIndex}, 'atas')">
+      <img src="${placeholderImage}" id="thumb-${newIndex}-bawah" data-pos="bawah" onclick="showMainImage(${newIndex}, 'bawah')">
+      <img src="${placeholderImage}" id="thumb-${newIndex}-kiri" data-pos="kiri" onclick="showMainImage(${newIndex}, 'kiri')">
+      <img src="${placeholderImage}" id="thumb-${newIndex}-kanan" data-pos="kanan" onclick="showMainImage(${newIndex}, 'kanan')">
     </div>
-  `;
+
+    <div class="form-group price-stock mt-4" id="color-form-${newIndex}">
+      <div style="margin-bottom: 10px;">
+        <label>Color Name</label>
+        <input type="text" name="color_name[]" class="form-control" oninput="updateColorInfo(${newIndex})">
+      </div>
+      <div style="margin-bottom: 10px;">
+        <label>Color Code (Hex)</label>
+        <input type="text" name="color_code[]" id="hexColor-${newIndex}" class="form-control" oninput="updateColorInfo(${newIndex})">
+      </div>
+      <div>
+        <label>Color Picker</label>
+        <input type="color" id="colorPicker-${newIndex}" value="#ff0000" class="form-control form-control-color" onchange="syncPicker(${newIndex})">
+      </div>
+    </div>
+  </div>
+`;
   document.getElementById('colorTabContent').appendChild(newContent);
 
   // Update colorImages array
   colorImages[newIndex] = {
     colorIndex: newIndex,
-    images: {
+    color_name: "Red",
+    color_code: "#ff0000",
       atas: placeholderImage,
       bawah: placeholderImage,
       kiri: placeholderImage,
       kanan: placeholderImage
-    }
+
   };
 
   // Aktifkan tab baru
@@ -633,22 +648,28 @@ function printColorImagesJSON() {
 </script>
 <script>
 function prepareImageData() {
-  // Ambil semua field warna dan hex
-  const colorNames = document.querySelectorAll('input[name="color[]"]');
-  const colorCodes = document.querySelectorAll('input[name="color_code[]"]');
+  const defaultImage = "http://alp-webdev-5.test/image/no_image.png";
 
-  colorNames.forEach((input, index) => {
-    if (!colorImages[index]) return;
+  for (let i = 0; i < colorImages.length; i++) {
+    const color = colorImages[i];
+    const positions = ['atas', 'bawah', 'kiri', 'kanan'];
 
-    colorImages[index].color_name = input.value;
-    colorImages[index].color_code = colorCodes[index].value;
-  });
+    for (let pos of positions) {
+      if (color[pos] === defaultImage) {
+        Swal.fire({
+          icon: 'error',
+          title: 'Gagal!',
+          html: `Gambar posisi <b>${pos}</b> untuk warna <b>${color.color_name || 'Tanpa Nama'}</b> belum diganti.`,
+          confirmButtonColor: '#d33'
+        });
+        return false; // ← batalkan submit
+      }
+    }
+  }
 
-  // Simpan ke hidden input agar ikut terkirim
-  const json = JSON.stringify(colorImages);
-  document.getElementById('imageJson').value = json;
-
-  return true; // agar form tetap dikirim
+  // Jika semua valid, lanjut submit
+  document.getElementById("imageJson").value = JSON.stringify(colorImages);
+  return true;
 }
 
 

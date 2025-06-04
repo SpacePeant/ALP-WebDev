@@ -19,7 +19,7 @@ class RoleMiddleware
     public function handle(Request $request, Closure $next, string $role)
     {
         if (!Auth::check() || Auth::user()->role !== $role) {
-            abort(403, 'Unauthorized.');
+            return redirect()->route('login')->with('error', 'Please login with the correct role to access this page.');
         }
 
         return $next($request);
