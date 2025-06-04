@@ -168,7 +168,7 @@ Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('ar
 Route::match(['get', 'post'], '/detail', [CollectionController::class, 'detail'])->name('detail');
 Route::get('/product-list', [CollectionController::class, 'productList'])->name('product.list');
 
-require _DIR_.'/auth.php';
+require __DIR__.'/auth.php';
 
 
 
