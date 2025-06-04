@@ -1,8 +1,11 @@
 @extends('base.base1')
 
+
 @section('title', 'Home')
 
-@section('content') 
+
+@section('content')
+
 
 <!DOCTYPE html>
 <html lang="id">
@@ -13,6 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
 
+
     <style>
       * {
       margin: 0;
@@ -21,28 +25,34 @@
       font-family: "Red Hat Text", sans-serif;
     }
 
+
 #carouselExample{
   margin-top :100px;
 }
 
 /* CAROUSEL */
 
+
 #carouselExample{
   margin-top :100px;
 }
+
 
 .haha {
   display: flex;
   margin: 0px 60px 20px 60px;
 }
 
+
 .besar {
   margin-right: 20px;
 }
 
+
 .kecil {
   margin-bottom: 20px;
 }
+
 
 .carousel-image-large {
   height: 100%;
@@ -50,13 +60,16 @@
   border-radius: 10px;
 }
 
+
 .carousel-image-small {
   height: auto;
   width: 100%;
   border-radius: 10px;
 }
 
+
 /* EMAIL ME */
+
 
 .wrapper {
   display: flex;
@@ -65,6 +78,7 @@
   height: 100%;
   margin-bottom: 50px;
 }
+
 
 .coupon-container {
   position: relative;
@@ -75,6 +89,7 @@
   border-radius: 10px;
   overflow: hidden;
 }
+
 
 .background-text {
   position: absolute;
@@ -91,6 +106,7 @@
   z-index: 0;
 }
 
+
 .content {
   position: relative;
   display: flex;
@@ -99,6 +115,7 @@
   z-index: 1;
 }
 
+
 .coupon-text h1 {
   font-size: 25px;
   margin: 0;
@@ -106,15 +123,18 @@
   font-weight: bold;
 }
 
+
 .coupon-text p {
   font-size: 18px;
   color: #737373;
   margin-top: 10px;
 }
 
+
 .playfair {
   font-family: "Playfair Display", serif;
 }
+
 
 .email-button {
   background: #000;
@@ -126,7 +146,9 @@
   cursor: pointer;
 }
 
+
 /* NEW */
+
 
 .newbrand {
   display: flex;
@@ -135,6 +157,7 @@
   height: 100%;
   width: 100%;
 }
+
 
 .product-container {
   position: relative;
@@ -145,6 +168,7 @@
   transition: 0.7s;
   max-height: 500px;
 }
+
 
 /* .product-container:hover {
   background-color: #6b1c1c;
@@ -176,11 +200,15 @@
   position: relative;
   z-index: 1;
 }
+}
+
+
 .product-container:hover .bekatas,
 .product-container:hover .bekbawah {
   color: #000;
   transition: 0.7s;
 }
+
 
 /* .product-container:hover .product-info h2 {
   color: #fff;
@@ -191,6 +219,7 @@
   color: {{ $newestProduct->color_font }};
   transition: 0.7s;
 }
+
 
 .bekatas,
 .bekbawah {
@@ -208,15 +237,18 @@
   transition: 0.7s;
 }
 
+
 .bekatas {
   position: absolute;
   top: 65px;
   margin-left: 250px;
 }
 
+
 .bekbawah {
   margin-left: 500px;
 }
+
 
 .product-content {
   position: relative;
@@ -225,6 +257,7 @@
   align-items: center;
   z-index: 1;
 }
+
 
 .product-content {
   height: 100%;
@@ -248,11 +281,13 @@
   margin-left: 200px;
 }
 
+
 .product-info {
   text-align: right;
   margin-right: 100px;
   transition: 0.7s;
 }
+
 
 .product-info h2 {
   font-size: 32px;
@@ -261,6 +296,7 @@
   margin-bottom: 20px;
   transition: 0.7s;
 }
+
 
 .shop-button {
   background: #000;
@@ -273,11 +309,14 @@
   transition: background 0.3s ease;
 }
 
+
 .shop-button:hover {
   background: #333;
 }
 
+
 /* KEPO */
+
 
 .kepo {
   background-image: url("image/kepo.png");
@@ -293,16 +332,19 @@
   padding: 20px;
 }
 
+
 .cta-content {
   z-index: 2;
   color: #fff;
 }
+
 
 .cta-content h1 {
   font-size: 48px;
   font-weight: 800;
   margin: 60px;
 }
+
 
 .cta-button {
   background-color: #e26d5c;
@@ -315,9 +357,11 @@
   transition: background 0.3s;
 }
 
+
 .cta-button:hover {
   background-color: #cf5a49;
 }
+
 
 /* Responsive */
 @media (max-width: 768px) {
@@ -325,15 +369,18 @@
     font-size: 32px;
   }
 
+
   .cta-button {
     padding: 10px 20px;
     font-size: 14px;
   }
 }
 
+
 .color-filter {
   margin-bottom: 20px;
 }
+
 
 .color-filter h3 {
   color: #e26d5c;
@@ -342,11 +389,13 @@
   margin-bottom: 10px;
 }
 
+
 .colors {
   display: grid;
   grid-template-columns: repeat(6, 30px);
   gap: 10px;
 }
+
 
 .color {
   width: 30px;
@@ -357,6 +406,7 @@
   transition: transform 0.2s;
 }
 
+
 .color::before {
   content: "";
   display: block;
@@ -366,13 +416,16 @@
   background-color: inherit;
 }
 
+
 .color {
   background-color: var(--color, transparent);
 }
 
+
 .color:hover {
   transform: scale(1.1);
 }
+
 
 .background-area {
   margin-top: 30px;
@@ -383,6 +436,7 @@
   border-radius: 8px;
 }
 
+
 .top-product h2{
       margin:30px 80px 20px 90px
 }
@@ -390,17 +444,19 @@
       margin:30px 80px 20px 90px
 }
 
+
     .product-card {
-        background-color: #fff; 
+        background-color: #fff;
         border: 1px solid #ddd;
         border-radius: 8px;
         width: 240px;
         padding: 15px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         text-align: center;
-        transition: transform 0.3s, background-color 0.3s; 
+        transition: transform 0.3s, background-color 0.3s;
         position: relative;
     }
+
 
     .product-card img {
         max-width: 100%;
@@ -410,32 +466,37 @@
         transition: transform 0.3s ease-in-out;
     }
 
+
     .product-card:hover img {
-        transform: rotate(0deg); 
+        transform: rotate(0deg);
     }
+
 
 .product-card:hover {
     background-color: var(--bg-color);
     color: var(--font-color);
 }
 
+
 .product-card:hover h3,
 .product-card:hover p {
     color: var(--font-color);
 }
     .product-card:hover {
-        transform: translateY(-10px); 
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
-        background-color: var(--bg-color); 
+        transform: translateY(-10px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        background-color: var(--bg-color);
     }
+
 
     .product-card h3 {
         transition: all 0.3s ease;
         font-size: 18px;
         margin: 10px 0;
-        color: inherit; 
+        color: inherit;
         color: #333;
     }
+
 
     .product-card p {
         transition: all 0.3s ease;
@@ -446,6 +507,7 @@
     display: none;
 }
 
+
 .horizontal-scroll-wrapper, .horizontal-scroll-wrapperr {
   display: flex;
   gap: 100px;
@@ -455,18 +517,21 @@
   margin: 0px 40px;
 }
 
+
 .horizontal-scroll-wrapperr{
   justify-content:center;
 }
 
+
 .horizontal-scroll-wrapper::-webkit-scrollbar,
 .horizontal-scroll-wrapperr::-webkit-scrollbar {
-  display: none; 
+  display: none;
 }
+
 
 .product-link {
   flex: 0 0 auto;
-  width: 200px; 
+  width: 200px;
   scroll-snap-align: start;
   text-decoration:none;
 }
@@ -478,10 +543,12 @@
     display: block;
   }
 
+
   .ttop-product {
     display: none;
   }
 }
+
 
 .HUHU h5 {
   font-size: 20px;
@@ -493,15 +560,18 @@
   font-size: 32px;
 }
 
+
 /* Medium screen: max 1250px */
 @media screen and (max-width: 1250px) {
   .HUHU h5 {
     font-size: 16px;
   }
 
+
   .HUHU p {
     font-size: 14px;
   }
+
 
   #best h3{
     font-size: 24px;
@@ -511,15 +581,18 @@
   }
 }
 
+
 /* Small screen: max 992px */
 @media screen and (max-width: 992px) {
   .HUHU h5 {
     font-size: 14px;
   }
 
+
   .HUHU p {
     font-size: 13px;
   }
+
 
   #best h3{
     font-size: 20px;
@@ -536,19 +609,23 @@
 }
 }
 
+
 /* Extra small screen: max 700px */
 @media screen and (max-width: 700px) {
   .HUHU h5 {
     font-size: 12px;
   }
 
+
   .HUHU p {
     font-size: 12px;
   }
 
+
   #best h3{
     font-size: 18px;
   }
+
 
   .coupon-text h1{
     font-size:20px;
@@ -571,19 +648,23 @@
 }
 }
 
+
 /* Very small screens: max 500px */
 @media screen and (max-width: 576px) {
   .HUHU h5 {
     font-size: 10px;
   }
 
+
   .HUHU p {
     font-size: 10px;
   }
 
+
   #best h3{
     font-size: 14px;
   }
+
 
   .coupon-text h1{
     font-size:17px;
@@ -643,6 +724,7 @@
   </head>
   <body>
 
+
     <div class="container my-5">
       <div
         id="carouselExample"
@@ -689,6 +771,7 @@
             </div>
           </div>
 
+
           <div class="carousel-item">
             <div class="haha">
               <div class="besar">
@@ -726,6 +809,7 @@
               </div>
             </div>
           </div>
+
 
           <div class="carousel-item">
             <div class="haha">
@@ -768,9 +852,11 @@
       </div>
     </div>
 
+
     <div class="wrapper">
       <div class="coupon-container">
         <div class="background-text">10% OFF</div>
+
 
         <div class="content row">
           <div class="coupon-text col-8">
@@ -781,6 +867,7 @@
         </div>
       </div>
     </div>
+
 
     <div class="newbrand">
       <div class="product-container">
@@ -805,6 +892,7 @@
       </div>
     </div>
 
+
     <div class="top-product flex flex-col items-center justify-center text-center mt-10 mb-5">
       <h2 class="text-xl font-bold mb-4" style = "margin-top: 60px;"><strong>Best Seller</strong></h2>
       <div class="horizontal-scroll-wrapper">
@@ -823,6 +911,7 @@
         @endforelse
       </div>
     </div>
+
 
     <div class="ttop-product flex flex-col items-center justify-center text-center mt-10 mb-5">
       <h2 class="text-xl font-semibold mb-4" style = "margin-top: 60px;"><strong>Best Seller</strong></h2>
@@ -843,8 +932,10 @@
       </div>
     </div>
 
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+
 
 <div class="container py-5">
   <div class="row align-items-center">
@@ -853,11 +944,12 @@
       <img src="{{ asset('image/huhah.png') }}" alt="Shoes" class="img-fluid rounded">
     </div>
     <div class="col-1 mb-4 mb-lg-0 text-center">
-      
+     
     </div>  
     <!-- Teks fitur -->
     <div class="col-5" id="best">
       <h3 class="fw-bold mb-4">DESIGNED TO<br>PERFORM</h3>
+
 
       <div class="mb-4 d-flex">
         <div class="me-3">
@@ -869,6 +961,7 @@
         </div>
       </div>
 
+
       <div class="mb-4 d-flex">
         <div class="me-3">
           <i class="bi bi-link-45deg fs-3 text-dark"></i>
@@ -878,6 +971,7 @@
           <p class="mb-0">Built to last with looks that fit any style.</p>
         </div>
       </div>
+
 
       <div class="d-flex">
         <div class="me-3">
@@ -892,6 +986,7 @@
   </div>
 </div>
 
+
     <section class="kepo">
       <div class="cta-content">
         <h1>WANT TO KNOW US MORE?</h1>
@@ -899,14 +994,17 @@
       </div>
     </section>
 
+
     <!-- Link FontAwesome buat icon -->
     <script
       src="https://kit.fontawesome.com/yourfontawesomekit.js"
       crossorigin="anonymous"
     ></script>
 
+
     <!-- Bootstrap JS Bundle -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
 
     <script>
       feather.replace();
@@ -914,3 +1012,7 @@
   </body>
 </html>
 @endsection
+
+
+
+

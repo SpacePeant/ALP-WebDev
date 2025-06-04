@@ -239,4 +239,3 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::post('/detail_sepatu/{id}/add-review', [ProductController::class, 'addReview'])->name('product.addReview');
-
