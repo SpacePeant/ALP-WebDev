@@ -163,6 +163,145 @@
   transform: scale(1.05);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15);
 }
+
+@media (max-width: 575.98px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr); /* Tetap 2 kolom */
+    gap: 12px;
+    padding: 0 12px;
+  }
+
+  .container {
+    padding: 16px;
+  }
+
+  .product-card {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  .product-card img {
+    width: 100%;
+    height: auto;
+  }
+
+  h1 {
+    /* font-size: 20px; */
+    margin-top: 80px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+
+  .btn,
+  .form-select,
+  .form-control {
+    font-size: 14px;
+  }
+
+  /* Wrapper untuk tombol dan filter: susun vertikal
+  .d-flex.justify-content-between.flex-wrap.align-items-end.mb-4 {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding: 0 12px;
+  }
+
+
+  .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .hahi {
+    width: 100%;
+  }
+
+  .hahi .d-flex {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 8px;
+  }
+
+  .hahi .d-flex > select {
+    align-self: flex-end;
+    width: fit-content;
+  }
+
+  .hahi .d-flex > div {
+    width: 100%;
+    margin: 0;
+  }
+
+  #search {
+    width: 100%;
+  } */
+}
+
+/* ≥576px – 767px = 2 kolom */
+@media (min-width: 576px) and (max-width: 767.98px) {
+  .product-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    padding: 0 16px;
+  }
+
+  .container {
+    padding: 24px;
+  }
+ h1 {
+    /* font-size: 20px; */
+    margin-top: 80px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+}
+
+/* ≥768px – 991px = 3 kolom */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .product-grid {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    padding: 0 24px;
+  }
+
+  .container {
+    padding: 32px;
+  }
+
+   h1 {
+    /* font-size: 20px; */
+    margin-top: 80px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+}
+
+/* ≥992px – 1199px = 4 kolom */
+@media (min-width: 992px) and (max-width: 1199.98px) {
+  .product-grid {
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    padding: 0 30px;
+  }
+
+  .container {
+    padding: 36px;
+  }
+}
+
+/* ≥1200px = 5 kolom */
+@media (min-width: 1200px) {
+  .product-grid {
+    grid-template-columns: repeat(5, 1fr);
+    gap: 30px;
+    padding: 0; /* sudah center via margin auto */
+  }
+
+  .container {
+    padding: 40px;
+  }
+}
   </style>
 </head>
 <body>
@@ -170,33 +309,63 @@
 <div class="container">
 <h1>Product</h1>
 
-<div class="d-flex justify-content-between flex-wrap align-items-end mb-4" style = "margin-left: 15px;">
-  <a href="{{ route('addproduct') }}" class="btn d-flex align-items-center gap-2 mb-2" style="height: fit-content;">
+<div class="d-flex justify-content-between align-items-end mb-4 d-none d-md-flex">
+  <!-- Tombol Add New Product di kiri -->
+  <a href="{{ route('addproduct') }}" class="btn d-flex align-items-center gap-2 mb-2" style="height: fit-content; margin-left: 0;">
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
       <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0-1A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
       <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
     </svg>
     <span>Add New Product</span>
   </a>
-        <div class="hahi">
-          
-    <div class="d-flex gap-3 align-items-end">
-<label for="search_by" class="form-label">Search by</label>
+
+  <!-- Wrapper search di kanan -->
+  <div class="d-flex align-items-end gap-3">
+    <div>
+      <label for="search_by" class="form-label mb-1">Search by</label><br>
       <select id="search_by" name="search_by" class="form-select">
         <option value="product_id">Product ID</option>
         <option value="product_name">Product Name</option>
       </select>
+    </div>
 
-          <div>
-      <label for="search" class="form-label mb-1">&nbsp;</label> <!-- spacer supaya input rata bawah dengan select -->
+    <div style="min-width: 200px; margin-right: 10px">
+      <label for="search" class="form-label mb-1">&nbsp;</label>
       <input type="text" id="search" name="search" class="form-control" placeholder="Search">
     </div>
-    </div>
-        </div>
-
-  
+  </div>
 </div>
 
+
+<div class="d-block d-md-none mb-4 px-3">
+
+  <div class="row g-2 align-items-center mb-2">
+    <!-- Kiri: Tombol Add -->
+    <div class="col-6 ps-0">
+  <a href="{{ route('addproduct') }}" class="btn w-100 d-flex align-items-center gap-2 ps-1">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" class="bi bi-plus-circle" viewBox="0 0 16 16">
+      <path d="M8 15A7 7 0 1 0 8 1a7 7 0 0 0 0 14zm0-1A6 6 0 1 1 8 2a6 6 0 0 1 0 12z"/>
+      <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z"/>
+    </svg>
+    <span>Add New Product</span>
+  </a>
+</div>
+
+    <!-- Kanan: Label + Select Search By -->
+    <div class="col-6 d-flex align-items-center justify-content-end">
+      <label for="search_by_mobile" class="me-2 mb-0 small">Search by</label>
+      <select id="search_by_mobile" name="search_by" class="form-select form-select-sm w-auto">
+        <option value="product_id">Product ID</option>
+        <option value="product_name">Product Name</option>
+      </select>
+    </div>
+  </div>
+
+  <!-- Full Width: Input Search -->
+  <div>
+    <input type="text" id="search_mobile" name="search" class="form-control" placeholder="Search">
+  </div>
+</div>
 
 <div id="product-list">
     @include('partials.admin-list', ['products' => $products])

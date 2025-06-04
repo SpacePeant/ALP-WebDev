@@ -16,17 +16,17 @@
             <div class="row mb-3">
                 <div class="col">
                     <p>Name</p>
-                    <input type="text" class="form-control" value="{{ $customer->name }}" readonly>
+                    <input type="text" class="form-control" value="{{ $customer->name }}">
                 </div>
                 <div class="col">
                     <p>Phone Number</p>
-                    <input type="text" class="form-control" value="{{ $customer->phone_number }}" readonly>
+                    <input type="text" class="form-control" value="{{ $customer->phone_number }}">
                 </div>
             </div>
 
             <div class="mb-4">
                 <p>Address</p>
-                <input type="text" class="form-control" value="{{ $customer->address }}" readonly>
+                <input type="text" class="form-control" value="{{ $customer->address }}">
             </div>
 
             <h5>Products</h5><br>

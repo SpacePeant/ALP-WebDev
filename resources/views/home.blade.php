@@ -24,6 +24,7 @@
 #carouselExample{
   margin-top :100px;
 }
+
 /* CAROUSEL */
 
 #carouselExample{
@@ -142,21 +143,52 @@
   width: 100%;
   overflow: hidden;
   transition: 0.7s;
+  max-height: 500px;
 }
 
-.product-container:hover {
+/* .product-container:hover {
   background-color: #6b1c1c;
   transition: 0.7s;
+} */
+
+/* .product-container:hover {
+    background-color: {{ $newestProduct->color_code_bg }};
+    transition: 0.7s;
+  } */
+
+  .product-container::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: {{ $newestProduct->color_code_bg }};
+  opacity: 0;
+  transition: opacity 0.7s ease;
+  z-index: 0;
 }
 
+.product-container:hover::before {
+  opacity: 0.8;
+}
+
+.product-container > * {
+  position: relative;
+  z-index: 1;
+}
 .product-container:hover .bekatas,
 .product-container:hover .bekbawah {
   color: #000;
   transition: 0.7s;
 }
 
-.product-container:hover .product-info h2 {
+/* .product-container:hover .product-info h2 {
   color: #fff;
+  transition: 0.7s;
+} */
+
+.product-container:hover .product-info h2 {
+  color: {{ $newestProduct->color_font }};
   transition: 0.7s;
 }
 
@@ -194,10 +226,26 @@
   z-index: 1;
 }
 
+.product-content {
+  height: 100%;
+  display: flex;
+  align-items: center;
+}
+  
 .product-image img {
-  width: 600px;
-  height: auto;
-  margin-left: 100px;
+  transition: transform 0.5s ease;
+  transform-origin: center;
+}
+
+.product-container:hover .product-image img {
+  transform: rotate(-20deg) scale(1.75);
+}
+
+.product-image img {
+  width: auto;
+  transform: scale(1.75);
+  transform-origin: center;
+  margin-left: 200px;
 }
 
 .product-info {
@@ -480,7 +528,8 @@
     font-size: 20px;
   }
   .product-image img {
-  margin-left: 40px;
+  margin-left: 110px;
+  width: 200px;
 }
 .shop-button{
   font-size: 14px;
@@ -514,7 +563,7 @@
     font-size: 16px;
   }
   .product-image img {
-  margin-left: 0px;
+  margin-left: 60px;
 }
 .shop-button{
   font-size: 10px;
@@ -523,7 +572,7 @@
 }
 
 /* Very small screens: max 500px */
-@media screen and (max-width: 500px) {
+@media screen and (max-width: 576px) {
   .HUHU h5 {
     font-size: 10px;
   }
@@ -546,18 +595,39 @@
     font-size:10px;
   }
   .product-info h2{
-    font-size: 12px;
-  }
-  .product-info{
-    margin-right: 30px;
+    font-size: 16px;
   }
   .product-image img {
-  margin-left: 0px;
+  margin-left: 60px;
+  width: 150px;
 }
 .shop-button{
   font-size: 6px;
-    padding: 5px 20px;
+  padding: 5px 20px;
 }
+}
+
+@media (max-width: 500px) {
+  .product-content {
+    margin-right: -100px;
+  }
+
+  .product-image img {
+    width: 110px;
+    margin-left: 20px;
+  }
+
+  .product-info h2 {
+    font-size: 13px;
+    line-height: 1.2;
+    margin: 0;
+  }
+
+  .shop-button {
+    font-size: 10px;
+    padding: 4px 12px;
+    white-space: nowrap; /* Jangan pecah ke bawah */
+  }
 }
     </style>
     <!-- Bootstrap CSS -->
@@ -715,18 +785,23 @@
     <div class="newbrand">
       <div class="product-container">
         <div class="bekatas">NEW</div>
-        <div class="bekbawah">ITEM</div>
+        <div class="bekbawah" style="padding-bottom: 40px">ITEM</div>
+<div class="product-content d-flex align-items-center" style="height: 100%;">
+  <div class="product-image me-4">
+    <img src="{{ asset('image/sepatu/kiri/' . $newestProduct->image_kiri) }}" 
+         alt="{{ $newestProduct->name }}" 
+         class="img-fluid rotated-img" 
+         style="max-height: 250px; object-fit: contain;" />
+  </div>
 
-        <div class="product-content row">
-          <div class="product-image col-5">
-            <img src="{{ asset('image/new.png') }}" alt="New Shoes" class="img-fluid"/>
-          </div>
-
-          <div class="product-info col-4">
-            <h2>The Air Jordan 1 Low<br />Phantom Night Maroon</h2>
-            <button class="shop-button" onclick="window.location.href='{{ route('detail') }}'">SHOP NOW</button>
-          </div>
-        </div>
+  <div class="product-info">
+    <h2>{{ $newestProduct->name }}</h2>
+    <button class="shop-button" 
+            onclick="window.location.href='{{ route('detail_sepatu.show', ['id' => $newestProduct->id]) }}'">
+      SHOP NOW
+    </button>
+  </div>
+</div>
       </div>
     </div>
 
@@ -782,7 +857,7 @@
     </div>  
     <!-- Teks fitur -->
     <div class="col-5" id="best">
-      <h3 class="fw-bold mb-4">BEST FEATURE<br>IN SHOES</h3>
+      <h3 class="fw-bold mb-4">DESIGNED TO<br>PERFORM</h3>
 
       <div class="mb-4 d-flex">
         <div class="me-3">
