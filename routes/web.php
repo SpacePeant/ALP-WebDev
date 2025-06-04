@@ -22,8 +22,8 @@ use App\Http\Controllers\CollectionController;
 // ==============================
 // GENERAL & LANDING PAGE ROUTES
 // ==============================
-Route::get('/', function () {
-    return view('welcome');
+Route::get('', function () {
+    return view('auth.login');
 });
 Route::get('/about-us', fn() => view('aboutus'))->name('about');
 Route::get('/collection', fn() => view('collection'))->name('collection');
