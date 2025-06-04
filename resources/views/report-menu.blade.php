@@ -224,7 +224,7 @@
     </div>
 
     <!-- Tombol PDF -->
-    <div class="col-auto d-flex align-items-end gap-2">
+    <div class="col-auto d-flex align-items-end gap-2" style="margin-bottom:10px;">
             <a id="pdf-button"
                   href="#"
                   class="btn btn-danger d-none"

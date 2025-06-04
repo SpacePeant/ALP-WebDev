@@ -34,9 +34,9 @@
       <div class="order-details-wrapper">
         <div class="order-details-content">
           <hr>
-          <p>Customer: {{ $order->customer_name }}</p>
-          <p>Phone No.: {{ $order->phone_number }}</p>
-          <p>Shipped To: {{ $order->customer_address }}</p>
+          <p>Customer: {{ $order->cust_name }}</p>
+          <p>Phone No.: {{ $order->cust_phone_number }}</p>
+          <p>Shipped To: {{ $order->cust_address }}</p>
           <p>Payment Method: {{ $order->payment_method }}</p>
           <hr>
           <p class="mb-2">Products</p>
@@ -149,3 +149,5 @@
     </nav>
 @endif
 </div>
+
+<span id="total-orders" hidden>{{ $orders->total() }}</span>

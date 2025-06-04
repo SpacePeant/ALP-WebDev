@@ -12,22 +12,24 @@
         {{-- Customer Info --}}
         <div class="col-md-8">
             <h5>Customer Information</h5><br>
+                    <form method="POST" action="{{ route('checkout.payNow') }}">
+                @csrf
 
-            <div class="row mb-3">
-                <div class="col">
-                    <p>Name</p>
-                    <input type="text" class="form-control" value="{{ $customer->name }}">
-                </div>
-                <div class="col">
-                    <p>Phone Number</p>
-                    <input type="text" class="form-control" value="{{ $customer->phone_number }}">
-                </div>
+        <div class="row mb-3">
+            <div class="col">
+                <p>Name</p>
+                <input type="text" class="form-control" name="cust_name" id="cust_name" value="{{ old('cust_name', $customer->name ?? '') }}">
             </div>
+            <div class="col">
+                <p>Phone Number</p>
+                <input type="text" class="form-control" name="cust_phone_number" id="cust_phone_number" value="{{ old('cust_phone_number', $customer->phone_number ?? '') }}">
+            </div>
+        </div>
+        <div class="mb-4">
+            <p>Address</p>
+            <input type="text" class="form-control" name="cust_address" id="cust_address" value="{{ old('cust_address', $customer->address ?? '') }}">
+        </div>
 
-            <div class="mb-4">
-                <p>Address</p>
-                <input type="text" class="form-control" value="{{ $customer->address }}">
-            </div>
 
             <h5>Products</h5><br>
 
@@ -74,8 +76,8 @@
 
         {{-- Order Summary & Payment --}}
         <div class="col-md-4">
-            <form method="POST" action="{{ route('checkout.payNow') }}">
-                @csrf
+            {{-- <form method="POST" action="{{ route('checkout.payNow') }}">
+                @csrf --}}
                 <div class="border p-3 rounded">
                     <h6>Order Summary</h6>
 
@@ -96,7 +98,7 @@
                         </strong>
                     </div>
                     <input type="hidden" name="payment_method" id="payment_method_input" value="cash">
-                    <button type="submit" name="pay_now" class="btn btn-dark w-100">Pay Now</button>
+                    <button type="submit" name="pay_now" class="btn w-100 hover-black" style="background-color: #444; color: white;">Pay Now</button>
                 </div>
             </form>
         </div>
@@ -279,6 +281,18 @@ document.addEventListener("DOMContentLoaded", function () {
 
 </script>
 
+<script>
+    document.getElementById('input_name').addEventListener('input', function() {
+        document.getElementById('cust_name').value = this.value;
+    });
+    document.getElementById('input_phone').addEventListener('input', function() {
+        document.getElementById('phone_number').value = this.value;
+    });
+    document.getElementById('input_address').addEventListener('input', function() {
+        document.getElementById('address').value = this.value;
+    });
+</script>
+
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
@@ -336,10 +350,10 @@ document.addEventListener("DOMContentLoaded", function () {
         text-align: center;
         display: inline-block;
     }
-    .payment-btn.active {
-        background-color: #333;
+    /* .payment-btn.active {
+        background-color: black;
         color: white;
-    }
+    } */
     .popup {
         position: fixed;
         top: 0; left: 0;
@@ -422,6 +436,10 @@ document.addEventListener("DOMContentLoaded", function () {
 .btn-minus:disabled,
 .btn-plus:disabled {
     opacity: 0.5;
+}
+
+.hover-black:hover {
+    background-color: black !important;
 }
 </style>
 @endsection

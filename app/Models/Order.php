@@ -14,7 +14,10 @@ class Order extends Model
         'order_date',
         'status',
         'total_amount',
-        'payment_method'
+        'payment_method',
+        'cust_name',
+        'cust_phone_number',
+        'cust_address',
     ];
 
     // Relasi ke Customer
@@ -32,5 +35,10 @@ class Order extends Model
     public function details()
 {
     return $this->hasMany(\App\Models\OrderDetail::class, 'order_id');
+}
+
+public function getRouteKeyName()
+{
+    return 'order_id';  // jadi Laravel pakai kolom order_id untuk route model binding
 }
 }

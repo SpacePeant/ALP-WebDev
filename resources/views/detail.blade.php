@@ -1,12 +1,16 @@
 @extends('base.base1')
 
+
 @section('title', 'Home')
 
-@section('content') 
+
+@section('content')
+
 
 @php
     $user_id = $user_id ?? null;
 @endphp
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -19,11 +23,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
 
+
   <style>
     * {
         font-family: 'Red Hat Text', sans-serif;
     }
-    
+   
     /* CAROUSEL */
     .carousel-image-large {
         height: 100%;
@@ -35,11 +40,13 @@
     margin-top : 70px;
     }
 
+
     .carousel-item img {
     width: 100%;
-    height: auto; 
-    object-fit: contain; 
+    height: auto;
+    object-fit: contain;
     }
+
 
     .carousel-caption-center {
     margin-top: 30px;
@@ -49,13 +56,15 @@
     color: black;
     text-align: left;
     width: 100%;
-    max-width: 40%; 
+    max-width: 40%;
     padding: 0 15px;
     }
+
 
     #car{
         margin-bottom: 50px;
     }
+
 
     .carousel-caption-center h2 {
     font-family: 'Red Hat Text', sans-serif;
@@ -64,6 +73,7 @@
     margin-bottom: 30px;
     }
 
+
     .carousel-caption-center p {
     font-family: 'Red Hat Text', sans-serif;
     font-size: 1.2rem;
@@ -71,10 +81,12 @@
     margin-bottom: 50px;
     }
 
+
     .carousel-caption-center a {
     color: black;
     text-decoration: none;
     }
+
 
     @media (max-width: 992px) {
     .carousel-caption-center h2 {
@@ -82,35 +94,41 @@
         margin-top: -20px;
     }
 
+
     .carousel-caption-center p {
         font-size: 1rem;
         margin-bottom: -10px;
     }
 
+
     .carousel-caption-center a {
         font-size: 1rem;
     }
     }
 
+
     @media (max-width: 768px) {
     .carousel-caption-center h2 {
-        font-size: 1.5rem; 
+        font-size: 1.5rem;
     }
 
+
     .carousel-caption-center p {
-        font-size: 0.7rem; 
+        font-size: 0.7rem;
         margin-top: -10px;
     }
     .carousel-caption-center a {
-        font-size: 0.7rem; 
+        font-size: 0.7rem;
     }
     }
+
 
     @media (max-width: 576px) {
     .carousel-caption-center h2 {
         font-size: 1.2rem;
         margin-top: -10px;
     }
+
 
     .carousel-caption-center p{
         font-size: 0.5rem;
@@ -121,12 +139,14 @@
     }
     }
 
+
     @media (max-width: 414px){
         .carousel-caption-center h2 {
         font-size: 1.2rem;
         margin-top: -30px;
     }
     }
+
 
     body {
     font-family: Arial, sans-serif;
@@ -135,9 +155,11 @@
     /* padding: 20px; */
     }
 
+
     h1 {
         text-align: center;
     }
+
 
     .product-grid {
         display: flex;
@@ -146,18 +168,20 @@
         gap: 20px;
     }
 
+
     .product-card {
-        background-color: #fff; 
+        background-color: #fff;
         border: 1px solid #ddd;
         border-radius: 8px;
         width: 250px;
         padding: 15px;
         box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         text-align: center;
-        transition: transform 0.3s, background-color 0.3s; 
+        transition: transform 0.3s, background-color 0.3s;
         position: relative;
         height: 100%;
     }
+
 
     .product-card img {
         max-width: 100%;
@@ -167,37 +191,43 @@
         transition: transform 0.3s ease-in-out;
     }
 
+
     .product-card:hover img {
-        transform: rotate(0deg); 
+        transform: rotate(0deg);
     }
+
 
 .product-card:hover {
     background-color: var(--bg-color);
     color: var(--font-color);
 }
 
+
 .product-card:hover h3,
 .product-card:hover p {
     color: var(--font-color);
 }
     .product-card:hover {
-        transform: translateY(-10px); 
-        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15); 
-        background-color: var(--bg-color); 
+        transform: translateY(-10px);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        background-color: var(--bg-color);
     }
+
 
     .product-card h3 {
         transition: all 0.3s ease;
         font-size: 18px;
         margin: 10px 0;
-        color: inherit; 
+        color: inherit;
     }
+
 
     .product-card p {
         transition: all 0.3s ease;
         font-size: 16px;
         color: #333;
     }
+
 
     .filter-bar {
         display: flex;
@@ -208,6 +238,7 @@
         margin-bottom: 30px;
     }
 
+
     .filter-bar input[type="text"],
     .filter-bar select {
         padding: 10px 20px;
@@ -215,6 +246,7 @@
         border: 1px solid #ccc;
         font-size: 16px;
     }
+
 
     .price-filter {
   display: flex;
@@ -224,6 +256,7 @@
   font-family: sans-serif;
 }
 
+
 .slider-values {
   display: flex;
   justify-content: space-between;
@@ -231,11 +264,13 @@
   font-size: 14px;
 }
 
+
 .slider-container {
   position: relative;
   width: 200px;
   height: 30px;
 }
+
 
 input[type="range"] {
   position: absolute;
@@ -248,6 +283,7 @@ input[type="range"] {
   z-index: 2;
 }
 
+
 input[type="range"]::-webkit-slider-thumb {
   pointer-events: all;
   width: 14px;
@@ -257,6 +293,7 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   -webkit-appearance: none;
 }
+
 
 .slider-track {
   position: absolute;
@@ -268,6 +305,7 @@ input[type="range"]::-webkit-slider-thumb {
   z-index: 1;
   border-radius: 5px;
 }
+
 
 .slider-track::after {
   content: "";
@@ -286,6 +324,7 @@ input[type="range"]::-webkit-slider-thumb {
         transition: 1.5s;
     }
 
+
     .select-wrapper select {
         width: 100%;
         padding: 8px 40px 8px 12px;
@@ -298,6 +337,7 @@ input[type="range"]::-webkit-slider-thumb {
         transition: 1.5s;
     }
 
+
     .select-wrapper::after {
         content: '▼';
         font-size: 12px;
@@ -306,17 +346,19 @@ input[type="range"]::-webkit-slider-thumb {
         right: 12px;
         top: 50%;
         transform: translateY(-50%);
-        pointer-events: none; 
+        pointer-events: none;
     }
     .select-wrapper:hover {
-        border-color: black; 
+        border-color: black;
         transition: 1.5s;
     }
 
+
     .select-wrapper:hover select {
-        border-color: black; 
+        border-color: black;
         transition: 1.5s;
     }
+
 
     .product-container {
     display: flex;
@@ -324,6 +366,7 @@ input[type="range"]::-webkit-slider-thumb {
     padding-left: 40px;
     margin-bottom: 100px;
 }
+
 
 .filter-sidebar {
     width: 250px;
@@ -333,6 +376,7 @@ input[type="range"]::-webkit-slider-thumb {
     border-right: 1px solid #ddd;
     background-color: #fafafa;
 }
+
 
 .filter-bar {
     display: flex;
@@ -347,9 +391,11 @@ input[type="range"]::-webkit-slider-thumb {
     z-index: 10;
 }
 
+
 .filter-section {
     margin-bottom: 25px;
 }
+
 
 .filter-section h4 {
     font-size: 18px;
@@ -358,11 +404,13 @@ input[type="range"]::-webkit-slider-thumb {
     padding-left: 10px;
 }
 
+
 .color-palette {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
+
 
 .color-box {
     width: 30px;
@@ -379,11 +427,13 @@ input[type="range"]::-webkit-slider-thumb {
     border-right: 1px solid #ddd;
 }
 
+
 .filter-group {
     margin-bottom: 15px;
     border-left: 4px solid black;
     padding-left: 10px;
 }
+
 
 .filter-title {
     font-size: 18px;
@@ -393,9 +443,11 @@ input[type="range"]::-webkit-slider-thumb {
     transition: color 0.2s ease;
 }
 
+
 .filter-title:hover {
     color: #444;
 }
+
 
 .filter-content {
     max-height: 0;
@@ -403,9 +455,11 @@ input[type="range"]::-webkit-slider-thumb {
     transition: max-height 0.4s ease;
 }
 
+
 .filter-group.active .filter-content {
     max-height: 300px; /* Sesuaikan dengan konten maksimal */
 }
+
 
 .color-palette {
     display: flex;
@@ -413,9 +467,10 @@ input[type="range"]::-webkit-slider-thumb {
     gap: 8px;
 }
 
+
 .color-box {
-    display: inline-block;   
-    width: 20px;                   
+    display: inline-block;  
+    width: 20px;                  
     height: 20px;
     border-radius: 4px;
     margin-right: 6px;
@@ -437,6 +492,7 @@ input[type="range"]::-webkit-slider-thumb {
     max-height: 200px;
 }
 
+
 #searchToggle {
     display: none; /* default sembunyi di desktop */
     background: none;
@@ -455,9 +511,11 @@ input[type="range"]::-webkit-slider-thumb {
         margin-top: -50px;
     }
 
+
     #searchToggle {
         display: inline-block; /* tampilkan hanya saat mobile */
     }
+
 
     #searchInput {
         display: none;
@@ -466,6 +524,7 @@ input[type="range"]::-webkit-slider-thumb {
         transition: all 0.3s ease;
     }
 
+
     .filter-bar.show-search #searchInput {
         display: inline-block;
         opacity: 1;
@@ -473,11 +532,13 @@ input[type="range"]::-webkit-slider-thumb {
         margin-right: 10px;
     }
 
+
     .select-wrapper {
     flex-shrink: 0;
     min-width: 70px; /* atau lebih besar jika perlu */
 }
 }
+
 
 @media (max-width: 768px) {
     .product-container {
@@ -491,25 +552,30 @@ input[type="range"]::-webkit-slider-thumb {
         margin-right: 0 !important;
     }
 
+
     .offcanvas-body .filter-group {
         margin-bottom: 1rem;
     }
+
 
     .product-container {
         flex-direction: column;
     }
 
+
     #productResults {
         margin-top: 0.5rem;
     }
 
+
     .product-grid {
         display: flex;
         flex-wrap: wrap;
-        justify-content: left; 
-        gap: 1rem; 
-        padding: 0 1rem; 
+        justify-content: left;
+        gap: 1rem;
+        padding: 0 1rem;
     }
+
 
     .product-card {
         margin-right: 0px;
@@ -517,44 +583,9 @@ input[type="range"]::-webkit-slider-thumb {
         height: 100%;
     }
 
+
     .container-fluid {
         margin-top: -15px;
-    }
-}
-
-@media (max-width: 576px) { /* Mobile kecil */
-    .product-card {
-        height: 280px;
-    }
-}
-
-@media (min-width: 577px) and (max-width: 768px) { /* Mobile gede / Tablet kecil */
-    .product-card {
-        height: 300px;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 992px) { /* Tablet besar */
-    .product-card {
-        height: 270px;
-    }
-}
-
-@media (min-width: 993px) and (max-width: 1200px) { /* Laptop */
-    .product-card {
-        height: 280px;
-    }
-}
-
-@media (min-width: 1201px) and (max-width: 1400px) { /* Desktop medium */
-    .product-card {
-        height: 330px;
-    }
-}
-
-@media (min-width: 1401px) { /* Desktop besar */
-    .product-card {
-        height: 330px;
     }
 }
 
@@ -575,15 +606,20 @@ input[type="range"]::-webkit-slider-thumb {
 
 
 
+
+
+
 .pagination {
         display: flex;
         justify-content: end;
         gap: 6px;
     }
 
+
     .pagination li {
         list-style: none;
     }
+
 
     .pagination li a,
     .pagination li span {
@@ -594,11 +630,13 @@ input[type="range"]::-webkit-slider-thumb {
         border-radius: 4px;
     }
 
+
     .pagination li.active span {
         background-color: #007bff;
         color: white;
         border-color: #007bff;
     }
+
 
         .pagination-wrapper {
         display: flex;
@@ -631,6 +669,7 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
 
+
       <div class="carousel-item">
         <img src="{{ asset('image/image_carousel/casualcollection.png') }}" alt="Casual">
         <div class="carousel-caption-center" style="color: #ffffff;">
@@ -639,6 +678,7 @@ input[type="range"]::-webkit-slider-thumb {
           {{-- <a href="#" style="color: #8C1D1D;">View Collection →</a> --}}
         </div>
       </div>
+
 
       <div class="carousel-item">
         <img src="{{ asset('image/image_carousel/basketballcollection.png') }}" alt="Basketball">
@@ -649,14 +689,16 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
 
+
       <div class="carousel-item">
         <img src="{{ asset('image/image_carousel/trainingcollection.png') }}" alt="Training">
-        <div class="carousel-caption-center" style="color: #ffffff;"> 
+        <div class="carousel-caption-center" style="color: #ffffff;">
           <h2>Training</h2>
           <p>Nike training shoes deliver a perfect blend of stability, support, and flexibility, making them ideal for a wide range of workouts.</p>
           {{-- <a href="#" style="color: #23AA97;">View Collection →</a> --}}
         </div>
       </div>
+
 
       <div class="carousel-item">
         <img src="{{ asset('image/image_carousel/soccercollection.png') }}" alt="Soccer">
@@ -667,6 +709,7 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
 
+
       <div class="carousel-item">
         <img src="{{ asset('image/image_carousel/sandalscollection.png') }}" alt="Sandals">
         <div class="carousel-caption-center" style="color: #ffffff;">
@@ -676,6 +719,7 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
       </div>
 
+
     </div>
   </div>
   <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
@@ -683,13 +727,16 @@ input[type="range"]::-webkit-slider-thumb {
     <span class="visually-hidden">Previous</span>
   </button>
 
+
   <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
   </button>
 </div>
 
+
 <form method="GET" id="filterForm">
+
 
     {{-- Filter Bar: Search, Sort, Price Slider --}}
     <div class="filter-bar">
@@ -697,7 +744,9 @@ input[type="range"]::-webkit-slider-thumb {
         <i class="bi bi-search"></i>
     </button>
 
+
     <input type="text" name="search" placeholder="Search" id="searchInput" />
+
 
     <div class="select-wrapper">
         <select name="sort" id="sortSelect" class="select">
@@ -707,6 +756,7 @@ input[type="range"]::-webkit-slider-thumb {
             <option value="price_desc">Price: High to Low</option>
         </select>
     </div>
+
 
     <div class="price-filter">
     <label>Price</label>
@@ -721,12 +771,14 @@ input[type="range"]::-webkit-slider-thumb {
     </div>
 </div>
 
+
 </div>
     <div class="d-flex justify-content-between align-items-center d-md-none mb-3" style="margin-left: 20px">
         <button class="btn btn-dark btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#mobileFilter">
             <i class="bi bi-filter"></i> Filter
         </button>
     </div>
+
 
 <div class="product-container d-flex">
     <aside class="filter-sidebar d-none d-md-block me-3">
@@ -743,6 +795,7 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
         </div>
 
+
         <div class="filter-group warna">
             <div class="filter-title" onclick="toggleFilter(this)">Color</div>
             <div class="filter-content">
@@ -758,6 +811,8 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
 
 
+
+
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Size</div>
             <div class="filter-content">
@@ -769,7 +824,7 @@ input[type="range"]::-webkit-slider-thumb {
                     </label><br>
                 @endforeach
             </div>
-        </div>
+        </div> --}}
 
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
@@ -785,10 +840,12 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
     </aside>
 
+
     <main id="productResults" class="flex-grow-1">
         @include('partials.product_list', ['products' => $products])
     </main>
 </div>
+
 
 <div class="offcanvas offcanvas-start" tabindex="-1" id="mobileFilter">
     <div class="offcanvas-header">
@@ -809,6 +866,7 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
         </div>
 
+
         <div class="filter-group warna">
             <div class="filter-title" onclick="toggleFilter(this)">Color</div>
             <div class="filter-content">
@@ -823,6 +881,7 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
         </div>
 
+
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Size</div>
             <div class="filter-content">
@@ -834,7 +893,7 @@ input[type="range"]::-webkit-slider-thumb {
                     </label><br>
                 @endforeach
             </div>
-        </div>
+        </div> --}}
 
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
@@ -852,6 +911,8 @@ input[type="range"]::-webkit-slider-thumb {
 </div>
 
 
+
+
     <button type="submit" style="display:none;"></button>
 </form>
     <script>
@@ -862,6 +923,7 @@ input[type="range"]::-webkit-slider-thumb {
     console.log('Checked colors:', checkedColors);
   }
 
+
   // pasang event listener ke semua checkbox color
   document.querySelectorAll('input[name="color[]"]').forEach(checkbox => {
     checkbox.addEventListener('change', logCheckedColors);
@@ -869,8 +931,11 @@ input[type="range"]::-webkit-slider-thumb {
 </script>
 
 
+
+
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <script>
 $(document).ready(function () {
@@ -996,6 +1061,10 @@ $(document).ready(function () {
 });
 </script>
 
+
 </body>
 </html>
 @endsection
+
+
+

@@ -160,18 +160,26 @@ $averageRating = $totalReviews > 0
     ]);
 }
 
-    public function index()
+    public function index(Request $request)
     {
+        $perPage = $request->input('entries', 10); // default 10 jika tidak ada parameter
+
         $products = DB::table('product as p')
             ->leftjoin('product_color as pc', 'p.id', '=', 'pc.product_id')
             ->leftjoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
             ->select('p.id', 'pc.id as color_id', 'p.name', 'pc.color_name', 'pci.image_kiri')
             ->where('pc.status', 'active')
             ->groupBy('p.id', 'pc.id', 'p.name', 'pc.color_name', 'pci.image_kiri')
-            ->get();
+            ->paginate($perPage)
+            ->withQueryString(); // menjaga query 'entries' tetap ada di pagination link
 
-        return view('productadmin', compact('products'));
+        if ($request->ajax()) {
+            return view('partials.admin-list', compact('products'))->render();
+        }
+
+        return view('productadmin', compact('products', 'perPage'));
     }
+
 
     public function delete($id)
 {
@@ -481,10 +489,37 @@ return response()->json($variants);
 
 }
 
+// public function search(Request $request)
+// {
+//     $searchBy = $request->input('search_by');
+//     $search = $request->input('search');
+
+//     $query = DB::table('product as p')
+//         ->leftJoin('product_color as pc', 'p.id', '=', 'pc.product_id')
+//         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
+//         ->select('p.id', 'pc.id as color_id', 'p.name', 'pc.color_name', 'pci.image_kiri')
+//         ->where('pc.status', 'active')
+//         ->groupBy('p.id', 'pc.id', 'p.name', 'pc.color_name', 'pci.image_kiri');
+
+//     if ($search && trim($search) !== '') {
+//         if ($searchBy === 'product_id') {
+//             $query->where('p.id', $search);
+//         } elseif ($searchBy === 'product_name') {
+//             $query->where('p.name', 'LIKE', '%' . $search . '%');
+//         }
+//     }
+//     // else tidak ditambah where, jadi ambil semua data
+
+//     $products = $query->get();
+
+//     return view('partials.admin-list', compact('products'));
+// }
+
 public function search(Request $request)
 {
     $searchBy = $request->input('search_by');
     $search = $request->input('search');
+    $perPage = $request->input('entries', 10); // default 10 jika tidak ada
 
     $query = DB::table('product as p')
         ->leftJoin('product_color as pc', 'p.id', '=', 'pc.product_id')
@@ -500,9 +535,8 @@ public function search(Request $request)
             $query->where('p.name', 'LIKE', '%' . $search . '%');
         }
     }
-    // else tidak ditambah where, jadi ambil semua data
 
-    $products = $query->get();
+    $products = $query->paginate($perPage)->withQueryString();
 
     return view('partials.admin-list', compact('products'));
 }

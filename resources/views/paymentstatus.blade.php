@@ -91,7 +91,7 @@
             <div class="alert alert-danger">{{ session('error') }}</div>
         @endif
 
-        <p>Invoice Number:{{ $order->id }}</p>
+        <p>Invoice Number: {{ $order->id }}</p>
         <p>Total Amount: Rp {{ number_format($order->total_amount) }}</p>
 
         <p>Payment Status:
@@ -116,4 +116,5 @@
         </div>
     </div>
 </div>
+
 @endsection

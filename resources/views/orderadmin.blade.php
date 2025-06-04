@@ -296,22 +296,21 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    const orderContainer = document.getElementById('order-container');
-    const filterForm = document.getElementById('filterForm');
-    const searchInput = document.getElementById('search');
-    const searchBy = document.getElementById('search_by');
-    const startDate = document.getElementById('start_date');
-    const endDate = document.getElementById('end_date');
-    const statusTabs = document.querySelectorAll('#orderStatusTabs .nav-link');
+    let orderContainer = document.getElementById('order-container');
+    let filterForm = document.getElementById('filterForm');
+    let searchInput = document.getElementById('search');
+    let searchBy = document.getElementById('search_by');
+    let startDate = document.getElementById('start_date');
+    let endDate = document.getElementById('end_date');
+    let statusTabs = document.querySelectorAll('#orderStatusTabs .nav-link');
+    let entriesSelect = document.getElementById('entries');
 
-    // Toggle dropdown detail pesanan
     function toggleDropdown(e) {
         const btn = e.currentTarget;
         const orderCard = btn.closest('.order-card');
         const wrapper = orderCard.querySelector('.order-details-wrapper');
         const icon = btn.querySelector('.dropdown-icon');
 
-        // Tutup semua yang lain
         document.querySelectorAll('.order-details-wrapper').forEach(w => {
             if (w !== wrapper) {
                 w.classList.remove('open');
@@ -320,20 +319,44 @@ document.addEventListener('DOMContentLoaded', function () {
             }
         });
 
-        // Toggle yang dipilih
         wrapper.classList.toggle('open');
         icon.textContent = wrapper.classList.contains('open') ? '▲' : '▼';
     }
 
-    // Bind dropdown button
     function bindDropdownToggle() {
         document.querySelectorAll('.view-order-toggle').forEach(btn => {
-            btn.removeEventListener('click', toggleDropdown);
-            btn.addEventListener('click', toggleDropdown);
+            btn.removeEventListener('click', toggleDropdown); // Unbind
+            btn.addEventListener('click', toggleDropdown);    // Rebind
         });
     }
 
-    // Fungsi AJAX utama
+    function bindEntriesSelect() {
+        entriesSelect = document.getElementById('entries');
+        if (entriesSelect) {
+            entriesSelect.removeEventListener('change', handleEntriesChange);
+            entriesSelect.addEventListener('change', handleEntriesChange);
+        }
+    }
+
+    function handleEntriesChange() {
+        const newEntries = parseInt(entriesSelect.value);
+        const newMaxPage = Math.ceil(totalOrders / newEntries);
+        const targetPage = currentPage <= newMaxPage ? currentPage : newMaxPage;
+
+        const params = new URLSearchParams();
+        if (searchInput) params.set('search', searchInput.value);
+        if (searchBy) params.set('search_by', searchBy.value);
+        if (startDate) params.set('start_date', startDate.value);
+        if (endDate) params.set('end_date', endDate.value);
+        const activeTab = document.querySelector('#orderStatusTabs .nav-link.active');
+        if (activeTab) params.set('status', activeTab.getAttribute('data-status'));
+
+        params.set('entries', newEntries);
+        if (targetPage > 1) params.set('page', targetPage);
+
+        fetchOrders(params.toString());
+    }
+
     function fetchOrders(params = '') {
         const url = "{{ route('admin.orders.filter') }}?" + params;
         fetch(url, {
@@ -341,22 +364,37 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(res => res.text())
         .then(html => {
-            orderContainer.innerHTML = html;
-            bindDropdownToggle();
-        })
+    orderContainer.innerHTML = html;
+
+    // 🔁 Update totalOrders dari elemen tersembunyi di HTML
+    const totalElement = document.getElementById('total-orders');
+    if (totalElement) totalOrders = parseInt(totalElement.textContent);
+
+    // Rebind
+    entriesSelect = document.getElementById('entries');
+    bindDropdownToggle();
+    bindEntriesSelect();
+})
         .catch(err => console.error('AJAX error:', err));
     }
 
-    // Handle pagination klik
     document.addEventListener('click', function(e) {
         if (e.target.matches('.pagination a')) {
             e.preventDefault();
             const url = new URL(e.target.href);
+            currentPage = parseInt(url.searchParams.get('page')) || 1;
+
+            if (entriesSelect) url.searchParams.set('entries', entriesSelect.value);
+            if (searchInput) url.searchParams.set('search', searchInput.value);
+            if (searchBy) url.searchParams.set('search_by', searchBy.value);
+            if (startDate) url.searchParams.set('start_date', startDate.value);
+            if (endDate) url.searchParams.set('end_date', endDate.value);
+            const activeTab = document.querySelector('#orderStatusTabs .nav-link.active');
+            if (activeTab) url.searchParams.set('status', activeTab.getAttribute('data-status'));
             fetchOrders(url.searchParams.toString());
         }
     });
 
-    // Filter form submit
     if (filterForm) {
         filterForm.addEventListener('submit', function(e) {
             e.preventDefault();
@@ -366,7 +404,6 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    // Search realtime dengan debounce
     let debounceTimeout;
     function doSearch() {
         clearTimeout(debounceTimeout);
@@ -377,6 +414,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 start_date: startDate?.value || '',
                 end_date: endDate?.value || ''
             });
+            if (entriesSelect) params.set('entries', entriesSelect.value);
             fetchOrders(params.toString());
         }, 300);
     }
@@ -386,22 +424,23 @@ document.addEventListener('DOMContentLoaded', function () {
     if (startDate) startDate.addEventListener('change', doSearch);
     if (endDate) endDate.addEventListener('change', doSearch);
 
-    // Tab status order
     statusTabs.forEach(tab => {
         tab.addEventListener('click', function(e) {
             e.preventDefault();
             statusTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
             const status = this.getAttribute('data-status');
-            fetchOrders('status=' + status);
+            const params = new URLSearchParams({ status });
+            if (entriesSelect) params.set('entries', entriesSelect.value);
+            fetchOrders(params.toString());
         });
     });
 
-    // Initial setup
+    // ✅ Initial setup
     bindDropdownToggle();
+    bindEntriesSelect();
 });
 </script>
-
 
 </body>
 </html>

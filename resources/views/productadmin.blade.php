@@ -399,75 +399,65 @@
   </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 <script>
-function showVariants(color_id) {
-  fetch(`/product/${color_id}`)
-    .then(res => res.json())
-    .then(data => {
-      const tbody = document.getElementById('variantTable');
-      tbody.innerHTML = '';
+  // Fungsi tampilkan variant produk dalam modal
+  function showVariants(color_id) {
+    fetch(`/product/${color_id}`)
+      .then(res => res.json())
+      .then(data => {
+        const tbody = document.getElementById('variantTable');
+        tbody.innerHTML = '';
 
-      if (data.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="2" class="py-2">No variants found.</td></tr>';
-        // Clear texts and image if no data
-        document.getElementById('productName').textContent = '-';
-        document.getElementById('productColor').textContent = '-';
-        document.getElementById('productCategory').textContent = '-';
-        document.getElementById('productImage').src = '';
-      } else {
-        const item = data[0];
-        document.getElementById('productName').textContent = item.product_name || '-';
-        document.getElementById('productColor').textContent = item.color_name || '-';
-        document.getElementById('productCategory').textContent = item.category_name || '-';
-
-        // Set image, pastikan path gambarnya valid
-        if (item.image_kiri) {
-          document.getElementById('productImage').src = '/image/sepatu/kiri/' + item.image_kiri;
+        if (data.length === 0) {
+          tbody.innerHTML = '<tr><td colspan="2" class="py-2">No variants found.</td></tr>';
+          document.getElementById('productName').textContent = '-';
+          document.getElementById('productColor').textContent = '-';
+          document.getElementById('productCategory').textContent = '-';
+          document.getElementById('productImage').src = '';
         } else {
-          document.getElementById('productImage').src = ''; // kosongkan jika tidak ada gambar
+          const item = data[0];
+          document.getElementById('productName').textContent = item.product_name || '-';
+          document.getElementById('productColor').textContent = item.color_name || '-';
+          document.getElementById('productCategory').textContent = item.category_name || '-';
+          document.getElementById('productImage').src = item.image_kiri ? '/image/sepatu/kiri/' + item.image_kiri : '';
+
+          data.forEach(item => {
+            tbody.innerHTML += `<tr>
+              <td class="py-2 border-b">${item.size}</td>
+              <td class="py-2 border-b">${item.stock}</td>
+            </tr>`;
+          });
         }
 
+        // Tampilkan modal dan disable scroll body
+        const modal = document.getElementById('variantModal');
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+        document.body.style.overflow = 'hidden';
+      });
+  }
 
-        data.forEach(item => {
-          tbody.innerHTML += `<tr>
-            <td class="py-2 border-b">${item.size}</td>
-            <td class="py-2 border-b">${item.stock}</td>
-          </tr>`;
-        });
-      }
+  // Fungsi tutup modal variant
+  function closeModal() {
+    const modal = document.getElementById('variantModal');
+    modal.classList.add('hidden');
+    modal.classList.remove('flex');
+    document.body.style.overflow = '';
+  }
 
-      const modal = document.getElementById('variantModal');
-      modal.classList.remove('hidden');
-      modal.classList.add('flex');
-
-      // Disable scroll body saat modal aktif
-      document.body.style.overflow = 'hidden';
-    });
-}
-
-function closeModal() {
-  const modal = document.getElementById('variantModal');
-  modal.classList.add('hidden');
-  modal.classList.remove('flex');
-
-  // Enable scroll body saat modal ditutup
-  document.body.style.overflow = '';
-}
-</script>
-  
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <!-- Bootstrap JS Bundle -->
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-
-  <script>
+  // Fungsi toggle dropdown custom
   function toggleDropdown(btn) {
     const dropdown = btn.nextElementSibling;
-    // Tutup semua dropdown lain
+    // Tutup dropdown lain
     document.querySelectorAll('.custom-dropdown-menu').forEach(menu => {
       if (menu !== dropdown) menu.style.display = 'none';
     });
     // Toggle dropdown ini
-    dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+    dropdown.style.display = (dropdown.style.display === 'block') ? 'none' : 'block';
   }
 
   // Tutup dropdown saat klik di luar
@@ -479,57 +469,109 @@ function closeModal() {
     }
   });
 
-  // function confirmDelete(id) {
-  //   if (confirm('Are you sure you want to delete this product?')) {
-  //     window.location.href = '/products/delete/' + id;
-  //   }
-  // }
-
+  // Konfirmasi hapus produk menggunakan SweetAlert2
   function confirmDelete(id) {
     Swal.fire({
-        title: 'Are you sure?',
-        text: "This item will be permanently deleted!",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#6c757d',
-        confirmButtonText: 'Yes, delete it',
-        cancelButtonText: 'Cancel',
-        reverseButtons: true
+      title: 'Are you sure?',
+      text: "This item will be permanently deleted!",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Yes, delete it',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
     }).then((result) => {
-        if (result.isConfirmed) {
-            window.location.href = '/products/delete/' + id;
-        }
+      if (result.isConfirmed) {
+        window.location.href = '/products/delete/' + id;
+      }
     });
-}
+  }
 
-</script>
-
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-
-<script>
+  // Document ready untuk event handling dan AJAX search + pagination
 $(document).ready(function () {
-    $('#search').on('keyup', function () {
-        let search = $('#search').val();
-        let searchBy = $('#search_by').val();
+    let baseUrl = "{{ route('admin.products.search') }}";
+    let currentPage = 1;
+    let currentEntries = parseInt($('#entries').val()) || 10;
+
+    function fetchProducts(url = null, forcePageCheck = false) {
+        if (!url) {
+            url = baseUrl + `?entries=${currentEntries}&page=${currentPage}`;
+        }
 
         $.ajax({
-            url: "{{ route('admin.products.search') }}",
+            url: url,
             type: "GET",
             data: {
-                search: search,
-                search_by: searchBy
+                search: $('#search').val(),
+                search_by: $('#search_by').val(),
+                entries: currentEntries,
+                page: currentPage,
             },
             success: function (data) {
                 $('#product-list').html(data);
+
+                // Cek max page dari response, diasumsikan disertakan di <script> di partial
+                let maxPage = window.totalPages || null;
+
+                // Jika kita force cek page valid dan maxPage diketahui
+                if (forcePageCheck && maxPage !== null) {
+                    if (currentPage > maxPage) {
+                        currentPage = maxPage;
+                        fetchProducts(null, false);  // reload pakai page max
+                        return; // hentikan fungsi supaya tidak bind dua kali
+                    }
+                }
+
+                attachPaginationEvents();
+                bindEvents();
             },
-            error: function () {
-                alert("Gagal mengambil data pencarian.");
+            error: function (xhr, status, error) {
+                console.error("AJAX error:", status, error);
             }
         });
-    });
+    }
+
+    function attachPaginationEvents() {
+        $('#product-list .pagination a').off('click').on('click', function (e) {
+            e.preventDefault();
+            let url = $(this).attr('href');
+            if (url) {
+                const urlObj = new URL(url, window.location.origin);
+                currentPage = parseInt(urlObj.searchParams.get('page')) || 1;
+                currentEntries = parseInt(urlObj.searchParams.get('entries')) || currentEntries;
+
+                fetchProducts(url);
+            }
+        });
+    }
+
+    function bindEvents() {
+        $('#entries').off('change').on('change', function () {
+            currentEntries = parseInt($(this).val());
+
+            // jangan reset page ke 1 dulu, tapi cek apakah page valid setelah fetch
+            fetchProducts(null, true);
+        });
+
+        $('#search').off('keyup').on('keyup', function () {
+            currentPage = 1;
+            fetchProducts();
+        });
+
+        $('#search_by').off('change').on('change', function () {
+            currentPage = 1;
+            fetchProducts();
+        });
+    }
+
+    bindEvents();
+    fetchProducts();
 });
+
+
 </script>
+
 </body>
 </html>
 
