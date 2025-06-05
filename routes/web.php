@@ -145,9 +145,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
         Route::get('/payment/status/{id}', [PaymentController::class, 'checkStatus'])->name('payment.status');
         Route::get('/payment/return/{id}', [PaymentController::class, 'handleReturn'])->name('payment.return');
-
-            // Review
-    Route::post('/detail_sepatu/{id}/add-review', [ProductController::class, 'addReview'])->name('product.addReview');
+        Route::post('/detail_sepatu/{id}/add-review', [ProductController::class, 'addReview'])->name('product.addReview');
     });
 
     // Role: Admin Only
@@ -157,5 +155,6 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/pdf', [ReportController::class, 'downloadPDF'])->name('report.sales.pdf');
             Route::get('/data', [ReportController::class, 'fetchSalesTable'])->name('report.sales.data');
         });
+        Route::get('/reportt', [ReportController::class, 'getData']);
     });
 });
