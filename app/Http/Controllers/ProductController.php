@@ -227,10 +227,7 @@ $averageRating = $totalReviews > 0
         'gender' => 'nullable|string',
         'image_json' => 'required|json',
     ]);
-    }
-    catch(Exception $g){
-
-    }
+    
 
     // Parse dan validasi isi image_json
     $imageData = json_decode($validated['image_json'], true);
@@ -341,7 +338,12 @@ foreach ($imageData as $index => $color) {
         ));
     }
 
-    return redirect()->route('addproduct')->with('success', 'Product saved successfully!');
+    return redirect()->route('productadmin')->with('success', 'Product saved successfully!');
+    }
+    catch(Exception $e){
+        Log::error('Gagal menyimpan produk: ' . $e->getMessage());
+        return redirect()->route('addproduct')->with('error', 'Gagal insert product');
+    }
 }
 
 

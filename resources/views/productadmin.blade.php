@@ -613,7 +613,21 @@ $(document).ready(function () {
 
 
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved!',
+                text: 'Product has been saved successfully',
+                confirmButtonColor: '#3085d6'
+            });
+        @elseif (session('error'))
+            Swal.fire('Error', result.message || "Failed to save.", 'error');
+        @endif
+    });
+</script>
 </body>
 </html>
 
