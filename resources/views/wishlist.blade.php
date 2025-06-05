@@ -64,13 +64,24 @@
     .delete-icon:hover {
       color: black;
     }
+    #empty-message {
+      text-align: left;
+      margin-top: 30px;
+      color: black;
+      margin-left: 50px;
+      margin-bottom: 30px;
+    }
   </style>
 </head>
 <body>
   <div class="iss"></div>
   <h1 id="my-wishlist-title" class="fw-bold mb-3 my-5 mx-5">My Wishlist</h1>
+  <div class="hi" id="huha"></div>
+      @if ($wishlists->isEmpty())
+      <div id="empty-message">You have no wishlist items yet.</div>
+    @else
   <div id="list-wishlist" class="container">
-    @foreach ($wishlists as $item)
+      @foreach ($wishlists as $item)
         <div class="row wishlist-item mb-3 pb-3 border-bottom align-items-center">
             <div class="col-auto">
                 <i class="fas fa-trash delete-icon" data-product-id="{{ $item->product_id }}"></i>
@@ -85,10 +96,14 @@
                 <a href="{{ url('detail_sepatu/' . $item->product_id) }}" class="btn btn-view">View Product</a>
             </div>
         </div>
-        @endforeach
+      @endforeach
+    @endif
   </div>
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  <script>
+<script>
+const listWishlist = document.getElementById('list-wishlist');
+
 document.querySelectorAll('.delete-icon').forEach(icon => {
   icon.addEventListener('click', function () {
     const productId = this.dataset.productId;
@@ -117,6 +132,15 @@ document.querySelectorAll('.delete-icon').forEach(icon => {
         .then(result => {
           if (result.success) {
             row.remove();
+
+            // Jika setelah penghapusan tidak ada item wishlist lagi, tampilkan pesan kosong
+if (listWishlist.querySelectorAll('.wishlist-item').length === 0) {
+  const huha = document.getElementById('huha');
+  huha.innerHTML = `
+    <div id="empty-message"
+    >You have no wishlist items yet.
+    </div>`;
+}
             Swal.fire({
               icon: 'success',
               title: 'Removed!',

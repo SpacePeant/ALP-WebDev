@@ -301,6 +301,31 @@
 .back-to-collection:hover {
     background: #f0f0f0;
 }
+
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #555;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -309,9 +334,14 @@
   </a>
   <h1>Edit Product</h1>
 
+      {{-- Loader --}}
+    <div id="loader" class="loader-overlay">
+      <div class="loader"></div>
+    </div>
+
   <div class="main-container">
   <div class="form-container">
-    <form method="POST" action="{{ route('product.update', $id) }}" enctype="multipart/form-data">
+    <form method="POST" id="productForm" action="{{ route('product.update', $id) }}" enctype="multipart/form-data">
       @csrf
       @method('PUT')
       <input type="hidden" name="color_id" value="{{ $color_id }}">
@@ -387,8 +417,24 @@
             <input type="number" name="stok" value="{{ old('stok', $product->stock) }}">
         </div>
     </div>
+
+        <div class="form-group price-stock mt-4" id="color-content-0">
+          <div style="margin-bottom: 10px;">
+    <label>Color Name</label>
+    <input type="text" name="color_name" value="{{ $product->color_name }}" class="form-control" oninput="updateColorInfo(0)">
+          </div>
+          <div style="margin-bottom: 10px;">
+    <label>Color Code (Hex)</label>
+    <input type="text" name="color_code" id="hexColor-0" value="{{ $product->color_code }}" class="form-control" style="width:130px;" oninput="updateColorInfo(0)">
+          </div>
+          <div>
+    <label>Color Picker</label>
+    <input type="color" id="colorPicker-0" value="{{ $product->color_code }}" class="form-control form-control-color" style="width:100px;" onchange="syncPicker(0)">
+          </div>
+        </div>
+
     <input type="hidden" name="stocks_json" id="stocks-json">
-      <button type="submit" class="save-btn">Save</button>
+      <button class="save-btn" type="submit" name="save" id="save-btn">Save</button>
     </form>
   </div>
   <div class="image-container">
@@ -471,6 +517,32 @@
 <script src="https://unpkg.com/feather-icons"></script>
 <script>
   feather.replace();
+</script>
+
+<script>
+function updateColorInfo(index) {
+    const hexInput = document.getElementById('hexColor-' + index);
+    const picker = document.getElementById('colorPicker-' + index);
+    picker.value = hexInput.value;
+}
+
+function syncPicker(index) {
+    const hexInput = document.getElementById('hexColor-' + index);
+    const picker = document.getElementById('colorPicker-' + index);
+    hexInput.value = picker.value;
+}
+</script>
+
+<script>
+ document.addEventListener("DOMContentLoaded", function () {
+    const saveBtn = document.getElementById("save-btn");
+    const form = document.getElementById("productForm");
+    if (saveBtn && form) {
+      form.addEventListener("submit", function() {
+        document.getElementById("loader").style.display = "flex";
+      });
+    }
+  });
 </script>
 
 </body>

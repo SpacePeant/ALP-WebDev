@@ -41,7 +41,7 @@ class OrderController extends Controller
             )
             ->orderByDesc('o.id');
 
-        if (in_array($filter, ['Paid', 'Pending', 'Expired'])) {
+        if ($filter && in_array($filter, ['Paid', 'Pending', 'Expired'])) {
             $query->where('o.status', $filter);
         }
 
@@ -120,7 +120,7 @@ public function filterAjax(Request $request)
         )
         ->orderByDesc('o.id');
 
-    if (in_array($filter, ['Paid', 'Pending', 'Expired'])) {
+    if ($filter && in_array($filter, ['Paid', 'Pending', 'Expired'])) {
         $query->where('o.status', $filter);
     }
 
@@ -226,7 +226,15 @@ public function index(Request $request)
     }
 
     $perPage = $request->input('entries', 5); // default 5
-    $orders = $query->orderBy('o.order_date', 'desc')->paginate($perPage)->appends(['entries' => $perPage]);
+    $orders = $query->orderBy('o.order_date', 'desc')
+    ->paginate($perPage)
+    ->appends([
+        'entries' => $perPage,
+        'filter' => $filter,
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+        'search' => $search
+    ]);
 
     // Ambil detail produk tiap order
     foreach ($orders as $order) {

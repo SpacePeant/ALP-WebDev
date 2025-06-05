@@ -214,7 +214,7 @@ $averageRating = $totalReviews > 0
         return view('addproduct', compact('category'));
     }
 
-    public function store(Request $request)
+ public function store(Request $request)
 {
     // Validasi semua inputan
     try{
@@ -341,7 +341,7 @@ foreach ($imageData as $index => $color) {
         ));
     }
 
-    return redirect()->route('addproduct')->with('success', 'Product saved successfully!');
+    return redirect()->route('productadmin')->with('success', 'Product saved successfully!');
 }
 
 
@@ -362,6 +362,7 @@ foreach ($imageData as $index => $color) {
             'c.name as category_name',
             'pc.id as color_id',
             'pc.color_name',
+            'pc.color_code',
             'pci.image_kiri',
             'pci.image_kanan',
             'pci.image_atas',
@@ -372,7 +373,7 @@ foreach ($imageData as $index => $color) {
         ->first();
 
     if (!$product) {
-        return redirect()->back()->with('error', 'Produk tidak ditemukan.');
+        return redirect()->back()->with('error', 'Product not found.');
     }
 
     $sizeStock = DB::table('product_variant')
@@ -398,6 +399,8 @@ public function update(Request $request, $id)
         'kategori' => 'required|integer|exists:category,id',
         'harga' => 'required|integer',
         'color_id' => 'required|integer',
+        'color_name' => 'required|string|max:255',      // tambahkan validasi ini
+        'color_code' => 'required|string|max:7',        // tambahkan validasi ini
         'stocks_json' => 'required|json',
     ]);
 
@@ -409,6 +412,14 @@ public function update(Request $request, $id)
     $product->category_id = $validated['kategori'];
     $product->updated_at = now();
     $product->save();
+
+    // Update product_color
+    DB::table('product_color')
+        ->where('id', $validated['color_id'])
+        ->update([
+            'color_name' => $validated['color_name'],
+            'color_code' => $validated['color_code'],
+        ]);
 
     $stocksArray = json_decode($validated['stocks_json'], true);
 
@@ -429,6 +440,7 @@ public function update(Request $request, $id)
 
     return redirect()->route('productadmin')->with('success', 'Produk berhasil diperbarui');
 }
+
 public function update_gambar(Request $request)
 {
     $request->validate([
