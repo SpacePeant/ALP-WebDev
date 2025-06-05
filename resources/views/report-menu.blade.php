@@ -12,6 +12,8 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Display:wght@400;500&display=swap" rel="stylesheet">
+<!-- Versi CDN Font Awesome 6 -->
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
 
     <style>
         body {
@@ -262,7 +264,7 @@
 let bestSellerChartInstance; // Tambahkan ini
 
     function fetchDashboardData(year, month = '') {
-  let url = `/report?year=${year}`;
+  let url = `/reportt?year=${year}`;
   if (month) url += `&month=${month}`;
 
   fetch(url)

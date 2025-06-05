@@ -73,6 +73,7 @@ Route::get('/products/delete/{id}', [ProductController::class, 'delete'])->name(
 Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
 Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
+Route::get('/product/{color_id}', [ProductController::class, 'getVariants']);
 Route::get('/product_list', [ProductController::class, 'index'])->name('product.list');
 Route::get('/product-detail/{id}', function ($id) {
     $details = DB::table('product as p')
@@ -225,6 +226,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
     Route::get('/report/sales/pdf', [ReportController::class, 'downloadPDF'])->name('report.sales.pdf');
     Route::get('/report/sales/data', [ReportController::class, 'fetchSalesTable'])->name('report.sales.data');
+    Route::get('/reportt', [ReportController::class, 'getData']);
+
 
     // Article (Admin View)
     Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');
