@@ -589,85 +589,6 @@ input[type="range"]::-webkit-slider-thumb {
     }
 }
 
-@media (max-width: 576px) { /* Mobile kecil */
-    .product-card {
-        height: 280px;
-    }
-}
-
-@media (min-width: 577px) and (max-width: 768px) { /* Mobile gede / Tablet kecil */
-    .product-card {
-        height: 300px;
-    }
-}
-
-@media (min-width: 769px) and (max-width: 992px) { /* Tablet besar */
-    .product-card {
-        height: 270px;
-    }
-}
-
-@media (min-width: 993px) and (max-width: 1200px) { /* Laptop */
-    .product-card {
-        height: 280px;
-    }
-}
-
-@media (min-width: 1201px) and (max-width: 1400px) { /* Desktop medium */
-    .product-card {
-        height: 330px;
-    }
-}
-
-@media (min-width: 1401px) { /* Desktop besar */
-    .product-card {
-        height: 330px;
-    }
-}
-
-
-@media (max-width: 576px) { /* Mobile kecil */
-    .product-card {
-        height: 280px;
-    }
-}
-
-
-@media (min-width: 577px) and (max-width: 768px) { /* Mobile gede / Tablet kecil */
-    .product-card {
-        height: 300px;
-    }
-}
-
-
-@media (min-width: 769px) and (max-width: 992px) { /* Tablet besar */
-    .product-card {
-        height: 270px;
-    }
-}
-
-
-@media (min-width: 993px) and (max-width: 1200px) { /* Laptop */
-    .product-card {
-        height: 280px;
-    }
-}
-
-
-@media (min-width: 1201px) and (max-width: 1400px) { /* Desktop medium */
-    .product-card {
-        height: 330px;
-    }
-}
-
-
-@media (min-width: 1401px) { /* Desktop besar */
-    .product-card {
-        height: 330px;
-    }
-}
-
-
 .product-card {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -905,7 +826,6 @@ input[type="range"]::-webkit-slider-thumb {
             </div>
         </div> --}}
 
-
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
             <div class="filter-content">
@@ -973,8 +893,7 @@ input[type="range"]::-webkit-slider-thumb {
                     </label><br>
                 @endforeach
             </div>
-        </div> --}}
-
+        </div>  --}}
 
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
