@@ -18,18 +18,29 @@
             <div class="row mb-3">
                 <div class="col">
                     <p>Name</p>
-                    <input type="text" name="cust_name" class="form-control" value="{{ old('cust_name', $customer->name) }}">
+                    <input type="text" name="cust_name" class="form-control" value="{{ old('cust_name', $customer->name) }}" required>
                 </div>
 
                 <div class="col">
-                    <p>Phone Number</p>
-                    <input type="text" name="cust_phone_number" class="form-control" value="{{ old('cust_phone_number', $customer->phone_number) }}">
-                </div>
+    <p>Phone Number</p>
+    <input
+        type="text"
+        name="cust_phone_number"
+        class="form-control"
+        value="{{ old('cust_phone_number', $customer->phone_number) }}"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        maxlength="15"
+        placeholder="Enter numbers only"
+        required
+    >
+</div>
             </div>
 
              <div class="mb-4">
                 <p>Address</p>
-                <input type="text" name="cust_address" class="form-control" value="{{ old('cust_address', $customer->address) }}">
+                <input type="text" name="cust_address" class="form-control" value="{{ old('cust_address', $customer->address) }}" required>
             </div>
 
             <h5>Products</h5><br>
