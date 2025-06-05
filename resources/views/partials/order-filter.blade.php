@@ -7,7 +7,8 @@
           <p class="mb-1">Order ID: {{ $order->id }}</p>
           <p class="mb-1">Order Date: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
           <p class="mb-1">Items: {{ $order->item_count }}</p>
-          <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p>
+          {{-- <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p> --}}
+          <p class="mb-1">Total: Rp. {{ number_format($order->total, 0, ',', '.') }}</p>
           <div class="mb-1">
               Status:
               @if ($order->status == 'paid')

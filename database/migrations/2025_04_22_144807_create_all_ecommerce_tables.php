@@ -64,6 +64,7 @@ return new class extends Migration
             $table->string('image_kanan', 255);
             $table->string('image_atas', 255);
             $table->string('image_bawah', 255);
+            $table->timestamps();
         });
 
         Schema::create('product_variant', function (Blueprint $table) {
@@ -72,6 +73,7 @@ return new class extends Migration
             $table->foreignId('color_id')->constrained('product_color')->onDelete('cascade');
             $table->integer('size');
             $table->unsignedInteger('stock')->default(0);
+            $table->timestamps();
         });
 
         Schema::create('wishlists', function (Blueprint $table) {
@@ -81,6 +83,7 @@ return new class extends Migration
             $table->timestamp('added_at')->nullable();
             $table->timestamps();
             $table->unique(['user_id', 'product_id']);
+            $table->timestamps();
         });
 
         Schema::create('product_reviews', function (Blueprint $table) {
@@ -114,6 +117,9 @@ return new class extends Migration
             $table->string('payment_method', 50)->nullable();
             $table->text('payment_url')->nullable();
             $table->decimal('total_amount', 12, 2);
+            $table->string('cust_name');
+            $table->text('cust_address');
+            $table->string('cust_phone_number', 15);
             $table->timestamps();
         });
 

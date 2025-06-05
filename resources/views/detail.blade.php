@@ -629,6 +629,7 @@ input[type="range"]::-webkit-slider-thumb {
         align-items: center;
         flex-wrap: wrap;
         gap: 10px;
+        margin-right: 30px;
     }
     .pagination .page-item .page-link {
         /* padding: 0.375rem 0.75rem; */
@@ -651,6 +652,7 @@ input[type="range"]::-webkit-slider-thumb {
       background-color: black !important;
       color: white !important;
   }
+
   </style>
 </head>
 <body>
