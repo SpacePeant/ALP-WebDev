@@ -1011,12 +1011,4 @@
     </script>
   </body>
 </html>
-<<<<<<< HEAD
 @endsection
-=======
-@endsection
-
-
-
-
->>>>>>> a2dcd3184ae3a28e74ef8f4043df73be3099de1c

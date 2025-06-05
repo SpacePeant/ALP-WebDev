@@ -87,13 +87,24 @@
         </div>
         @endforeach
   </div>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script>
-    document.querySelectorAll('.delete-icon').forEach(icon => {
-      icon.addEventListener('click', function () {
-        const productId = this.dataset.productId;
-        const row = this.closest('.wishlist-item');
-  
+document.querySelectorAll('.delete-icon').forEach(icon => {
+  icon.addEventListener('click', function () {
+    const productId = this.dataset.productId;
+    const row = this.closest('.wishlist-item');
+
+    Swal.fire({
+      title: 'Are you sure?',
+      text: "Do you want to remove this item from your wishlist?",
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Yes, remove it!',
+      cancelButtonText: 'Cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
         fetch("{{ url('wishlist/delete') }}", {
           method: 'POST',
           headers: {
@@ -106,16 +117,27 @@
         .then(result => {
           if (result.success) {
             row.remove();
+            Swal.fire({
+              icon: 'success',
+              title: 'Removed!',
+              text: 'The item has been removed from your wishlist.',
+              timer: 1500,
+              showConfirmButton: false
+            });
           } else {
-            alert(result.message || "Fail to Remove Item from Wishlist");
+            Swal.fire('Error', result.message || "Failed to remove item.", 'error');
           }
         })
         .catch(error => {
           console.error("Error:", error);
+          Swal.fire('Error', 'Something went wrong. Please try again.', 'error');
         });
-      });
+      }
     });
-  </script>
+  });
+});
+</script>
+
 </body>
 </html>
 @endsection

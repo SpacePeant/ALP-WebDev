@@ -813,7 +813,7 @@ input[type="range"]::-webkit-slider-thumb {
 
 
 
-        <div class="filter-group">
+        {{-- <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Size</div>
             <div class="filter-content">
                 @foreach ($sizes as $size)
@@ -882,7 +882,7 @@ input[type="range"]::-webkit-slider-thumb {
         </div>
 
 
-        <div class="filter-group">
+        {{-- <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Size</div>
             <div class="filter-content">
                 @foreach ($sizes as $size)
@@ -893,7 +893,7 @@ input[type="range"]::-webkit-slider-thumb {
                     </label><br>
                 @endforeach
             </div>
-        </div> --}}
+        </div>  --}}
 
         <div class="filter-group">
             <div class="filter-title" onclick="toggleFilter(this)">Gender</div>
