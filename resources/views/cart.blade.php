@@ -109,12 +109,14 @@
           <span>Total</span>
           <span id="summary-total">Rp. 0</span>
         </div>
-        <a href="{{ url('checkout') }}" class="btn btn-black w-100">Checkout</a>
+        <a href="{{ url('checkout') }}" class="btn btn-black w-100" id="checkout-btn">Checkout</a>
       </div>
     </div>
   </div>
 </div>
-
+<div id="loader" class="loader-overlay">
+      <div class="loader"></div>
+  </div>
 <script>
   document.querySelectorAll('.qty-value[contenteditable="true"]').forEach(span => {
     span.addEventListener('keydown', function(e) {
@@ -264,6 +266,31 @@
   .table-bordered th, .table-bordered td { 
     border: none; 
   }
+
+  .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #555;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
 </style>
 
 <script>
@@ -309,7 +336,14 @@ function updatePlusButtonState(row) {
         }
     });
 }
-
+function checkIfCartIsEmpty() {
+    const tbody = document.querySelector("tbody");
+    if (tbody.querySelectorAll("tr").length === 0) {
+        const emptyRow = document.createElement("tr");
+        emptyRow.innerHTML = `<td colspan="4" class="text-left">Your cart is empty.</td>`;
+        tbody.appendChild(emptyRow);
+    }
+}
 document.addEventListener("DOMContentLoaded", function () {
     // Inisialisasi row total & summary
     document.querySelectorAll("tbody tr").forEach(row => {
@@ -335,9 +369,48 @@ document.addEventListener("DOMContentLoaded", function () {
             if (currentQty > 1) {
                 currentQty--;
             } else {
-                row.remove();
-                updateSummary();
-                return;
+                 Swal.fire({
+                  title: 'Are you sure?',
+                  text: "Do you want to remove this item from your cart?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#d33',
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonText: 'Yes',
+                  cancelButtonText: 'Cancel'
+              }).then((result) => {
+    if (result.isConfirmed) {
+        // Hapus elemen baris dari DOM
+        row.remove();
+        updateSummary();
+        checkIfCartIsEmpty();
+
+        // Tampilkan notifikasi sukses
+        Swal.fire({
+            icon: 'success',
+            title: 'Removed!',
+            text: 'The item has been removed from your cart.',
+            timer: 1500,
+            showConfirmButton: false
+        });
+
+        // Ambil ID cart dan kirim update quantity = 0
+        const cartId = row.getAttribute("data-cart-id");
+        fetch("{{ route('cart.update') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: `id=${cartId}&quantity=0`
+        });
+
+    } else if (result.dismiss !== Swal.DismissReason.cancel) {
+        // Jika gagal dan bukan karena cancel, tampilkan error
+        Swal.fire('Error', result.message || "Failed to remove item.", 'error');
+    }
+});
+              return;
             }
         }
 
@@ -450,25 +523,49 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
 
     // Checkbox untuk pilih item
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const isChecked = this.checked ? 1 : 0;
-            const row = this.closest('tr');
-            const cartId = row.dataset.cartId;
+    checkbox.addEventListener('change', function () {
+        const isChecked = this.checked ? 1 : 0;
+        const row = this.closest('tr');
+        const cartId = row.dataset.cartId;
 
-            fetch("{{ route('cart.update_pilih') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                body: `cart_id=${cartId}&is_pilih=${isChecked}`
-            }).catch(error => {
-                console.error('Error:', error);
+        fetch("{{ route('cart.update_pilih') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            body: `cart_id=${cartId}&is_pilih=${isChecked}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                // Kalau gagal (misalnya stok habis), tampilkan SweetAlert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Stock Produk ABES',
+                    text: data.error,
+                });
+
+                // Kembalikan checkbox ke keadaan sebelumnya
+                this.checked = !isChecked;
+            } else {
+                // Kalau berhasil, update ringkasan
+                updateSummary();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi Kesalahan',
+                text: 'Gagal mengupdate pilihan. Silakan coba lagi.',
             });
 
-            updateSummary();
+            // Kembalikan checkbox ke keadaan sebelumnya
+            this.checked = !isChecked;
         });
     });
+});
 
     // Size dropdown
     document.querySelectorAll('.size-select').forEach(function (select) {
@@ -494,55 +591,72 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
             });
 
         select.addEventListener('change', function () {
-    const variantId = this.value;
-    const selectedOption = this.options[this.selectedIndex];
-    const stock = parseInt(selectedOption.getAttribute('data-stock'));
+          const row = this.closest('tr');
+          const qtySpan = row.querySelector('.item-qty');
 
-    const row = this.closest('tr');
-    const qtySpan = row.querySelector('.item-qty');
-    const currentQty = parseInt(qtySpan.textContent) || 1;
+          const variantId = this.value;
+          const selectedOption = this.options[this.selectedIndex];
+          const stock = parseInt(selectedOption.getAttribute('data-stock'));
 
-    // Update atribut data-stock
-    row.setAttribute('data-stock', stock);
+          const currentQty = parseInt(qtySpan.textContent) || 1;
 
-    // Logic: tetap pakai qty lama jika masih valid, atau ubah ke stock baru
-    let newQty = currentQty;
-    if (currentQty > stock) {
-        newQty = stock;
-        Swal.fire({
-            icon: 'info',
-            title: 'Limited Stock',
-            text: `The maximum stock for this product is ${maxStock}.`,
-            confirmButtonColor: '#3085d6',
-            confirmButtonText: 'OK'
+          // sesuaikan quantity: min antara quantity lama dan stock size baru
+          const newQty = currentQty > stock ? stock : currentQty;
+
+          // update quantity di UI dan data-stock
+          qtySpan.textContent = newQty;
+          row.setAttribute('data-stock', stock);
+
+          updateRowTotal(row);
+          updateSummary();
+          updatePlusButtonState(row);
+
+          fetch('/cart/update-size', {
+              method: 'POST',
+              headers: {
+                  'Content-Type': 'application/json',
+                  'X-CSRF-TOKEN': '{{ csrf_token() }}'
+              },
+              body: JSON.stringify({
+                  cart_id: cartId,
+                  variant_id: variantId,
+                  quantity: newQty
+              })
+          })
+          .then(res => res.json())
+          .then(data => {
+              if (!data.success) {
+                  console.error("Failed to Update Size.");
+              }
+          });
         });
+      });
+});
+
+document.getElementById('checkout-btn').addEventListener('click', function (e) {
+    const itemCount = parseInt(document.getElementById('summary-items').innerText);
+
+    if (itemCount === 0) {
+      e.preventDefault(); 
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops!',
+        text: 'No items selected for checkout.',
+        confirmButtonText: 'OK'
+      });
     }
+  });
 
-    qtySpan.textContent = newQty;
-
-    updateRowTotal(row);
-    updateSummary();
-    updatePlusButtonState(row);
-
-    fetch('/cart/update-size', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'X-CSRF-TOKEN': '{{ csrf_token() }}'
-        },
-        body: JSON.stringify({
-            cart_id: cartId,
-            variant_id: variantId
-        })
-    })
-    .then(res => res.json())
-    .then(data => {
-        if (!data.success) {
-            console.error("Failed to Update Size.");
-        }
+  document.addEventListener("DOMContentLoaded", function () {
+    const checkoutBtn = document.getElementById("checkout-btn");
+    checkoutBtn.addEventListener("click", function (e) {
+      document.getElementById("loader").style.display = "flex";
     });
-});
-    });
-});
+  });
+
+//   window.addEventListener("pageshow", function (event) {
+//   // Fired when coming back via Back/Forward cache (bfcache)
+//   document.getElementById("loader").style.display = "none";
+// });
 </script>
 @endsection

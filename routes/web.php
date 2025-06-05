@@ -22,8 +22,8 @@ use App\Http\Controllers\CollectionController;
 // ==============================
 // GENERAL & LANDING PAGE ROUTES
 // ==============================
-Route::get('/', function () {
-    return view('welcome');
+Route::get('', function () {
+    return view('auth.login');
 });
 Route::get('/about-us', fn() => view('aboutus'))->name('about');
 Route::get('/collection', fn() => view('collection'))->name('collection');
@@ -73,6 +73,7 @@ Route::get('/products/delete/{id}', [ProductController::class, 'delete'])->name(
 Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
 Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
 Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
+Route::get('/product/{color_id}', [ProductController::class, 'getVariants']);
 Route::get('/product_list', [ProductController::class, 'index'])->name('product.list');
 Route::get('/product-detail/{id}', function ($id) {
     $details = DB::table('product as p')
@@ -131,15 +132,13 @@ Route::post('/wishlist/toggle', [WishlistController::class, 'toggle'])->name('wi
 // ==============================
 // CHECKOUT & PAYMENT ROUTES
 // ==============================
+Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
+Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
 Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
+Route::get('/payment/status/{id}', [PaymentController::class, 'checkStatus'])->name('payment.status');
+Route::get('/payment/return/{id}', [PaymentController::class, 'handleReturn'])->name('payment.return');
 
-Route::middleware(['auth', 'role:customer'])->group(function () {
-    Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
-    Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
-    Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
-    Route::get('/payment/return/{order}', [PaymentController::class, 'handleReturn'])->name('payment.return');
-    Route::get('/payment/status/{order}', [PaymentController::class, 'checkStatus'])->name('payment.status');
-});
 
 // ==============================
 // REPORT & CHART ROUTES
@@ -172,11 +171,6 @@ Route::match(['get', 'post'], '/detail', [CollectionController::class, 'detail']
 Route::get('/product-list', [CollectionController::class, 'productList'])->name('product.list');
 
 require __DIR__.'/auth.php';
-
-
-
-
-
 
 Route::middleware(['auth', 'role:customer'])->group(function () {
     // Cart
@@ -232,6 +226,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::get('/report/sales', [ReportController::class, 'salesReport'])->name('report.sales');
     Route::get('/report/sales/pdf', [ReportController::class, 'downloadPDF'])->name('report.sales.pdf');
     Route::get('/report/sales/data', [ReportController::class, 'fetchSalesTable'])->name('report.sales.data');
+    Route::get('/reportt', [ReportController::class, 'getData']);
+
 
     // Article (Admin View)
     Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');
@@ -241,4 +237,3 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 });
 
 Route::post('/detail_sepatu/{id}/add-review', [ProductController::class, 'addReview'])->name('product.addReview');
-

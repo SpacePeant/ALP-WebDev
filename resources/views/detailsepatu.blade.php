@@ -906,6 +906,31 @@ body {
     display: block;
   }
 }
+
+.loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #555;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg);}
+    }
   </style>
 </head>
 <body>
@@ -1186,6 +1211,10 @@ body {
       </div>
     </div>
   </div>
+</div>
+
+<div id="loader" class="loader-overlay">
+      <div class="loader"></div>
 </div>
 <script>
   // Fungsi untuk update qty dengan batasan stok
@@ -2090,43 +2119,45 @@ if (confirmAddToCartBtn) {
     })
     .then(res => res.json())
     .then(data => {
-      if (data.success) {
-        // ✅ Tutup modal
-        const modalElem = document.getElementById('cartModal');
-        if (modalElem) {
-          // const bootstrapModal = bootstrap.Modal.getInstance(modalElem);
-          // if (bootstrapModal) bootstrapModal.hide();
-          const bootstrapModal = bootstrap.Modal.getOrCreateInstance(modalElem);
-          bootstrapModal.hide();
+  if (data.success) {
+    // ✅ Tutup modal
+    const modalElem = document.getElementById('cartModal');
+    if (modalElem) {
+      const bootstrapModal = bootstrap.Modal.getOrCreateInstance(modalElem);
+      bootstrapModal.hide();
+    }
+
+    setTimeout(() => {
+      document.getElementById("loader").style.display = "none";
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Success!',
+        text: 'Product successfully added to the cart!',
+        showCancelButton: true,
+        confirmButtonColor: '#000000',
+        cancelButtonColor: '#3085d6',
+        confirmButtonText: 'Continue Shopping',
+        cancelButtonText: 'View Cart'
+      }).then((result) => {
+        if (result.dismiss === Swal.DismissReason.cancel) {
+          window.location.href = '/cart';
         }
-        // ✅ Tunggu 300ms biar animasi modal selesai
-        setTimeout(() => {
-          Swal.fire({
-            icon: 'success',
-            title: 'Success!',
-            text: 'Product successfully added to the cart!',
-            showCancelButton: true,
-            confirmButtonColor: '#000000',
-            cancelButtonColor: '#3085d6',
-            confirmButtonText: 'Continue Shopping',
-            cancelButtonText: 'View Cart'
-          }).then((result) => {
-            if (result.dismiss === Swal.DismissReason.cancel) {
-              window.location.href = '/cart';
-            }
-            // Kalau pilih "Continue Shopping", nggak perlu aksi apa-apa
-          });
-        }, 300);  // delay 300ms
-      } else {
-        Swal.fire({
-          icon: 'error',
-          title: 'Failed!',
-          text: data.message || 'An error occurred while adding to cart',
-          confirmButtonColor: '#d33',
-          confirmButtonText: 'Try Again'
-        });
-      }
-    })
+      });
+    }, 300);
+  } else {
+    // Cek apakah error karena stok
+    const isStockError = data.message && data.message.toLowerCase().includes('stok tidak mencukupi');
+
+    Swal.fire({
+      icon: 'error',
+      title: isStockError ? 'Stok Tidak Cukup!' : 'Failed!',
+      text: data.message || 'An error occurred while adding to cart',
+      confirmButtonColor: '#d33',
+      confirmButtonText: 'Try Again'
+    });
+  }
+})
     .catch(err => {
       console.error('Fetch Error:', err);
       Swal.fire({
@@ -2144,6 +2175,14 @@ if (confirmAddToCartBtn) {
         document.getElementById('review-form').classList.toggle('hidden');
     });
 
+document.addEventListener("DOMContentLoaded", function () {
+    const confirmButton = document.getElementById("confirmAddToCart");
+    if (confirmButton) {
+      confirmButton.addEventListener("click", function () {
+        document.getElementById("loader").style.display = "flex";
+      });
+    }
+  });
 </script>
 
 

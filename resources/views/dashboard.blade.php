@@ -309,27 +309,27 @@
               </div>
             </div>
             <div class="col-md-4">
-    <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
-      <div class="section-title d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
-        <span>Product Stock</span>
+              <div class="card-box" style="max-height: 500px; display: flex; flex-direction: column;">
+                <div class="section-title d-flex justify-content-between align-items-center" style="flex-shrink: 0;">
+                  <span>Product Stock</span>
 
-      </div>
-      <div style="overflow-y: auto; flex-grow: 1;">
-        <table class="table-custom">
-          <tbody id="productList">
-            @foreach($productStock as $p)
-              <tr onclick="fetchProductDetail('{{ $p->id }}')" style="cursor:pointer;">
-                <td class="d-flex justify-content-between align-items-center">
-    <span>{{ $p->name }}</span>
-    <span class="text-end">{{ $p->total_stock }}</span>
-  </td>
-            </tr>   
-          @endforeach
-        </tbody>
-      </table>
-    </div>
-  </div>
-</div>
+                  </div>
+                  <div style="overflow-y: auto; flex-grow: 1;">
+                    <table class="table-custom">
+                      <tbody id="productList">
+                        @foreach($productStock as $p)
+                          <tr onclick="fetchProductDetail('{{ $p->id }}')" style="cursor:pointer;">
+                            <td class="d-flex justify-content-between align-items-center">
+                            <span>{{ $p->name }}</span>
+                            <span class="text-end">{{ $p->total_stock }}</span>
+                          </td>
+                        </tr>   
+                      @endforeach
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
 
           </div>
 

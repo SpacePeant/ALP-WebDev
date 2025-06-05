@@ -32,30 +32,33 @@ class CollectionController extends Controller
     $roundedMax = ceil($maxPrice / 1000000) * 1000000;
 
     $query = DB::table('product as p')
-        ->select(
-            'p.id as product_id',
-            'p.name as product_name',
-            'p.gender',
-            'p.price',
-            'p.description',
-            'c.name as category_name',
-            'pc.color_code',
-            'pc.color_name',
-            'pc.color_code_bg',
-            'pc.color_font',
-            'pci.image_atas',
-            'pci.image_bawah',
-            'pci.image_kiri',
-            'pci.image_kanan'
-        )
-        ->leftJoin('category as c', 'p.category_id', '=', 'c.id')
-        ->leftJoin('product_color as pc', function ($join) {
-            $join->on('p.id', '=', 'pc.product_id')
-                 ->where('pc.is_primary', true)
-                 ->where('pc.status', 'active');
-        })
-        ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
-        ->whereBetween('p.price', [$min, $max]);
+    ->select(
+        'p.id as product_id',
+        'p.name as product_name',
+        'p.gender',
+        'p.price',
+        'p.description',
+        'c.name as category_name',
+        'pc.color_code',
+        'pc.color_name',
+        'pc.color_code_bg',
+        'pc.color_font',
+        'pci.image_atas',
+        'pci.image_bawah',
+        'pci.image_kiri',
+        'pci.image_kanan'
+    )
+    ->leftJoin('category as c', 'p.category_id', '=', 'c.id')
+    ->leftJoin('product_color as pc', function ($join) {
+        $join->on('p.id', '=', 'pc.product_id')
+             ->where('pc.is_primary', true)
+             ->where('pc.status', 'active');
+    })
+    ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
+    ->leftJoin(DB::raw('(SELECT product_id, SUM(stock) as total_stock FROM product_variant GROUP BY product_id) as pv'), 'p.id', '=', 'pv.product_id')
+    ->whereBetween('p.price', [$min, $max])
+    ->where('pv.total_stock', '>', 0);
+
 
     if (!empty($search)) {
         $query->where('p.name', 'like', '%' . $search . '%');
@@ -96,8 +99,12 @@ class CollectionController extends Controller
         $query->orderBy('p.created_at', 'desc');
     }
 
-     $perPage = $request->input('entries', 8); 
+    $perPage = $request->input('entries', 8); 
     $products = $query->paginate($perPage)->appends(['entries' => $perPage]);
+
+    if ($request->ajax()) {
+        return view('partials.product_list', ['products' => $products])->render();
+    }
 
     $categories = DB::table('category')->pluck('name');
 
@@ -153,13 +160,17 @@ public function productList(Request $request)
              ->where('pc_primary.status', 'active');
     })
     ->leftJoin('product_color_image as pci', 'pc_primary.id', '=', 'pci.color_id')
+    // LEFT JOIN ke subquery product_variant yang menjumlahkan stok
+    ->leftJoin(DB::raw('(SELECT product_id, SUM(stock) as total_stock FROM product_variant GROUP BY product_id) as pv'), 'p.id', '=', 'pv.product_id')
     ->select(
         'p.id as product_id', 'p.name as product_name', 'p.gender', 'p.price',
         'c.name as category_name',
         'pc_primary.color_code', 'pc_primary.color_name', 'pc_primary.color_code_bg', 'pc_primary.color_font',
         'pci.image_kiri'
     )
-    ->whereBetween('p.price', [$min, $max]);
+    ->whereBetween('p.price', [$min, $max])
+    ->where('pv.total_stock', '>', 0); // hanya ambil yang stoknya > 0
+
 
 if (!empty($colors)) {
     $query->whereExists(function ($subquery) use ($colors) {
@@ -202,7 +213,7 @@ if (!empty($colors)) {
     }
 
 
-    $perPage = $request->input('entries', 8);
+$perPage = $request->input('entries', 8);
 $products = $query->paginate($perPage)->appends(['entries' => $perPage]);
 
 if ($request->ajax()) {

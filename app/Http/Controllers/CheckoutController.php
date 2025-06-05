@@ -9,6 +9,7 @@ use App\Models\Product;
 use App\Models\CartItem;
 use App\Models\Customer;
 use App\Models\OrderDetail;
+use Illuminate\Support\Str;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -91,112 +92,161 @@ public function updateQuantity(Request $request)
 }
 
 public function processCheckout(Request $request)
-    {
-        $customerId = session('user_id') ?? $request->query('user_id', 1);
-        Log::info('Pay Now clicked by user ID: ' . $customerId);
-        Log::info('Request data:', $request->all());
+{
+    $customerId = session('user_id') ?? $request->query('user_id', 1);
+    Log::info('Pay Now clicked by user ID: ' . $customerId);
+    Log::info('Request data:', $request->all());
 
-        DB::beginTransaction();
+    DB::beginTransaction();
 
-        try {
-            $cartItems = CartItem::with('product')
-                ->where('user_id', $customerId)
-                ->where('is_pilih', 1)
-                ->get();
+    try {
+        $cartItems = DB::table('cart_items')
+    ->join('product_variant', 'cart_items.product_variant_id', '=', 'product_variant.id')
+    ->join('product', 'product_variant.product_id', '=', 'product.id')
+    ->join('product_color', 'product_variant.color_id', '=', 'product_color.id')
+    ->select(
+        'cart_items.quantity',
+        'cart_items.product_variant_id',
+        'product_variant.stock',
+        'product_variant.size',
+        'product_color.color_name as color_name',
+        'product.name as product_name'
+    )
+    ->where('cart_items.user_id', $customerId)
+    ->where('cart_items.is_pilih', 1)
+    ->get();
 
-            if ($cartItems->isEmpty()) {
-                return back()->with('error', 'Keranjang kosong.');
-            }
+if ($cartItems->isEmpty()) {
+    return back()->with('error', 'Keranjang belanja Anda kosong.');
+}
 
-            $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price);
-
-            $order = Order::create([
-                'user_id' => $customerId,
-                'order_date' => now(),
-                'status' => 'Pending',
-                'total_amount' => $totalAmount,
-            ]);
-
-            foreach ($cartItems as $item) {
-                OrderDetail::create([
-                    'order_id' => $order->id,
-                    'product_id' => $item->product_id,
-                    'product_variant_id' => $item->product_variant_id,
-                    'product_color_id' => $item->product_color_id,
-                    'quantity' => $item->quantity,
-                    'unit_price' => $item->product->price,
-                ]);
-            }
-
-            Config::$serverKey = config('midtrans.server_key');
-            Config::$isProduction = config('midtrans.is_production');
-            Config::$isSanitized = true;
-            Config::$is3ds = true;
-
-            $email = trim(session('user_email', 'Guest'));
-
-            if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-                Log::error('Invalid email format: ' . $email);
-                return back()->with('error', 'Email Anda tidak valid. Mohon perbarui profil Anda.');
-            }
-
-            $user_name = session('user_name', 'Guest');
-
-            $params = [
-                'transaction_details' => [
-                    'order_id' => $order->id,
-                    'gross_amount' => $totalAmount,
-                ],
-                'customer_details' => [
-                    'first_name' => $user_name,
-                    'email' => $email,
-                ],
-                'callbacks' => [
-                    'finish' => route('payment.return', $order->id),
-                ],
-            ];
-
-            $snapUrl = Snap::createTransaction($params)->redirect_url;
-
-            $order->payment_url = $snapUrl;
-            $order->save();
-
-            DB::commit();
-
-            session()->forget('cart');
-            CartItem::where('user_id', $customerId)->where('is_pilih', 1)->delete();
-
-            return redirect()->away($snapUrl);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            Log::error('Midtrans error: ' . $e->getMessage());
-            return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran.');
-        }
+foreach ($cartItems as $item) {
+    if ($item->quantity > $item->stock) {
+        DB::rollBack(); 
+        return back()->with([
+            'error' => "Stok tidak mencukupi untuk produk <strong>{$item->product_name}</strong> (Ukuran: {$item->size}, Warna: {$item->color_name}).<br>
+                    Stok tersedia: <strong>{$item->stock}</strong>, yang Anda pesan: <strong>{$item->quantity}</strong>."
+        ]);
     }
+}
+$cartItems = CartItem::with('product')
+            ->where('user_id', $customerId)
+            ->where('is_pilih', 1)
+            ->get();
 
-    public function handleMidtransWebhook(Request $request)
+        if ($cartItems->isEmpty()) {
+            return back()->with('error', 'Cart is empty.');
+        }
+        $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price) + 30000;
+
+        $order = Order::create([
+            // 'order_id' => $orderId, // hapus ini karena gak ada kolom order_id
+            'user_id' => $customerId,
+            'order_date' => now(),
+            'status' => 'pending',
+            'total_amount' => $totalAmount,
+            'cust_name' => $request->input('cust_name'),
+            'cust_phone_number' => $request->input('cust_phone_number'),
+            'cust_address' => $request->input('cust_address'),
+        ]);
+
+        foreach ($cartItems as $item) {
+            OrderDetail::create([
+                'order_id' => $order->id, // pakai id dari DB
+                'product_id' => $item->product_id,
+                'product_variant_id' => $item->product_variant_id,
+                'product_color_id' => $item->product_color_id,
+                'quantity' => $item->quantity,
+                'unit_price' => $item->product->price,
+            ]);
+        }
+
+        Config::$serverKey = config('midtrans.server_key');
+        Config::$isProduction = config('midtrans.is_production');
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
+
+        $email = trim(session('user_email', 'guest@example.com'));
+        if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            Log::error('Invalid email format: ' . $email);
+            return back()->with('error', 'Email Anda tidak valid. Mohon perbarui profil Anda.');
+        }
+
+        $user_name = session('user_name', 'Guest');
+
+        // buat order_id string untuk Midtrans pakai id order:
+        $midtransOrderId = 'ORDER-' . $order->id;
+
+        $params = [
+            'transaction_details' => [
+                'order_id' => $midtransOrderId,
+                'gross_amount' => $totalAmount,
+            ],
+            'customer_details' => [
+                'first_name' => $user_name,
+                'email' => $email,
+            ],
+            'callbacks' => [
+                'finish' => url('/payment/return/' . urlencode($midtransOrderId)),
+            ],
+        ];
+
+        $snapUrl = Snap::createTransaction($params)->redirect_url;
+
+        $order->payment_url = $snapUrl;
+        $order->save();
+
+        DB::commit();
+
+        session()->forget('cart');
+        CartItem::where('user_id', $customerId)->where('is_pilih', 1)->delete();
+
+        return redirect()->away($snapUrl);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        Log::error('Midtrans error: ' . $e->getMessage());
+        return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran.');
+    }
+}
+
+
+public function handleMidtransWebhook(Request $request)
 {
     Log::info('Webhook received:', $request->all());
 
-    $orderId = $request->input('order_id');
+    $midtransOrderId = $request->input('order_id');  // misal: "ORDER-123"
     $paymentType = $request->input('payment_type');
     $transactionStatus = $request->input('transaction_status');
 
-    Log::info("OrderId: $orderId, PaymentType: $paymentType, TransactionStatus: $transactionStatus");
+    Log::info("OrderId: $midtransOrderId, PaymentType: $paymentType, TransactionStatus: $transactionStatus");
 
-    $order = Order::find($orderId);
+    // Ambil id saja dari order_id string Midtrans, misal ORDER-123 jadi 123
+    $id = (int) str_replace('ORDER-', '', $midtransOrderId);
+
+    $order = Order::find($id);
 
     if ($order) {
+        $mapStatus = [
+            'settlement' => 'paid',
+            'capture' => 'paid',
+            'pending' => 'pending',
+            'expire' => 'expired',
+            'cancel' => 'cancelled',
+            'deny' => 'failed',
+            'failure' => 'failed',
+        ];
+
         $order->payment_method = $paymentType;
-        $order->status = $transactionStatus;
+        $order->status = $mapStatus[$transactionStatus] ?? 'unknown';
         $order->save();
 
         Log::info("Order updated successfully.");
     } else {
-        Log::warning("Order $orderId not found.");
+        Log::warning("Order $id not found.");
     }
 
     return response()->json(['message' => 'OK']);
 }
+
 }
