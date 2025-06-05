@@ -11,7 +11,7 @@
   <meta charset="UTF-8">
   <title>Product Admin</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-
+ <meta name="csrf-token" content="{{ csrf_token() }}">
   <!-- Google Fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Display:wght@400;500&display=swap" rel="stylesheet">
 

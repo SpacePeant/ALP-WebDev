@@ -1012,7 +1012,3 @@
   </body>
 </html>
 @endsection
-
-
-
-
