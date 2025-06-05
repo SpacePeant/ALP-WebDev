@@ -257,6 +257,14 @@
         /* padding: 0.25rem 0.5rem; */
     }
 
+    .nav-link {
+      color: black;
+    }
+
+    .nav-link:hover {
+      color: black;
+    }
+
 </style>
 @endpush
 

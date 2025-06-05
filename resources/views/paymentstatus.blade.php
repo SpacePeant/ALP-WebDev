@@ -79,7 +79,15 @@
     border-color: #d6d8db;
     }
 
+    #btn-view {
+  background: #444;
+  transition: background-color 0.3s;
+  color: white;
+}
 
+#btn-view:hover {
+  background:black;
+}
 </style>
 
 <h1 class="text-center">Payment Status</h1>
@@ -112,7 +120,7 @@
 
         <div class="text-center mt-4">
             <a href="{{ route('payment.status', $order->id) }}" class="btn btn-outline-secondary">Check Status Again</a>
-            <a href="{{ route('order') }}" class="btn btn-primary">View My Orders</a>
+            <a href="{{ route('order') }}" class="btn" id="btn-view">View My Orders</a>
         </div>
     </div>
 </div>

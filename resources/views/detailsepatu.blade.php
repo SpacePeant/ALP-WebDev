@@ -2124,15 +2124,39 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
 <script>
 document.querySelectorAll('.add-cart').forEach(button => {
     button.addEventListener('click', function() {
-        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-        cartModal.show();
+      const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
+    const selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
+        if (!selectedSize || !selectedColorCode) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please select',
+        text: 'Please select both size and color before adding to cart.',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+    cartModal.show();
     });
 });
 
 document.querySelectorAll('.mobile-add-cart').forEach(button => {
     button.addEventListener('click', function() {
-        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-        cartModal.show();
+        const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
+    const selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
+        if (!selectedSize || !selectedColorCode) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please select',
+        text: 'Please select both size and color before adding to cart.',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+    cartModal.show();
     });
 });
 
@@ -2308,6 +2332,9 @@ if (confirmAddToCartBtn) {
 })
     .catch(err => {
       console.error('Fetch Error:', err);
+
+      document.getElementById("loader").style.display = "none";
+
       Swal.fire({
         icon: 'error',
         title: 'Error!',

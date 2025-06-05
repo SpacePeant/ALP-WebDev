@@ -66,7 +66,7 @@
                             </div>
                         </div>
                         <div class="text-end ms-3 price">
-                            Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }},00
+                            Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
                         </div>
                     </div>
                 @empty
@@ -85,15 +85,15 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>Subtotal</span><span id="subtotal">
-                            Rp {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity), 0, ',', '.') }},00
+                            Rp. {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity), 0, ',', '.') }}
                         </span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span>Shipping fee</span><span>Rp 30.000,00</span>
+                        <span>Shipping fee</span><span>Rp. 30.000</span>
                     </div>
                     <div class="d-flex justify-content-between" style ="margin-bottom: 20px;">
                         <strong>Total</strong><strong id="total">
-                            Rp {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity) + 30000, 0, ',', '.') }},00
+                            Rp. {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity) + 30000, 0, ',', '.') }}
                         </strong>
                     </div>
                     <input type="hidden" name="payment_method" id="payment_method_input" value="cash">
@@ -121,7 +121,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     function formatCurrency(num) {
-        return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',00';
+        return 'Rp. ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
     function updateSummary() {

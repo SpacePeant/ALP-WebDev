@@ -557,8 +557,8 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
             console.error('Error:', error);
             Swal.fire({
                 icon: 'error',
-                title: 'Terjadi Kesalahan',
-                text: 'Stock ABESS',
+                title: 'Error',
+                text: 'Failed to update selection. Please try again.',
             });
 
             // Kembalikan checkbox ke keadaan sebelumnya
@@ -654,6 +654,7 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 });
+
 
 //   window.addEventListener("pageshow", function (event) {
 //   // Fired when coming back via Back/Forward cache (bfcache)
