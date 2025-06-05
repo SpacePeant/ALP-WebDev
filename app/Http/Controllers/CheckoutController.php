@@ -100,7 +100,36 @@ public function processCheckout(Request $request)
     DB::beginTransaction();
 
     try {
-        $cartItems = CartItem::with('product')
+        $cartItems = DB::table('cart_items')
+    ->join('product_variant', 'cart_items.product_variant_id', '=', 'product_variant.id')
+    ->join('product', 'product_variant.product_id', '=', 'product.id')
+    ->join('product_color', 'product_variant.color_id', '=', 'product_color.id')
+    ->select(
+        'cart_items.quantity',
+        'cart_items.product_variant_id',
+        'product_variant.stock',
+        'product_variant.size',
+        'product_color.color_name as color_name',
+        'product.name as product_name'
+    )
+    ->where('cart_items.user_id', $customerId)
+    ->where('cart_items.is_pilih', 1)
+    ->get();
+
+if ($cartItems->isEmpty()) {
+    return back()->with('error', 'Keranjang belanja Anda kosong.');
+}
+
+foreach ($cartItems as $item) {
+    if ($item->quantity > $item->stock) {
+        DB::rollBack(); 
+        return back()->with([
+            'error' => "Stok tidak mencukupi untuk produk <strong>{$item->product_name}</strong> (Ukuran: {$item->size}, Warna: {$item->color_name}).<br>
+                    Stok tersedia: <strong>{$item->stock}</strong>, yang Anda pesan: <strong>{$item->quantity}</strong>."
+        ]);
+    }
+}
+$cartItems = CartItem::with('product')
             ->where('user_id', $customerId)
             ->where('is_pilih', 1)
             ->get();
@@ -108,7 +137,6 @@ public function processCheckout(Request $request)
         if ($cartItems->isEmpty()) {
             return back()->with('error', 'Cart is empty.');
         }
-
         $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price) + 30000;
 
         $order = Order::create([
