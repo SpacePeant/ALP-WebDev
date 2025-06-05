@@ -216,17 +216,21 @@ $cartItems = CartItem::with('product')
 
 public function handleMidtransWebhook(Request $request)
 {
+    Config::$serverKey = config('services.midtrans.server_key');
+        Config::$isProduction = config('services.midtrans.is_production');
+        Config::$isSanitized = true;
+        Config::$is3ds = true;
     Log::info('Webhook received:', $request->all());
 
-    $midtransOrderId = $request->input('order_id');  // misal: "ORDER-123"
+    $midtransOrderId = $request->input('order_id'); // e.g. "ORDER-123"
     $paymentType = $request->input('payment_type');
     $transactionStatus = $request->input('transaction_status');
+    $vaNumbers = $request->input('va_numbers');
+    $permataVa = $request->input('permata_va_number');
 
     Log::info("OrderId: $midtransOrderId, PaymentType: $paymentType, TransactionStatus: $transactionStatus");
 
-    // Ambil id saja dari order_id string Midtrans, misal ORDER-123 jadi 123
     $id = (int) str_replace('ORDER-', '', $midtransOrderId);
-
     $order = Order::find($id);
 
     if ($order) {
@@ -240,7 +244,15 @@ public function handleMidtransWebhook(Request $request)
             'failure' => 'failed',
         ];
 
-        $order->payment_method = $paymentType;
+        $paymentChannel = match ($paymentType) {
+            'bank_transfer' => $vaNumbers[0]['bank'] ?? 'permata' . ($permataVa ? " ({$permataVa})" : ''),
+            'gopay' => 'Gopay',
+            'qris' => 'QRIS',
+            'credit_card' => 'Kartu Kredit',
+            default => ucfirst($paymentType),
+        };
+
+        $order->payment_method = $paymentChannel;
         $order->status = $mapStatus[$transactionStatus] ?? 'unknown';
         $order->save();
 
