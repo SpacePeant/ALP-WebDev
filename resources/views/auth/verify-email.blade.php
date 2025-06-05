@@ -65,17 +65,17 @@
 <body class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
   <div class="verify-form text-center">
     <img src="{{ asset('image/logg.png') }}" class="logo" alt="Logo">
-    <h3 class="mb-4 fw-bold">Verifikasi Email</h3>
+    <h3 class="mb-4 fw-bold">Email Verification</h3>
 
     {{-- Pesan status --}}
     <div class="mb-3 text-sm text-muted">
-      Terima kasih telah mendaftar! Sebelum mulai, silakan verifikasi alamat email Anda melalui tautan yang kami kirimkan ke email Anda.
-      Jika belum menerima email, kami akan kirim ulang untuk Anda.
+      Thank you for signing up! Before you get started, please verify your email address through the link we sent to your email.
+If you haven't received the email, we can resend it for you.
     </div>
 
     @if (session('status') == 'verification-link-sent')
       <div class="alert alert-success text-sm">
-        Tautan verifikasi baru telah dikirim ke alamat email Anda.
+        A new verification link has been sent to your email address.
       </div>
     @endif
 
@@ -87,13 +87,13 @@
     {{-- Form Resend Email --}}
     <form method="POST" id="resendForm" action="{{ route('verification.send') }}">
       @csrf
-      <button type="submit" class="btn btn-black w-100 mb-3">Kirim Ulang Email Verifikasi</button>
+      <button type="submit" class="btn btn-black w-100 mb-3">Resend Verification Email</button>
     </form>
 
     {{-- Form Logout --}}
     <form method="POST" action="{{ route('logout') }}">
       @csrf
-      <button type="submit" class="btn btn-link text-decoration-none text-muted w-100">Keluar</button>
+      <button type="submit" class="btn btn-link text-decoration-none text-muted w-100">Logout</button>
     </form>
   </div>
 
