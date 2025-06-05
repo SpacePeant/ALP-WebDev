@@ -747,7 +747,7 @@ input[type="range"]::-webkit-slider-thumb {
 
     <div class="select-wrapper">
         <select name="sort" id="sortSelect" class="select">
-            <option class="sort" value="">Sort By</option>
+            <option class="sort" value="">Sort by</option>
             <option value="newest">Newest</option>
             <option value="price_asc">Price: Low to High</option>
             <option value="price_desc">Price: High to Low</option>
@@ -758,8 +758,8 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="price-filter">
     <label>Price</label>
     <div class="slider-values">
-      <span>Rp <span id="minPriceVal">{{ $minPrice }}k</span></span>
-      <span>Rp <span id="maxPriceVal">{{ $maxPrice }}k</span></span>
+      <span>Rp. <span id="minPriceVal">{{ $minPrice }}k</span></span>
+      <span>Rp. <span id="maxPriceVal">{{ $maxPrice }}k</span></span>
     </div>
     <div class="slider-container">
       <input type="range" name="min" id="minPrice" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ $minPrice }}" step="100">

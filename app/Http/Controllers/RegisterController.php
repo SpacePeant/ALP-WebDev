@@ -2,41 +2,46 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\User;
 use App\Models\Customer;
 use Illuminate\Support\Str;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Auth\Events\Registered;
 
 class RegisterController extends Controller
 {
     //
      public function show()
     {
-        return view('auth.signup');
+        return view('auth.register');
     }
 
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string',
-            'email' => 'required|email|unique:customers,email',
-            'phone_number' => 'required|string',
-            'password' => 'required|string|confirmed|min:6',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|confirmed|min:8',
+            'address' => 'required|string|max:255',
+            'phone_number' => 'required|string|max:20',
         ]);
 
-        Customer::create([
+        $user = User::create([
             'name' => $request->name,
-            'address' => $request->address,
             'email' => $request->email,
+            'address' => $request->address,
             'phone_number' => $request->phone_number,
             'password' => Hash::make($request->password),
-            'registration_date' => now()->format('Y-m-d'),
-            'remember_token' => Str::random(20),
-            'created_at' => now(),
-            'updated_at' => now(),
+            'role' => 'customer',
         ]);
 
-        return redirect()->route('login')->with('success', 'Account created successfully!');
+        event(new Registered($user));
+
+        Auth::login($user);
+
+        return redirect(route('login', absolute: false));
     }
 }

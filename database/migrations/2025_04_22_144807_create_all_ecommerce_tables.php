@@ -234,7 +234,42 @@ return new class extends Migration
                 WHERE id = NEW.product_variant_id;
             END
         ');
-    
+        
+        DB::unprepared('
+            CREATE TRIGGER trg_restore_stock_on_expired
+            AFTER UPDATE ON orders
+            FOR EACH ROW
+            BEGIN
+                DECLARE done INT DEFAULT FALSE;
+                DECLARE v_product_variant_id BIGINT;
+                DECLARE v_quantity INT;
+
+                DECLARE cur CURSOR FOR
+                    SELECT product_variant_id, quantity
+                    FROM order_details
+                    WHERE order_id = NEW.id;
+
+                DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = TRUE;
+
+                IF NEW.status = "expired" AND OLD.status != "expired" THEN
+                    OPEN cur;
+
+                    read_loop: LOOP
+                        FETCH cur INTO v_product_variant_id, v_quantity;
+
+                        IF done THEN
+                            LEAVE read_loop;
+                        END IF;
+
+                        UPDATE product_variant
+                        SET stock = stock + v_quantity
+                        WHERE id = v_product_variant_id;
+                    END LOOP;
+
+                    CLOSE cur;
+                END IF;
+            END
+        ');
     }
 
     public function down(): void
@@ -260,5 +295,6 @@ return new class extends Migration
         DB::unprepared("DROP TRIGGER IF EXISTS before_insert_product_color;");
         DB::unprepared("DROP TRIGGER IF EXISTS before_update_product_color;");
         DB::unprepared('DROP TRIGGER IF EXISTS reduce_stock');
+        DB::unprepared('DROP TRIGGER IF EXISTS trg_restore_stock_on_expired');
     }
 };

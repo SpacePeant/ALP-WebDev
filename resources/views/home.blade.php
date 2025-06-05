@@ -158,7 +158,6 @@
   width: 100%;
 }
 
-
 .product-container {
   position: relative;
   background: #f5f5f5;
@@ -169,18 +168,7 @@
   max-height: 500px;
 }
 
-
-/* .product-container:hover {
-  background-color: #6b1c1c;
-  transition: 0.7s;
-} */
-
-/* .product-container:hover {
-    background-color: {{ $newestProduct->color_code_bg }};
-    transition: 0.7s;
-  } */
-
-  .product-container::before {
+.product-container::before {
   content: '';
   position: absolute;
   top: 0; left: 0;
@@ -200,8 +188,6 @@
   position: relative;
   z-index: 1;
 }
-}
-
 
 .product-container:hover .bekatas,
 .product-container:hover .bekbawah {
@@ -209,17 +195,10 @@
   transition: 0.7s;
 }
 
-
-/* .product-container:hover .product-info h2 {
-  color: #fff;
-  transition: 0.7s;
-} */
-
 .product-container:hover .product-info h2 {
   color: {{ $newestProduct->color_font }};
   transition: 0.7s;
 }
-
 
 .bekatas,
 .bekbawah {
@@ -853,7 +832,7 @@
     </div>
 
 
-    <div class="wrapper">
+    {{-- <div class="wrapper">
       <div class="coupon-container">
         <div class="background-text">10% OFF</div>
 
@@ -866,7 +845,7 @@
           <button class="email-button col-3">EMAIL ME</button>
         </div>
       </div>
-    </div>
+    </div> --}}
 
 
     <div class="newbrand">
@@ -903,7 +882,7 @@
               <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
                 alt="{{ $related->product_name }}">
               <h3>{{ $related->product_name }}</h3>
-              <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+              <p>Rp. {{ number_format($related->price, 0, ',', '.') }}</p>
             </div>
           </a>
         @empty
@@ -923,7 +902,7 @@
               <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
                 alt="{{ $related->product_name }}">
               <h3>{{ $related->product_name }}</h3>
-              <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+              <p>Rp. {{ number_format($related->price, 0, ',', '.') }}</p>
             </div>
           </a>
         @empty

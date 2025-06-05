@@ -264,6 +264,14 @@
       color: white !important;
   }
 
+    .nav-link {
+      color: black;
+    }
+
+    .nav-link:hover {
+      color: black;
+    }
+
 </style>
 @endpush
 

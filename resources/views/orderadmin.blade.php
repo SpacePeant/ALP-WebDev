@@ -182,7 +182,7 @@
         border-radius: 4px;
     }
 
-    /* .pagination li.active span {
+    .pagination li.active span {
         background-color: #007bff;
         color: white;
         border-color: #007bff;
@@ -205,18 +205,25 @@
         0.5rem; */
     }
 
+  .pagination li.active a {
+      background-color: #444 !important;
+      color: white !important;
+      border-color: #444 !important;
+      transition: background-color 0.3s ease;
+  }
 
-.pagination li.active a {
-    background-color: #444 !important;
-    color: white !important;
-    border-color: #444 !important;
-    transition: background-color 0.3s ease;
-}
+  .pagination li.active a:hover {
+      background-color: black !important;
+      color: white !important;
+  }
 
-.pagination li.active a:hover {
-    background-color: black !important;
-    color: white !important;
-}
+    .nav-link {
+      color: black;
+    }
+
+    .nav-link:hover {
+      color: black;
+    }
 
   </style>
 </head>

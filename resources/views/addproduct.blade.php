@@ -316,9 +316,11 @@
 .back-to-collection:hover {
     background: #f0f0f0;
 }
-#colorTabContent{
-  margin-right: 50px;
-}
+
+
+
+
+
 .loader-overlay {
       position: fixed;
       top: 0;
@@ -353,7 +355,9 @@
       <i data-feather="corner-down-left"></i>
     </a>
   <h1>Add Product</h1>
-
+<div id="loader" class="loader-overlay">
+      <div class="loader"></div>
+    </div>
   <form id="productForm" method="POST" action="{{ route('addproduct.store') }}" onsubmit="return prepareImageData()" enctype="multipart/form-data">
     @csrf
 
@@ -401,7 +405,7 @@
         </div>
       </div>
       <input type="hidden" name="image_json" id="imageJson">
-      <button class="save-btn" type="submit" name="save" id="save-btn">Save</button>
+      <button id="save-btn" class="save-btn" type="submit" name="save" id="save-btn">Save</button>
       {{-- <button type="button" class="btn btn-secondary mt-3" onclick="printColorImagesJSON()">Show JSON</button> --}}
     </form>
     </div>
@@ -715,35 +719,24 @@ function printColorImagesJSON() {
 <script>
   feather.replace();
 </script>
-
-<!-- Script untuk tombol save -->
-<script>
- document.addEventListener("DOMContentLoaded", function () {
-    const saveBtn = document.getElementById("save-btn");
-    const form = document.getElementById("productForm");
-    if (saveBtn && form) {
-      form.addEventListener("submit", function() {
-        document.getElementById("loader").style.display = "flex";
-      });
-    }
-  });
-</script>
-
-<!-- Script untuk notifikasi SweetAlert -->
 <script>
 document.addEventListener("DOMContentLoaded", function () {
-  @if(session('success'))
-        Swal.fire({
-            icon: 'success',
-            title: 'Saved!',
-            text: 'Successfully saved a new product!',
-            timer: 1500,
-            showConfirmButton: false
+    const form = document.getElementById("productForm");
+    const saveBtn = document.getElementById("save-btn");
+
+    if (form && saveBtn) {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault(); // Cegah submit default dulu
+
+            // Panggil prepareImageData(), hanya lanjut jika true
+            if (prepareImageData()) {
+                document.getElementById("loader").style.display = "flex";
+                form.submit(); // Submit secara manual jika lolos
+            }
         });
-  @endif
+    }
 });
 </script>
-
 
 </body>
 </html>

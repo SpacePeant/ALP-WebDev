@@ -176,23 +176,26 @@ class CartController extends Controller
     }
 
     // Ambil informasi stock berdasarkan cart_id
-    $cartItem = CartItem::with(['product', 'productColor', 'productVariant'])
-        ->where('id', $cartId)
-        ->first();
+   $cartItem = CartItem::with(['product', 'productColor', 'productVariant'])
+    ->where('id', $cartId)
+    ->first();
 
-    if (!$cartItem) {
-        return response()->json(['error' => 'Item tidak ditemukan'], 404);
-    }
+if (!$cartItem) {
+    return response()->json(['error' => 'Item tidak ditemukan'], 404);
+}
 
-    // Cek stok dari product_variant (pastikan relasinya benar)
+// Ambil nilai is_pilih
+$pil = $cartItem->is_pilih;
+
+// Jika is_pilih == false (belum dipilih), maka cek stok dulu
+if (!$pil) {
     $stock = optional($cartItem->productVariant)->stock;
 
     if ($stock <= 0) {
         return response()->json(['error' => 'Stok habis, tidak dapat dipilih'], 400);
     }
-
-    // Lanjut update jika stok > 0
-    $updated = CartItem::where('id', $cartId)->update(['is_pilih' => $isPilih]);
+}
+$updated = CartItem::where('id', $cartId)->update(['is_pilih' => $isPilih]);
 
     if ($updated) {
         return response()->json(['message' => 'Status updated']);

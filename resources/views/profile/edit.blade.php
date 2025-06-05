@@ -7,7 +7,7 @@
     }
 
     .profile-initial {
-        background-color: #0d6efd;
+        background-color: #000;
         color: white;
         font-weight: bold;
         border-radius: 50%;
@@ -64,6 +64,16 @@
     @keyframes spin {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
+    }
+
+    #btn-profile {
+        background: #444;
+        transition: background-color 0.3s;
+        color: white;
+    }
+
+    #btn-profile:hover {
+    background:black;
     }
 </style>
 
@@ -133,7 +143,7 @@
                             @error('phone_number') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
-                        <button type="submit" class="btn btn-primary">Save</button>
+                        <button type="submit" class="btn" id="btn-profile">Save</button>
                         @if (session('status') === 'profile-updated')
                             <span class="ms-3 text-success">Saved.</span>
                         @endif
@@ -172,7 +182,7 @@
                     @error('password_confirmation', 'updatePassword') <div class="text-danger">{{ $message }}</div> @enderror
                 </div>
 
-                <button type="submit" class="btn btn-primary">Save</button>
+                <button type="submit" class="btn" id="btn-profile">Save</button>
                 @if (session('status') === 'password-updated')
                     <span class="ms-3 text-success">Saved.</span>
                 @endif
