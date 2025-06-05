@@ -42,6 +42,7 @@ class HomeController extends Controller
             ->orderByDesc('total_quantity')
             ->limit(4)
             ->get();
+
         $newestProduct = DB::table('product as p')
         ->join('product_color as pc', 'p.id', '=', 'pc.product_id')
         ->join('product_color_image as pci', 'pc.id', '=', 'pci.color_id')

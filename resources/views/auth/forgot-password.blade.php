@@ -47,6 +47,31 @@
       color: #000000;
       font-weight: bold;
     }
+
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #555;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body class="d-flex align-items-center justify-content-center" style="min-height: 100vh;">
@@ -72,7 +97,7 @@
       Forgot your password? No problem. Just enter your email and we’ll send you a password reset link.
     </div>
 
-    <form method="POST" action="{{ route('password.email') }}">
+    <form method="POST" action="{{ route('password.email') }}" id="forgotForm">
       @csrf
       <div class="mb-3">
         <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus value="{{ old('email') }}">
@@ -85,5 +110,28 @@
       <small><a href="{{ route('login') }}">Back to login</a></small>
     </div>
   </div>
+
+  <div id="loader" class="loader-overlay">
+      <div class="loader"></div>
+    </div>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+      const form = document.getElementById("forgotForm");
+      form.addEventListener("submit", function () {
+        document.getElementById("loader").style.display = "flex";
+      });
+
+       const loginLink = document.querySelector('a[href="{{ route('login') }}"]');
+    
+    if (loginLink) {
+      loginLink.addEventListener("click", function (e) {
+        // Tampilkan loader
+        document.getElementById("loader").style.display = "flex";
+      });
+    }
+    });
+  </script>
+  
 </body>
 </html>

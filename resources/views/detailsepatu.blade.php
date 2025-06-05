@@ -233,12 +233,12 @@ body {
   cursor: pointer;
 }
 
-.add-cart, #confirmAddToCart, #add-review-btn {
+.add-cart, #confirmAddToCart, #add-review-btn, #submitReview {
   background: #444;
   transition: background-color 0.3s;
 }
 
-.add-cart:hover, #confirmAddToCart:hover, #add-review-btn:hover {
+.add-cart:hover, #confirmAddToCart:hover, #add-review-btn:hover, #submitReview:hover {
   background:black;
 }
 
@@ -287,9 +287,6 @@ body {
   display: none;
 }
 
-#submitReview {
-  background-color: #3085d6;
-}
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -931,6 +928,31 @@ body {
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg);}
     }
+
+    .loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #555;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -1213,7 +1235,7 @@ body {
   </div>
 </div>
 
-<div id="loader" class="loader-overlay">
+<div id="loader" class="loader-overlay" style="display: none;">
       <div class="loader"></div>
 </div>
 <script>
@@ -1525,8 +1547,53 @@ inputQty.addEventListener('blur', () => {
     // -------------------------------
     // Wishlist (contoh: untuk mobile saja, implementasi sync opsional)
     // -------------------------------
-    document.querySelectorAll('.mobile-wishlist-btn').forEach(button => {
+//     document.querySelectorAll('.mobile-wishlist-btn').forEach(button => {
+//   button.addEventListener('click', function () {
+//     const productId = this.dataset.productId;
+//     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+//     const icon = this.querySelector('i');
+//     const isWishlisted = icon.classList.contains('bi-heart-fill');
+//     const url = isWishlisted ? '/wishlist/remove' : '/wishlist/add';
+
+//     fetch(url, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'X-CSRF-TOKEN': token
+//       },
+//       body: JSON.stringify({ product_id: productId })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       if (data.success) {
+//         // Toggle ikon pada mobile
+//         this.classList.toggle('active');
+//         icon.classList.toggle('bi-heart');
+//         icon.classList.toggle('bi-heart-fill');
+
+//         const desktopBtn = document.querySelector(`.wishlist-btn[data-product-id="${productId}"]`);
+//         if (desktopBtn) {
+//           const desktopIcon = desktopBtn.querySelector('i');
+//           desktopBtn.classList.toggle('active', icon.classList.contains('bi-heart-fill'));
+//           desktopIcon.classList.remove('bi-heart', 'bi-heart-fill');
+//           desktopIcon.classList.add(icon.classList.contains('bi-heart-fill') ? 'bi-heart-fill' : 'bi-heart');
+//         }
+//       } else {
+//         alert(data.message || 'Failed to Update Wishlist');
+//       }
+//     })
+//     .catch(error => {
+//       console.error(error);
+//       alert('An Error Occured When Updating Wishlist');
+//     });
+//   });
+// });
+
+document.querySelectorAll('.mobile-wishlist-btn').forEach(button => {
   button.addEventListener('click', function () {
+    if (this.classList.contains('loading')) return; // Cegah spam klik
+    this.classList.add('loading'); // Tandai sedang loading
+
     const productId = this.dataset.productId;
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const icon = this.querySelector('i');
@@ -1549,6 +1616,7 @@ inputQty.addEventListener('blur', () => {
         icon.classList.toggle('bi-heart');
         icon.classList.toggle('bi-heart-fill');
 
+        // Sinkronisasi ikon pada desktop
         const desktopBtn = document.querySelector(`.wishlist-btn[data-product-id="${productId}"]`);
         if (desktopBtn) {
           const desktopIcon = desktopBtn.querySelector('i');
@@ -1557,18 +1625,80 @@ inputQty.addEventListener('blur', () => {
           desktopIcon.classList.add(icon.classList.contains('bi-heart-fill') ? 'bi-heart-fill' : 'bi-heart');
         }
       } else {
-        alert(data.message || 'Failed to Update Wishlist');
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed!',
+          text: data.message || 'Failed to update wishlist.',
+          confirmButtonText: 'OK'
+        });
       }
     })
     .catch(error => {
       console.error(error);
-      alert('An Error Occured When Updating Wishlist');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'An error occurred while updating the wishlist.',
+        confirmButtonText: 'OK'
+      });
+    })
+    .finally(() => {
+      this.classList.remove('loading'); // Aktifkan kembali tombol
     });
   });
 });
 
+
+// document.querySelectorAll('.wishlist-btn').forEach(button => {
+//   button.addEventListener('click', function () {
+//     if (this.classList.contains('loading')) return; // Cegah spam klik
+//     this.classList.add('loading'); // Tandai tombol sedang loading
+    
+//     const productId = this.dataset.productId;
+//     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+//     const icon = this.querySelector('i');
+//     const isWishlisted = icon.classList.contains('bi-heart-fill');
+//     const url = isWishlisted ? '/wishlist/remove' : '/wishlist/add';
+
+//     fetch(url, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//         'X-CSRF-TOKEN': token
+//       },
+//       body: JSON.stringify({ product_id: productId })
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       if (data.success) {
+//         // Toggle ikon pada mobile
+//         this.classList.toggle('active');
+//         icon.classList.toggle('bi-heart');
+//         icon.classList.toggle('bi-heart-fill');
+
+//         const desktopBtn = document.querySelector(`.mobile-wishlist-btn[data-product-id="${productId}"]`);
+//         if (desktopBtn) {
+//           const desktopIcon = desktopBtn.querySelector('i');
+//           desktopBtn.classList.toggle('active', icon.classList.contains('bi-heart-fill'));
+//           desktopIcon.classList.remove('bi-heart', 'bi-heart-fill');
+//           desktopIcon.classList.add(icon.classList.contains('bi-heart-fill') ? 'bi-heart-fill' : 'bi-heart');
+//         }
+//       } else {
+//         alert(data.message || 'Failed to Update Wishlist');
+//       }
+//     })
+//     .catch(error => {
+//       console.error(error);
+//       alert('An Error Occured When Updating Wishlist');
+//     });
+//   });
+// });
+
 document.querySelectorAll('.wishlist-btn').forEach(button => {
   button.addEventListener('click', function () {
+    if (this.classList.contains('loading')) return; // Cegah spam klik
+    this.classList.add('loading'); // Tandai tombol sedang loading
+
     const productId = this.dataset.productId;
     const token = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     const icon = this.querySelector('i');
@@ -1591,6 +1721,7 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
         icon.classList.toggle('bi-heart');
         icon.classList.toggle('bi-heart-fill');
 
+        // Sinkronisasi dengan tombol desktop
         const desktopBtn = document.querySelector(`.mobile-wishlist-btn[data-product-id="${productId}"]`);
         if (desktopBtn) {
           const desktopIcon = desktopBtn.querySelector('i');
@@ -1599,12 +1730,25 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
           desktopIcon.classList.add(icon.classList.contains('bi-heart-fill') ? 'bi-heart-fill' : 'bi-heart');
         }
       } else {
-        alert(data.message || 'Failed to Update Wishlist');
+        Swal.fire({
+          icon: 'error',
+          title: 'Failed!',
+          text: data.message || 'Failed to update wishlist.',
+          confirmButtonText: 'OK'
+        });
       }
     })
     .catch(error => {
       console.error(error);
-      alert('An Error Occured When Updating Wishlist');
+      Swal.fire({
+        icon: 'error',
+        title: 'Error!',
+        text: 'An error occurred while updating the wishlist.',
+        confirmButtonText: 'OK'
+      });
+    })
+    .finally(() => {
+      this.classList.remove('loading'); // Aktifkan kembali tombol
     });
   });
 });
@@ -1747,6 +1891,10 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
         <button type="submit" id="submitReview">
             Submit Review
         </button>
+
+        <div id="loader" class="loader-overlay">
+      <div class="loader"></div>
+    </div>
     </form>
 </div>
 
@@ -2148,10 +2296,10 @@ if (confirmAddToCartBtn) {
   } else {
     // Cek apakah error karena stok
     const isStockError = data.message && data.message.toLowerCase().includes('stok tidak mencukupi');
-
+    document.getElementById("loader").style.display = "none";
     Swal.fire({
       icon: 'error',
-      title: isStockError ? 'Stok Tidak Cukup!' : 'Failed!',
+      title: isStockError ? 'Insufficient stock!' : 'Failed!',
       text: data.message || 'An error occurred while adding to cart',
       confirmButtonColor: '#d33',
       confirmButtonText: 'Try Again'
@@ -2183,6 +2331,18 @@ document.addEventListener("DOMContentLoaded", function () {
       });
     }
   });
+
+  document.addEventListener("DOMContentLoaded", function () {
+    const submitBtn = document.getElementById("submitReview");
+    const reviewForm = document.getElementById("review-form");
+
+    if (submitBtn && reviewForm) {
+      reviewForm.addEventListener("submit", function () {
+        document.getElementById("loader").style.display = "flex";
+      });
+    }
+  });
+
 </script>
 
 
