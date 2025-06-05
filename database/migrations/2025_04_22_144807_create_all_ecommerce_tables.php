@@ -83,7 +83,6 @@ return new class extends Migration
             $table->timestamp('added_at')->nullable();
             $table->timestamps();
             $table->unique(['user_id', 'product_id']);
-            $table->timestamps();
         });
 
         Schema::create('product_reviews', function (Blueprint $table) {
