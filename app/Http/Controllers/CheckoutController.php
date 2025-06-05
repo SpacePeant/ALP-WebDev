@@ -223,30 +223,29 @@ public function handleMidtransWebhook(Request $request)
 
     Log::info('Webhook received:', $request->all());
 
-    $midtransOrderId = $request->input('order_id');
-    $paymentType = $request->input('payment_type');
-    $transactionStatus = $request->input('transaction_status');
-    $vaNumbers = $request->input('va_numbers');
-    $permataVa = $request->input('permata_va_number');
-
-    // 🔐 Signature validation
+    // Cek signature untuk validasi
     $signatureKey = $request->input('signature_key');
-    $expectedSignature = hash('sha512',
-        $request->input('order_id') .
-        $request->input('status_code') .
-        $request->input('gross_amount') .
-        Config::$serverKey
-    );
+    $orderId = $request->input('order_id', '');
+    $statusCode = $request->input('status_code', '');
+    $grossAmount = $request->input('gross_amount', '');
+
+    $expectedSignature = hash('sha512', $orderId . $statusCode . $grossAmount . Config::$serverKey);
 
     if ($signatureKey !== $expectedSignature) {
-        Log::warning("Invalid signature for order ID: $midtransOrderId");
+        Log::warning("Invalid signature for order ID: $orderId");
         return response()->json(['message' => 'Invalid signature'], 403);
     }
 
+    // Ambil data penting
+    $transactionStatus = $request->input('transaction_status');
+    $paymentType = $request->input('payment_type');
+    $midtransOrderId = $orderId;
+
     Log::info("OrderId: $midtransOrderId, PaymentType: $paymentType, TransactionStatus: $transactionStatus");
 
+    // Ambil ID order, sesuaikan dengan format order kamu
     $id = (int) str_replace('ORDER-', '', $midtransOrderId);
-    $order = Order::find($id);
+    $order = \App\Models\Order::find($id);
 
     if ($order) {
         $mapStatus = [
@@ -259,8 +258,12 @@ public function handleMidtransWebhook(Request $request)
             'failure' => 'failed',
         ];
 
+        // Cek dulu va_numbers dan permata_va_number, karena kadang tidak ada di payload
+        $vaNumbers = $request->input('va_numbers', []);
+        $permataVa = $request->input('permata_va_number', null);
+
         $paymentChannel = match ($paymentType) {
-            'bank_transfer' => ($vaNumbers[0]['bank'] ?? 'permata') . ($permataVa ? " ({$permataVa})" : ''),
+            'bank_transfer' => (isset($vaNumbers[0]['bank']) ? $vaNumbers[0]['bank'] : 'permata') . ($permataVa ? " ({$permataVa})" : ''),
             'gopay' => 'Gopay',
             'qris' => 'QRIS',
             'credit_card' => 'Kartu Kredit',
@@ -276,7 +279,9 @@ public function handleMidtransWebhook(Request $request)
         Log::warning("Order $id not found.");
     }
 
+    // Response 200 OK supaya Midtrans tidak retry
     return response()->json(['message' => 'OK'], 200);
 }
+
 
 }
