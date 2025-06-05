@@ -395,8 +395,22 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     function handleEntriesChange() {
-        currentPage = 1; // reset ke halaman 1
-        fetchOrders(getFilterParams().toString());
+        const newEntries = parseInt(entriesSelect.value);
+        const newMaxPage = Math.ceil(totalOrders / newEntries);
+        const targetPage = currentPage <= newMaxPage ? currentPage : newMaxPage;
+
+        const params = new URLSearchParams();
+        if (searchInput) params.set('search', searchInput.value);
+        if (searchBy) params.set('search_by', searchBy.value);
+        if (startDate) params.set('start_date', startDate.value);
+        if (endDate) params.set('end_date', endDate.value);
+        const activeTab = document.querySelector('#orderStatusTabs .nav-link.active');
+        if (activeTab) params.set('status', activeTab.getAttribute('data-status'));
+
+        params.set('entries', newEntries);
+        if (targetPage > 1) params.set('page', targetPage);
+
+        fetchOrders(params.toString());
     }
 
     function fetchOrders(params = '') {

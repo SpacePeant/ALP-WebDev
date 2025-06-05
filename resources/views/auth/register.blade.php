@@ -105,7 +105,11 @@
         <input type="email" name="email" class="form-control" placeholder="Email" value="{{ old('email') }}" required>
       </div>
       <div class="mb-3">
-        <input type="tel" name="phone_number" class="form-control" placeholder="Phone Number" value="{{ old('phone_number') }}" required>
+        <input type="tel" name="phone_number" class="form-control" placeholder="Phone Number" value="{{ old('phone_number') }}" 
+        inputmode="numeric"
+        pattern="[0-9]*"
+        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        maxlength="15" required>
       </div>
       <div class="mb-3">
         <input type="password" name="password" class="form-control" placeholder="Password" required>
