@@ -66,57 +66,70 @@ class CartController extends Controller
     // }
 
      public function addToCart(Request $request)
-    {
-        $request->validate([
-            'product_id' => 'required|integer',
-            'size'       => 'required|string',
-            'color_code' => 'required|string',
-            'quantity'   => 'nullable|integer|min:1',
-        ]);
+{
+    $request->validate([
+        'product_id' => 'required|integer',
+        'size'       => 'required|string',
+        'color_code' => 'required|string',
+        'quantity'   => 'nullable|integer|min:1',
+    ]);
 
-        $userId = Session::get('user_id', 1);
-        $productId = $request->product_id;
-        $size = $request->size;
-        $colorCode = $request->color_code;
-         $quantity = max((int)$request->input('quantity', 1), 1);
+    $userId = Session::get('user_id', 1);
+    $productId = $request->product_id;
+    $size = $request->size;
+    $colorCode = $request->color_code;
+    $quantity = max((int)$request->input('quantity', 1), 1);
 
-        $color = ProductColor::where('product_id', $productId)
-                    ->where('color_code', $colorCode)
-                    ->first();
+    $color = ProductColor::where('product_id', $productId)
+                ->where('color_code', $colorCode)
+                ->first();
 
-        if (!$color) {
-            return response()->json(['success' => false, 'message' => 'Warna tidak ditemukan']);
-        }
-
-        $variant = ProductVariant::where('product_id', $productId)
-                    ->where('size', $size)
-                    ->first();
-
-        if (!$variant) {
-            return response()->json(['success' => false, 'message' => 'Ukuran tidak ditemukan']);
-        }
-
-        $item = CartItem::where('user_id', $userId)
-                    ->where('product_id', $productId)
-                    ->where('product_color_id', $color->id)
-                    ->where('product_variant_id', $variant->id)
-                    ->first();
-
-        if ($item) {
-            $item->quantity += $quantity;
-            $item->save();
-            return response()->json(['success' => true, 'message' => 'Jumlah diperbarui']);
-        } else {
-            CartItem::create([
-                'user_id'        => $userId,
-                'product_id'         => $productId,
-                'product_color_id'   => $color->id,
-                'product_variant_id' => $variant->id,
-                'quantity'           => $quantity,
-            ]);
-            return response()->json(['success' => true, 'message' => 'Item ditambahkan ke keranjang']);
-        }
+    if (!$color) {
+        return response()->json(['success' => false, 'message' => 'Warna tidak ditemukan']);
     }
+
+    $variant = ProductVariant::where('product_id', $productId)
+                ->where('size', $size)
+                ->first();
+
+    if (!$variant) {
+        return response()->json(['success' => false, 'message' => 'Ukuran tidak ditemukan']);
+    }
+
+    // Ambil item yang sudah ada di keranjang (jika ada)
+    $item = CartItem::where('user_id', $userId)
+                ->where('product_id', $productId)
+                ->where('product_color_id', $color->id)
+                ->where('product_variant_id', $variant->id)
+                ->first();
+
+    $existingQty = $item ? $item->quantity : 0;
+    $totalQty = $existingQty + $quantity;
+
+    // Cek stok cukup atau tidak
+    if ($totalQty > $variant->stock) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Stok tidak mencukupi. Stok tersedia: ' . $variant->stock . '. Dicart anda sudah ada ' . $item->quantity
+        ]);
+    }
+
+    // Update atau buat baru
+    if ($item) {
+        $item->quantity = $totalQty;
+        $item->save();
+        return response()->json(['success' => true, 'message' => 'Jumlah diperbarui']);
+    } else {
+        CartItem::create([
+            'user_id'            => $userId,
+            'product_id'         => $productId,
+            'product_color_id'   => $color->id,
+            'product_variant_id' => $variant->id,
+            'quantity'           => $quantity,
+        ]);
+        return response()->json(['success' => true, 'message' => 'Item ditambahkan ke keranjang']);
+    }
+}
 
     // Hapus item dari keranjang
     public function removeFromCart(Request $request)
@@ -154,22 +167,39 @@ class CartController extends Controller
     }
 
     public function updatePilih(Request $request)
-    {
-        $cartId = $request->input('cart_id');
-        $isPilih = $request->input('is_pilih');
+{
+    $cartId = $request->input('cart_id');
+    $isPilih = $request->input('is_pilih');
 
-        if (is_null($cartId) || is_null($isPilih)) {
-            return response()->json(['error' => 'Data tidak lengkap'], 400);
-        }
-
-        $updated = CartItem::where('id', $cartId)->update(['is_pilih' => $isPilih]);
-
-        if ($updated) {
-            return response()->json(['message' => 'Status updated']);
-        } else {
-            return response()->json(['error' => 'Gagal update status'], 500);
-        }
+    if (is_null($cartId) || is_null($isPilih)) {
+        return response()->json(['error' => 'Data tidak lengkap'], 400);
     }
+
+    // Ambil informasi stock berdasarkan cart_id
+    $cartItem = CartItem::with(['product', 'productColor', 'productVariant'])
+        ->where('id', $cartId)
+        ->first();
+
+    if (!$cartItem) {
+        return response()->json(['error' => 'Item tidak ditemukan'], 404);
+    }
+
+    // Cek stok dari product_variant (pastikan relasinya benar)
+    $stock = optional($cartItem->productVariant)->stock;
+
+    if ($stock <= 0) {
+        return response()->json(['error' => 'Stok habis, tidak dapat dipilih'], 400);
+    }
+
+    // Lanjut update jika stok > 0
+    $updated = CartItem::where('id', $cartId)->update(['is_pilih' => $isPilih]);
+
+    if ($updated) {
+        return response()->json(['message' => 'Status updated']);
+    } else {
+        return response()->json(['error' => 'Gagal update status'], 500);
+    }
+}
 
     public function index()
     {

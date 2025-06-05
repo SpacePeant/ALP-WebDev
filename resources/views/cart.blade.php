@@ -309,7 +309,14 @@ function updatePlusButtonState(row) {
         }
     });
 }
-
+function checkIfCartIsEmpty() {
+    const tbody = document.querySelector("tbody");
+    if (tbody.querySelectorAll("tr").length === 0) {
+        const emptyRow = document.createElement("tr");
+        emptyRow.innerHTML = `<td colspan="4" class="text-left">Your cart is empty.</td>`;
+        tbody.appendChild(emptyRow);
+    }
+}
 document.addEventListener("DOMContentLoaded", function () {
     // Inisialisasi row total & summary
     document.querySelectorAll("tbody tr").forEach(row => {
@@ -349,6 +356,7 @@ document.addEventListener("DOMContentLoaded", function () {
         // Hapus elemen baris dari DOM
         row.remove();
         updateSummary();
+        checkIfCartIsEmpty();
 
         // Tampilkan notifikasi sukses
         Swal.fire({
@@ -488,25 +496,49 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
 
     // Checkbox untuk pilih item
     document.querySelectorAll('input[type="checkbox"]').forEach(checkbox => {
-        checkbox.addEventListener('change', function () {
-            const isChecked = this.checked ? 1 : 0;
-            const row = this.closest('tr');
-            const cartId = row.dataset.cartId;
+    checkbox.addEventListener('change', function () {
+        const isChecked = this.checked ? 1 : 0;
+        const row = this.closest('tr');
+        const cartId = row.dataset.cartId;
 
-            fetch("{{ route('cart.update_pilih') }}", {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRF-TOKEN': "{{ csrf_token() }}"
-                },
-                body: `cart_id=${cartId}&is_pilih=${isChecked}`
-            }).catch(error => {
-                console.error('Error:', error);
+        fetch("{{ route('cart.update_pilih') }}", {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'X-CSRF-TOKEN': "{{ csrf_token() }}"
+            },
+            body: `cart_id=${cartId}&is_pilih=${isChecked}`
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.error) {
+                // Kalau gagal (misalnya stok habis), tampilkan SweetAlert
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Stock Produk ABES',
+                    text: data.error,
+                });
+
+                // Kembalikan checkbox ke keadaan sebelumnya
+                this.checked = !isChecked;
+            } else {
+                // Kalau berhasil, update ringkasan
+                updateSummary();
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Terjadi Kesalahan',
+                text: 'Gagal mengupdate pilihan. Silakan coba lagi.',
             });
 
-            updateSummary();
+            // Kembalikan checkbox ke keadaan sebelumnya
+            this.checked = !isChecked;
         });
     });
+});
 
     // Size dropdown
     document.querySelectorAll('.size-select').forEach(function (select) {
