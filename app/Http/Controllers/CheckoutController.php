@@ -217,16 +217,31 @@ $cartItems = CartItem::with('product')
 public function handleMidtransWebhook(Request $request)
 {
     Config::$serverKey = config('services.midtrans.server_key');
-        Config::$isProduction = config('services.midtrans.is_production');
-        Config::$isSanitized = true;
-        Config::$is3ds = true;
+    Config::$isProduction = config('services.midtrans.is_production');
+    Config::$isSanitized = true;
+    Config::$is3ds = true;
+
     Log::info('Webhook received:', $request->all());
 
-    $midtransOrderId = $request->input('order_id'); // e.g. "ORDER-123"
+    $midtransOrderId = $request->input('order_id');
     $paymentType = $request->input('payment_type');
     $transactionStatus = $request->input('transaction_status');
     $vaNumbers = $request->input('va_numbers');
     $permataVa = $request->input('permata_va_number');
+
+    // 🔐 Signature validation
+    $signatureKey = $request->input('signature_key');
+    $expectedSignature = hash('sha512',
+        $request->input('order_id') .
+        $request->input('status_code') .
+        $request->input('gross_amount') .
+        Config::$serverKey
+    );
+
+    if ($signatureKey !== $expectedSignature) {
+        Log::warning("Invalid signature for order ID: $midtransOrderId");
+        return response()->json(['message' => 'Invalid signature'], 403);
+    }
 
     Log::info("OrderId: $midtransOrderId, PaymentType: $paymentType, TransactionStatus: $transactionStatus");
 
@@ -245,7 +260,7 @@ public function handleMidtransWebhook(Request $request)
         ];
 
         $paymentChannel = match ($paymentType) {
-            'bank_transfer' => $vaNumbers[0]['bank'] ?? 'permata' . ($permataVa ? " ({$permataVa})" : ''),
+            'bank_transfer' => ($vaNumbers[0]['bank'] ?? 'permata') . ($permataVa ? " ({$permataVa})" : ''),
             'gopay' => 'Gopay',
             'qris' => 'QRIS',
             'credit_card' => 'Kartu Kredit',
@@ -256,7 +271,7 @@ public function handleMidtransWebhook(Request $request)
         $order->status = $mapStatus[$transactionStatus] ?? 'unknown';
         $order->save();
 
-        Log::info("Order updated successfully.");
+        Log::info("Order updated successfully: Order ID $id");
     } else {
         Log::warning("Order $id not found.");
     }
