@@ -139,7 +139,11 @@
 
                         <div class="mb-3">
                             <label for="name" class="form-label">Phone Number</label>
-                            <input class="form-control" id="phone_number" name="phone_number" type="text" value="{{ old('phone_number', $user->phone_number) }}" required autofocus autocomplete="phone_number">
+                            <input class="form-control" id="phone_number" name="phone_number" type="text" value="{{ old('phone_number', $user->phone_number) }}" inputmode="numeric"
+        pattern="[0-9]*"
+        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        maxlength="15"
+        required autofocus autocomplete="phone_number">
                             @error('phone_number') <div class="text-danger">{{ $message }}</div> @enderror
                         </div>
 
