@@ -574,7 +574,7 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
       });
 });
 
- document.getElementById('checkout-btn').addEventListener('click', function (e) {
+document.getElementById('checkout-btn').addEventListener('click', function (e) {
     const itemCount = parseInt(document.getElementById('summary-items').innerText);
 
     if (itemCount === 0) {
