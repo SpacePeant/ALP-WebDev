@@ -93,7 +93,7 @@ If you haven't received the email, we can resend it for you.
     {{-- Form Logout --}}
     <form method="POST" action="{{ route('logout') }}">
       @csrf
-      <button type="submit" class="btn btn-link text-decoration-none text-muted w-100">Logout</button>
+      <button type="submit" class="btn btn-link text-decoration-none text-muted w-100">Back to login</button>
     </form>
   </div>
 

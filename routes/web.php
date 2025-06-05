@@ -160,12 +160,12 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store', [ProductController::class, 'store'])->name('addproduct.store');
             Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('productadmin.delete');
         });
-
         Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
         Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
         Route::get('/product/{color_id}', [ProductController::class, 'getVariants']);
         Route::get('/product/{productId}', [ProductController::class, 'show'])->name('product.detail');
+        Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
     });
 });
 
