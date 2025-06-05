@@ -276,7 +276,7 @@ public function handleMidtransWebhook(Request $request)
         Log::warning("Order $id not found.");
     }
 
-    return response()->json(['message' => 'OK']);
+    return response()->json(['message' => 'OK'], 200);
 }
 
 }
