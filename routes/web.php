@@ -171,11 +171,6 @@ Route::get('/product-list', [CollectionController::class, 'productList'])->name(
 
 require __DIR__.'/auth.php';
 
-
-
-
-
-
 Route::middleware(['auth', 'role:customer'])->group(function () {
     // Cart
     Route::get('/cart', [CartController::class, 'index'])->name('cart');
