@@ -335,9 +335,47 @@ document.addEventListener("DOMContentLoaded", function () {
             if (currentQty > 1) {
                 currentQty--;
             } else {
-                row.remove();
-                updateSummary();
-                return;
+                 Swal.fire({
+                  title: 'Are you sure?',
+                  text: "Do you want to remove this item from your cart?",
+                  icon: 'warning',
+                  showCancelButton: true,
+                  confirmButtonColor: '#d33',
+                  cancelButtonColor: '#3085d6',
+                  confirmButtonText: 'Yes',
+                  cancelButtonText: 'Cancel'
+              }).then((result) => {
+    if (result.isConfirmed) {
+        // Hapus elemen baris dari DOM
+        row.remove();
+        updateSummary();
+
+        // Tampilkan notifikasi sukses
+        Swal.fire({
+            icon: 'success',
+            title: 'Removed!',
+            text: 'The item has been removed from your cart.',
+            timer: 1500,
+            showConfirmButton: false
+        });
+
+        // Ambil ID cart dan kirim update quantity = 0
+        const cartId = row.getAttribute("data-cart-id");
+        fetch("{{ route('cart.update') }}", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+                "X-CSRF-TOKEN": "{{ csrf_token() }}"
+            },
+            body: `id=${cartId}&quantity=0`
+        });
+
+    } else if (result.dismiss !== Swal.DismissReason.cancel) {
+        // Jika gagal dan bukan karena cancel, tampilkan error
+        Swal.fire('Error', result.message || "Failed to remove item.", 'error');
+    }
+});
+              return;
             }
         }
 

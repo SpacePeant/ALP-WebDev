@@ -302,6 +302,48 @@
     padding: 40px;
   }
 }
+
+.pagination {
+        display: flex;
+        justify-content: end;
+        gap: 6px;
+    }
+
+    .pagination li {
+        list-style: none;
+    }
+
+    .pagination li a,
+    .pagination li span {
+        padding: 6px 12px;
+        border: 1px solid #ccc;
+        text-decoration: none;
+        color: #333;
+        border-radius: 4px;
+    }
+
+    .pagination li.active span {
+        background-color: #007bff;
+        color: white;
+        border-color: #007bff;
+    }
+
+        .pagination-wrapper {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-wrap: wrap;
+        gap: 10px;
+        margin-right: 30px;
+    }
+    .pagination .page-item .page-link {
+        /* padding: 0.375rem 0.75rem; */
+        font-size: 0.875rem;
+    }
+    .form-select-sm {
+        font-size: 0.875rem;
+        /* padding: 0.25rem 0.5rem; */
+    }
   </style>
 </head>
 <body>
@@ -321,8 +363,8 @@
 
   <!-- Wrapper search di kanan -->
   <div class="d-flex align-items-end gap-3">
-    <div>
-      <label for="search_by" class="form-label mb-1">Search by</label><br>
+    <div class="d-flex align-items-center">
+      <label for="search_by" class="form-label mb-0 me-2" style="white-space: nowrap;">Search by</label><br>
       <select id="search_by" name="search_by" class="form-select">
         <option value="product_id">Product ID</option>
         <option value="product_name">Product Name</option>
@@ -478,7 +520,7 @@
       showCancelButton: true,
       confirmButtonColor: '#d33',
       cancelButtonColor: '#6c757d',
-      confirmButtonText: 'Yes, delete it',
+      confirmButtonText: 'Yes',
       cancelButtonText: 'Cancel',
       reverseButtons: true
     }).then((result) => {
