@@ -316,6 +316,35 @@
 .back-to-collection:hover {
     background: #f0f0f0;
 }
+
+
+
+
+
+.loader-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255,255,255,0.8);
+      display: none;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    .loader {
+      border: 8px solid #f3f3f3;
+      border-top: 8px solid #555;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
   </style>
 </head>
 <body>
@@ -326,8 +355,10 @@
       <i data-feather="corner-down-left"></i>
     </a>
   <h1>Add Product</h1>
-
-  <form method="POST" action="{{ route('addproduct.store') }}" onsubmit="return prepareImageData()" enctype="multipart/form-data">
+<div id="loader" class="loader-overlay">
+      <div class="loader"></div>
+    </div>
+  <form id="productForm" method="POST" action="{{ route('addproduct.store') }}" onsubmit="return prepareImageData()" enctype="multipart/form-data">
     @csrf
   <div class="main-container d-flex gap-4 flex-wrap">
     <div class="form-container">
@@ -369,7 +400,7 @@
         </div>
       </div>
       <input type="hidden" name="image_json" id="imageJson">
-      <button class="save-btn" type="submit" name="save">Save</button>
+      <button id="save-btn" class="save-btn" type="submit" name="save">Save</button>
       <button type="button" class="btn btn-secondary mt-3" onclick="printColorImagesJSON()">Show JSON</button>
     </form>
     </div>
@@ -680,6 +711,24 @@ function printColorImagesJSON() {
 <script src="https://unpkg.com/feather-icons"></script>
 <script>
   feather.replace();
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    const form = document.getElementById("productForm");
+    const saveBtn = document.getElementById("save-btn");
+
+    if (form && saveBtn) {
+        form.addEventListener("submit", function (e) {
+            e.preventDefault(); // Cegah submit default dulu
+
+            // Panggil prepareImageData(), hanya lanjut jika true
+            if (prepareImageData()) {
+                document.getElementById("loader").style.display = "flex";
+                form.submit(); // Submit secara manual jika lolos
+            }
+        });
+    }
+});
 </script>
 
 </body>
