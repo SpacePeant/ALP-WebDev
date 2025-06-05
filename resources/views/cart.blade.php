@@ -558,7 +558,7 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
             Swal.fire({
                 icon: 'error',
                 title: 'Terjadi Kesalahan',
-                text: 'Gagal mengupdate pilihan. Silakan coba lagi.',
+                text: 'Stock ABESS',
             });
 
             // Kembalikan checkbox ke keadaan sebelumnya
