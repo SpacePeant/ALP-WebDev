@@ -109,7 +109,7 @@
           <span>Total</span>
           <span id="summary-total">Rp. 0</span>
         </div>
-        <a href="{{ url('checkout') }}" class="btn btn-black w-100">Checkout</a>
+        <a href="{{ url('checkout') }}" class="btn btn-black w-100" id="checkout-btn">Checkout</a>
       </div>
     </div>
   </div>
@@ -535,5 +535,19 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
         });
       });
 });
+
+ document.getElementById('checkout-btn').addEventListener('click', function (e) {
+    const itemCount = parseInt(document.getElementById('summary-items').innerText);
+
+    if (itemCount === 0) {
+      e.preventDefault(); 
+      Swal.fire({
+        icon: 'warning',
+        title: 'Oops!',
+        text: 'No items selected for checkout.',
+        confirmButtonText: 'OK'
+      });
+    }
+  });
 </script>
 @endsection
