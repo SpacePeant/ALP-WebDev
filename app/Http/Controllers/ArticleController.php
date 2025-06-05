@@ -22,6 +22,17 @@ class ArticleController extends Controller
         return view('articles.articles', ['article' => $article]);
     }
 
+    public function adminArticle($id)
+    {
+        $article = DB::table('articles')->where('id', $id)->first();
+
+        if (!$article) {
+            abort(404);
+        }
+
+        return view('articles.adminarticles', ['article' => $article]);
+    }
+
     public function showAdmin()
     {
         $articles = DB::table('articles')->orderBy('created_at', 'desc')->get();

@@ -54,7 +54,7 @@
                 </div>
               
                 {{-- Clickable article link --}}
-                <a href="{{ url('/articles/' . $article->id) }}" style="text-decoration: none; color: inherit;">
+                <a href="{{ url('/admin/articles/' . $article->id) }}" style="text-decoration: none; color: inherit;">
                   <article>
                     <img src="{{ asset('image/image_article/' . $article->filename) }}" alt="{{ $article->title }}">
                     <h4>{{ $article->title }}</h4>
