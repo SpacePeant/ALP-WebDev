@@ -110,7 +110,7 @@ class CartController extends Controller
     if ($totalQty > $variant->stock) {
         return response()->json([
             'success' => false,
-            'message' => 'Stok tidak mencukupi. Stok tersedia: ' . $variant->stock . '. Dicart anda sudah ada ' . $item->quantity
+            'message' => 'Insufficient stock. Available stock: ' . $variant->stock . '. You already have ' . $item->quantity . ' item in your cart.'
         ]);
     }
 
