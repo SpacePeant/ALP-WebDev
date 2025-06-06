@@ -9,36 +9,34 @@
 <div class="container">
   <h1 class="text-center mb-4">Orders</h1>
 
-  <div class="d-flex justify-content-between flex-wrap" style="margin-bottom: 20px">
+  <div class="order-filter-bar d-flex justify-content-between gap-3 overflow-auto mb-4">
 
-  <form method="GET" action="{{ route('order') }}" id="filterForm" class="d-flex justify-content-end mb-4 gap-3 flex-wrap" style="margin-top: 50px;">
-      <div class="col-auto">
-          <label for="start_date" class="form-label">From</label>
+  <form method="GET" action="{{ route('order') }}" id="filterForm"
+        class="d-flex gap-3 align-items-end flex-nowrap">
+      <div>
+          <label for="start_date" class="form-label mb-1">From</label>
           <input type="date" id="start_date" name="start_date" class="form-control"
-              value="{{ request('start_date') }}">
+                 value="{{ request('start_date') }}">
       </div>
-      <div class="col-auto">
-          <label for="end_date" class="form-label">To</label>
+      <div>
+          <label for="end_date" class="form-label mb-1">To</label>
           <input type="date" id="end_date" name="end_date" class="form-control"
-              value="{{ request('end_date') }}">
+                 value="{{ request('end_date') }}">
       </div>
-      {{-- <div class="col-auto d-flex align-items-end">
-          <button type="submit" class="btn btn-filter">Filter</button>
-      </div> --}}
-</form>
+  </form>
 
-<form method="GET" action="{{ route('order') }}" id="searchForm" class="d-flex align-items-end gap-2 flex-wrap" style="margin-bottom: 20px">
-    <div class="d-flex align-items-end gap-2">
-        <div>
-            <input type="text" name="search" id="search" class="form-control" placeholder="Search Product Name"
-                value="{{ request('search') }}">
-        </div>
-    </div>
+  <form method="GET" action="{{ route('order') }}" id="searchForm"
+        class="d-flex align-items-end gap-2 flex-nowrap">
+      <div>
+          <label for="search" class="form-label mb-1">Search</label>
+          <input type="text" name="search" id="search" class="form-control"
+                 placeholder="Search Product Name" value="{{ request('search') }}">
+      </div>
 
-    {{-- Hidden input agar tetap menyertakan filter tanggal saat search --}}
-    <input type="hidden" name="start_date" value="{{ request('start_date') }}">
-    <input type="hidden" name="end_date" value="{{ request('end_date') }}">
-</form>
+      <!-- Hidden input agar tetap menyertakan filter tanggal saat search -->
+      <input type="hidden" name="start_date" value="{{ request('start_date') }}">
+      <input type="hidden" name="end_date" value="{{ request('end_date') }}">
+  </form>
 </div>
 
 <ul class="nav nav-tabs mb-3" id="orderStatusTabs">
@@ -270,6 +268,18 @@
     .nav-link:hover {
       color: black;
     }
+
+    @media (max-width: 768px) {
+  .order-filter-bar {
+    flex-wrap: nowrap !important;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .order-filter-bar form {
+    flex-shrink: 0;
+  }
+}
 </style>
 @endpush
 
