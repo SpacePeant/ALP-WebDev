@@ -36,7 +36,7 @@ public function handleReturn($order_id)
         } else {
             $order->status = $status->transaction_status;
         }
-
+        $order->payment_method = $status->payment_type;
         $order->save();
 
         return view('paymentstatus', [
@@ -75,7 +75,7 @@ public function checkStatus($order_id)
         } else {
             $order->status = $status->transaction_status;
         }
-
+        $order->payment_method = $status->payment_type;
         $order->save();
 
         return view('paymentstatus', [

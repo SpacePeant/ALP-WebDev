@@ -254,6 +254,8 @@
       <a href="#">Dashboard</a>
       <a href="{{ route('orderadmin') }}">Order</a>
       <a href="{{ route('productadmin') }}">Product</a>
+      <a href="{{ route('report') }}">Report</a>
+      <a href="{{ route('showadmin')}}">Blog</a>
     </nav>
   </div>
 </header>

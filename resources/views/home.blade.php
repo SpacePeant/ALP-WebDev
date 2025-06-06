@@ -906,7 +906,7 @@
             </div>
           </a>
         @empty
-          <p>Tidak ada rekomendasi produk.</p>
+          <p>No product recommendations available.</p>
         @endforelse
       </div>
     </div>

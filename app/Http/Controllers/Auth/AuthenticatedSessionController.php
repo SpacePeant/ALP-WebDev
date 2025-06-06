@@ -25,22 +25,31 @@ class AuthenticatedSessionController extends Controller
      * Handle an incoming authentication request.
      */
     public function store(LoginRequest $request): RedirectResponse
-    {
-        $request->authenticate();
+{
+    $request->authenticate();
+    $request->session()->regenerate();
 
-        $request->session()->regenerate();
+    $user = Auth::user();
 
-        $user = Auth::user();
-
-        Session::put('user_id', $user->id);
-        Session::put('user_name', $user->name);
-        Session::put('user_email', $user->email);
-
-        return match ($user->role) {
-            'customer' => redirect()->route('home'),
-            default => redirect()->route('dashboard'),
-        };
+    // Cek apakah akun sudah ditandai sebagai dihapus (deleted = 1)
+    if ($user->deleted) {
+        Auth::logout();
+        return redirect()->route('login')->withErrors([
+            'email' => 'Your account has been deactivated.',
+        ]);
     }
+
+    // Simpan informasi ke session
+    Session::put('user_id', $user->id);
+    Session::put('user_name', $user->name);
+    Session::put('user_email', $user->email);
+
+    // Arahkan sesuai role
+    return match ($user->role) {
+        'customer' => redirect()->route('home'),
+        default => redirect()->route('dashboard'),
+    };
+}
 
 
     /**

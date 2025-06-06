@@ -1772,11 +1772,11 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
           <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
             alt="{{ $related->product_name }}">
           <h3>{{ $related->product_name }}</h3>
-          <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+          <p>Rp. {{ number_format($related->price, 0, ',', '.') }}</p>
         </div>
       </a>
     @empty
-      <p>Tidak ada rekomendasi produk.</p>
+      <p>No product recommendations available.</p>
     @endforelse
   </div>
 </div>
@@ -2326,7 +2326,7 @@ if (confirmAddToCartBtn) {
       title: isStockError ? 'Insufficient stock!' : 'Failed!',
       text: data.message || 'An error occurred while adding to cart',
       confirmButtonColor: '#d33',
-      confirmButtonText: 'Try Again'
+      confirmButtonText: 'Cancel'
     });
   }
 })

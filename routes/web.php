@@ -81,7 +81,6 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/checkout', [CheckoutController::class, 'index'])->name('checkout');
         Route::post('/checkout/update-quantity', [CheckoutController::class, 'updateQuantity'])->name('checkout.updateQuantity');
         Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('checkout.payNow');
-        Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
         Route::get('/payment/status/{id}', [PaymentController::class, 'checkStatus'])->name('payment.status');
         Route::get('/payment/return/{id}', [PaymentController::class, 'handleReturn'])->name('payment.return');
         Route::post('/detail_sepatu/{id}/add-review', [ProductController::class, 'addReview'])->name('product.addReview');
@@ -160,14 +159,15 @@ Route::middleware(['auth'])->group(function () {
             Route::post('/store', [ProductController::class, 'store'])->name('addproduct.store');
             Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('productadmin.delete');
         });
-
         Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
         Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
         Route::get('/product/{color_id}', [ProductController::class, 'getVariants']);
         Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
         Route::get('/product/{productId}', [ProductController::class, 'show'])->name('product.detail');
+        Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
     });
 });
 
+Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
 require __DIR__.'/auth.php';
