@@ -12,7 +12,7 @@
   padding: 50px 20px 20px 20px;
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  gap: 40px;
+  gap: 80px;
   align-items: flex-start;
 }
 
@@ -124,14 +124,6 @@
           <h4>CONTACT</h4>
           <ul>
             <li><i class="fa-regular fa-envelope"></i> brrrr@gmail.com</li>
-          </ul>
-        </div>
-        <div class="footer-links">
-          <h4>SUPPORT</h4>
-          <ul>
-            <li><a href="#">Help</a></li>
-            <li><a href="#">Send Feedback</a></li>
-            <li><a href="#">FAQ</a></li>
           </ul>
         </div>
       </div>

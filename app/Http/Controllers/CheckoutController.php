@@ -117,7 +117,10 @@ public function processCheckout(Request $request)
     ->get();
 
 if ($cartItems->isEmpty()) {
-    return back()->with('error', 'Keranjang belanja Anda kosong.');
+    DB::rollBack(); 
+    return back()->with([
+            'error' => "Keranjang belanja Anda kosong."
+        ]);
 }
 
 foreach ($cartItems as $item) {

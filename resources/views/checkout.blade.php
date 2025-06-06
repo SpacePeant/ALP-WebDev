@@ -3,30 +3,33 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container py-5" id="HAH">
+    
     <a href="{{ route('cart') }}" class="back-to-collection" title="Back to cart">
         <i data-feather="corner-down-left"></i>
       </a>
     <h1 class="text-center mb-5">Checkout</h1>
-
+            <form method="POST" action="{{ route('checkout.payNow') }}">
+                @csrf
     <div class="row">
+        
         {{-- Customer Info --}}
         <div class="col-md-8">
             <h5>Customer Information</h5><br>
-
             <div class="row mb-3">
                 <div class="col">
                     <p>Name</p>
-                    <input type="text" class="form-control" value="{{ $customer->name }}">
+                    <input type="text" name="cust_name" class="form-control" value="{{ old('cust_name', $customer->name) }}">
                 </div>
+
                 <div class="col">
                     <p>Phone Number</p>
-                    <input type="text" class="form-control" value="{{ $customer->phone_number }}">
+                    <input type="text" name="cust_phone_number" class="form-control" value="{{ old('cust_phone_number', $customer->phone_number) }}">
                 </div>
             </div>
 
-            <div class="mb-4">
+             <div class="mb-4">
                 <p>Address</p>
-                <input type="text" class="form-control" value="{{ $customer->address }}">
+                <input type="text" name="cust_address" class="form-control" value="{{ old('cust_address', $customer->address) }}">
             </div>
 
             <h5>Products</h5><br>
@@ -74,8 +77,6 @@
 
         {{-- Order Summary & Payment --}}
         <div class="col-md-4">
-            <form method="POST" action="{{ route('checkout.payNow') }}">
-                @csrf
                 <div class="border p-3 rounded">
                     <h6>Order Summary</h6>
 
@@ -98,9 +99,9 @@
                     <input type="hidden" name="payment_method" id="payment_method_input" value="cash">
                     <button type="submit" name="pay_now" class="btn btn-dark w-100">Pay Now</button>
                 </div>
-            </form>
         </div>
     </div>
+</form>
 </div>
 
 <div id="loader" class="loader-overlay">

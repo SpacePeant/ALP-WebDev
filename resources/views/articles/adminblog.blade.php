@@ -22,7 +22,12 @@
   <body>
     <main>
       <section>
-        <h3 class="articles-title">All articles</h3>
+        <h1 class="text-center mb-4" style="font-family: 'Playfair Display', serif;
+  font-weight: 700;
+  margin-bottom: 40px;
+  margin-top:100px;
+  text-align: center;">All Articles</h1>
+        {{-- <h3 class="articles-title" style="margin-top: 100px">All Articles</h3> --}}
          <div class="d-flex justify-content-start mb-4">
             <button id = "button-add"class="btn btn-dark btn-lg px-4 shadow-sm rounded-0" data-bs-toggle="modal" data-bs-target="#createArticleModal">
                 <i class="bi bi-plus-lg me-2"></i> Create Article

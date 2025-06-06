@@ -316,9 +316,6 @@
 .back-to-collection:hover {
     background: #f0f0f0;
 }
-#colorTabContent{
-  margin-right: 50px;
-}
   </style>
 </head>
 <body>

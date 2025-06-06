@@ -15,7 +15,7 @@
         <thead>
           <tr>
             <th class="text-muted">Product</th>
-            <th class="text-muted">Price</th>
+            <th class="text-muted">Price</th> 
             <th class="text-muted">Qty</th>
             <th id="total-column" class="text-muted">Total</th>
           </tr>
@@ -114,7 +114,7 @@
     </div>
   </div>
 </div>
-<div id="loader" class="loader-overlay">
+<div id="loader" class="loader-overlay" style="display: none">
       <div class="loader"></div>
   </div>
 <script>
@@ -542,7 +542,7 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
                 // Kalau gagal (misalnya stok habis), tampilkan SweetAlert
                 Swal.fire({
                     icon: 'error',
-                    title: 'Stock Produk ABES',
+                    title: 'Insufficient stock!',
                     text: data.error,
                 });
 
@@ -558,7 +558,7 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
             Swal.fire({
                 icon: 'error',
                 title: 'Terjadi Kesalahan',
-                text: 'Gagal mengupdate pilihan. Silakan coba lagi.',
+                text: 'Stock ABESS',
             });
 
             // Kembalikan checkbox ke keadaan sebelumnya
@@ -626,33 +626,34 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
           .then(res => res.json())
           .then(data => {
               if (!data.success) {
-                  console.error("Failed to Update Size.");
+                  console.error("Failed to update size.");
               }
           });
         });
       });
 });
 
-document.getElementById('checkout-btn').addEventListener('click', function (e) {
+document.addEventListener("DOMContentLoaded", function () {
+  const checkoutBtn = document.getElementById("checkout-btn");
+
+  checkoutBtn.addEventListener("click", function (e) {
     const itemCount = parseInt(document.getElementById('summary-items').innerText);
 
     if (itemCount === 0) {
-      e.preventDefault(); 
+      e.preventDefault();
+      
       Swal.fire({
         icon: 'warning',
         title: 'Oops!',
         text: 'No items selected for checkout.',
         confirmButtonText: 'OK'
       });
+    } else {
+      // Show loader only if there are items
+      document.getElementById("loader").style.display = "flex";
     }
   });
-
-  document.addEventListener("DOMContentLoaded", function () {
-    const checkoutBtn = document.getElementById("checkout-btn");
-    checkoutBtn.addEventListener("click", function (e) {
-      document.getElementById("loader").style.display = "flex";
-    });
-  });
+});
 
 //   window.addEventListener("pageshow", function (event) {
 //   // Fired when coming back via Back/Forward cache (bfcache)
