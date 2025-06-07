@@ -257,7 +257,8 @@
 
 <div class="d-flex justify-content-between flex-wrap">
 <form method="GET" action="{{ route('admin.orders') }}" id="filterForm" class="d-flex justify-content-end mb-4 gap-3 flex-wrap" style="margin-top: 50px;">
-      <div class="col-auto">
+  <div class="d-flex flex-wrap gap-2 align-items-end">    
+  <div class="col-auto">
           <label for="start_date" class="form-label">From</label>
           <input type="date" id="start_date" name="start_date" class="form-control"
               value="{{ request('start_date') }}">
@@ -267,6 +268,7 @@
           <input type="date" id="end_date" name="end_date" class="form-control"
               value="{{ request('end_date') }}">
       </div>
+    </div>
       {{-- <div class="col-auto d-flex align-items-end">
           <button type="submit" class="btn btn-dark">Filter</button>
       </div> --}}

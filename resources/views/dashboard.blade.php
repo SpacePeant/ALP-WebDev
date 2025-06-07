@@ -232,7 +232,7 @@
   </style>
 </head>
 <body>
-  <div class="dashboard-container px-3 px-sm-4 px-md-0">
+  <div class="dashboard-container px-3 px-sm-4 px-md-4">
   <h1>Dashboard</h1>
 
   <div class="d-flex justify-content-end mb-3">
