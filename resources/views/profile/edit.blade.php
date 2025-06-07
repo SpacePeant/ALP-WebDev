@@ -1,6 +1,8 @@
 @extends('base.base1')
 
 @section('content')
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <style>
     .container {
         margin-top: 50px;
