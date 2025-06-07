@@ -222,6 +222,7 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
         Route::get('/product/{color_id}', [ProductController::class, 'getVariants']);
+        Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
         Route::get('/product/{productId}', [ProductController::class, 'show'])->name('product.detail');
         Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
     });

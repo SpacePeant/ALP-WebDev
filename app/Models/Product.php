@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Support\Facades\File;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 
@@ -34,6 +35,18 @@ class Product extends Model
     public function category()
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function getImageUrl($posisi)
+    {
+        $filename = $this->{'image_' . $posisi};
+        $path = "image/sepatu/{$posisi}/" . $filename;
+
+        if (!empty($filename) && File::exists(public_path($path))) {
+            return asset($path);
+        } else {
+            return asset('image/no_image.png');
+        }
     }
 
 }
