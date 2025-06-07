@@ -882,7 +882,7 @@
               <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
                 alt="{{ $related->product_name }}">
               <h3>{{ $related->product_name }}</h3>
-              <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+              <p>Rp. {{ number_format($related->price, 0, ',', '.') }}</p>
             </div>
           </a>
         @empty
@@ -902,11 +902,11 @@
               <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
                 alt="{{ $related->product_name }}">
               <h3>{{ $related->product_name }}</h3>
-              <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+              <p>Rp. {{ number_format($related->price, 0, ',', '.') }}</p>
             </div>
           </a>
         @empty
-          <p>Tidak ada rekomendasi produk.</p>
+          <p>No product recommendations available.</p>
         @endforelse
       </div>
     </div>

@@ -303,7 +303,7 @@
   }
 }
 
-.pagination {
+      .pagination {
         display: flex;
         justify-content: end;
         gap: 6px;
@@ -322,19 +322,12 @@
         border-radius: 4px;
     }
 
-    .pagination li.active span {
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-
         .pagination-wrapper {
         display: flex;
         justify-content: space-between;
         align-items: center;
         flex-wrap: wrap;
         gap: 10px;
-        margin-right: 30px;
     }
     .pagination .page-item .page-link {
         /* padding: 0.375rem 0.75rem; */
@@ -342,8 +335,21 @@
     }
     .form-select-sm {
         font-size: 0.875rem;
-        /* padding: 0.25rem 0.5rem; */
+        /* padding: 0.25rem 
+        0.5rem; */
     }
+    
+  .pagination li.active a {
+      background-color: #444 !important;
+      color: white !important;
+      border-color: #444 !important;
+      transition: background-color 0.3s ease;
+  }
+
+  .pagination li.active a:hover {
+      background-color: black !important;
+      color: white !important;
+  }
   </style>
 </head>
 <body>
@@ -613,7 +619,21 @@ $(document).ready(function () {
 
 
 </script>
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        @if (session('success'))
+            Swal.fire({
+                icon: 'success',
+                title: 'Saved!',
+                text: 'Product has been saved successfully',
+                confirmButtonColor: '#3085d6'
+            });
+        @elseif (session('error'))
+            Swal.fire('Error', result.message || "Failed to save.", 'error');
+        @endif
+    });
+</script>
 </body>
 </html>
 

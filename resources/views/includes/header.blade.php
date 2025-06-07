@@ -181,7 +181,7 @@
   <!-- Desktop Layout -->
   <div class="layout-desktop">
     <div class="logo">
-      <img src="{{ asset('image/logo2.png') }}" alt="Logo" />
+      <img src="{{ asset('image/logo2.png') }}" alt="Logo"/>
     </div>
 
     <nav class="menu">

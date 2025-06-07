@@ -7,7 +7,8 @@
           <p class="mb-1">Order ID: {{ $order->id }}</p>
           <p class="mb-1">Order Date: {{ \Carbon\Carbon::parse($order->order_date)->format('d M Y') }}</p>
           <p class="mb-1">Items: {{ $order->item_count }}</p>
-          <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p>
+          {{-- <p class="mb-1">Total: Rp. {{ number_format($order->total, 2, ',', '.') }}</p> --}}
+          <p class="mb-1">Total: Rp. {{ number_format($order->total, 0, ',', '.') }}</p>
           <div class="mb-1">
               Status:
               @if ($order->status == 'paid')
@@ -55,7 +56,6 @@
               </div>
             </div>
           @endforeach
-
         </div>
       </div>
     </div>
@@ -68,86 +68,88 @@
 @endif
 
 <div id="paginationWrapper" class="pagination-wrapper mt-4">
-    {{-- Show Entries --}}
-    <div class="d-flex align-items-center">
-        <label for="entries" class="me-2 mb-0">Show</label>
-        <select id="entries" name="entries" class="form-select form-select-sm w-auto"
-                onchange="changeEntries(this.value)">
-            <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
-            <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
-            <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
-        </select>
-        <span class="ms-2">entries</span>
-    </div>
+    <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+        {{-- Show Entries --}}
+        <div class="d-flex align-items-center">
+            <label for="entries" class="me-2 mb-0">Show</label>
+            <select id="entries" name="entries" class="form-select form-select-sm w-auto"
+                    onchange="changeEntries(this.value)">
+                <option value="5" {{ request('entries') == 5 ? 'selected' : '' }}>5</option>
+                <option value="10" {{ request('entries') == 10 ? 'selected' : '' }}>10</option>
+                <option value="25" {{ request('entries') == 25 ? 'selected' : '' }}>25</option>
+            </select>
+            <span class="ms-2">entries</span>
+        </div>
 
-    {{-- Pagination --}}
-@if ($orders->hasPages())
-    <nav>
-        <ul class="pagination pagination-sm mb-0">
-            {{-- Prev --}}
-            @if ($orders->onFirstPage())
-                <li class="page-item disabled"><span class="page-link">Prev</span></li>
-            @else
-                <li class="page-item">
-                    <a class="page-link" href="{{ $orders->previousPageUrl() }}">Prev</a>
-                </li>
-            @endif
-
-            @php
-                $current = $orders->currentPage();
-                $last = $orders->lastPage();
-            @endphp
-
-            {{-- Show 1-4 if currentPage <= 3 --}}
-            @if ($last <= 5)
-                @for ($i = 1; $i <= $last; $i++)
-                    <li class="page-item {{ $current == $i ? 'active' : '' }}">
-                        <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
-                    </li>
-                @endfor
-            @else
-                @if ($current <= 3)
-                    @for ($i = 1; $i <= 4; $i++)
-                        <li class="page-item {{ $current == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
-                        </li>
-                    @endfor
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                    <li class="page-item">
-                        <a class="page-link" href="{{ $orders->url($last) }}">{{ $last }}</a>
-                    </li>
-                @elseif ($current > 3 && $current < $last - 2)
-                    <li class="page-item"><a class="page-link" href="{{ $orders->url(1) }}">1</a></li>
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                    @for ($i = $current - 1; $i <= $current + 1; $i++)
-                        <li class="page-item {{ $current == $i ? 'active' : '' }}">
-                            <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
-                        </li>
-                    @endfor
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                    <li class="page-item"><a class="page-link" href="{{ $orders->url($last) }}">{{ $last }}</a></li>
+        {{-- Pagination --}}
+        @if ($orders->hasPages())
+        <nav>
+            <ul class="pagination pagination-sm mb-0">
+                {{-- Prev --}}
+                @if ($orders->onFirstPage())
+                    <li class="page-item disabled"><span class="page-link">Prev</span></li>
                 @else
-                    <li class="page-item"><a class="page-link" href="{{ $orders->url(1) }}">1</a></li>
-                    <li class="page-item disabled"><span class="page-link">...</span></li>
-                    @for ($i = $last - 3; $i <= $last; $i++)
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $orders->previousPageUrl() }}">Prev</a>
+                    </li>
+                @endif
+
+                @php
+                    $current = $orders->currentPage();
+                    $last = $orders->lastPage();
+                @endphp
+
+                {{-- Show pages --}}
+                @if ($last <= 5)
+                    @for ($i = 1; $i <= $last; $i++)
                         <li class="page-item {{ $current == $i ? 'active' : '' }}">
                             <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
                         </li>
                     @endfor
+                @else
+                    @if ($current <= 3)
+                        @for ($i = 1; $i <= 4; $i++)
+                            <li class="page-item {{ $current == $i ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <li class="page-item">
+                            <a class="page-link" href="{{ $orders->url($last) }}">{{ $last }}</a>
+                        </li>
+                    @elseif ($current > 3 && $current < $last - 2)
+                        <li class="page-item"><a class="page-link" href="{{ $orders->url(1) }}">1</a></li>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        @for ($i = $current - 1; $i <= $current + 1; $i++)
+                            <li class="page-item {{ $current == $i ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        <li class="page-item"><a class="page-link" href="{{ $orders->url($last) }}">{{ $last }}</a></li>
+                    @else
+                        <li class="page-item"><a class="page-link" href="{{ $orders->url(1) }}">1</a></li>
+                        <li class="page-item disabled"><span class="page-link">...</span></li>
+                        @for ($i = $last - 3; $i <= $last; $i++)
+                            <li class="page-item {{ $current == $i ? 'active' : '' }}">
+                                <a class="page-link" href="{{ $orders->url($i) }}">{{ $i }}</a>
+                            </li>
+                        @endfor
+                    @endif
                 @endif
-            @endif
 
-            {{-- Next --}}
-            @if ($orders->hasMorePages())
-                <li class="page-item">
-                    <a class="page-link" href="{{ $orders->nextPageUrl() }}">Next</a>
-                </li>
-            @else
-                <li class="page-item disabled"><span class="page-link">Next</span></li>
-            @endif
-        </ul>
-    </nav>
-@endif
+                {{-- Next --}}
+                @if ($orders->hasMorePages())
+                    <li class="page-item">
+                        <a class="page-link" href="{{ $orders->nextPageUrl() }}">Next</a>
+                    </li>
+                @else
+                    <li class="page-item disabled"><span class="page-link">Next</span></li>
+                @endif
+            </ul>
+        </nav>
+        @endif
+    </div>
 </div>
 
 <span id="total-orders" hidden>{{ $orders->total() }}</span>

@@ -34,6 +34,14 @@
       margin-top : 100px;
     }
 
+    h1 {
+      font-family: 'Playfair Display', serif;
+      font-weight: 700;
+      margin-bottom: 40px;
+      margin-top:120px;
+      text-align: center;
+    }
+
     /* Statistik cards */
     .card-stat {
       background-color: #fff;

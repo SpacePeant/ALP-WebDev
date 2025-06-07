@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\View\View;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Session;
@@ -45,21 +46,28 @@ class ProfileController extends Controller
     /**
      * Delete the user's account.
      */
-    public function destroy(Request $request): RedirectResponse
-    {
-        $request->validateWithBag('userDeletion', [
-            'password' => ['required', 'current_password'],
-        ]);
+    
 
-        $user = $request->user();
+public function destroy(Request $request): RedirectResponse
+{
+    $request->validateWithBag('userDeletion', [
+        'password' => ['required', 'current_password'],
+    ]);
 
-        Auth::logout();
+    $user = $request->user();
 
-        $user->delete();
+    Auth::logout();
 
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
+    // Update manual kolom 'deleted' jadi 1 berdasarkan ID
+    DB::table('users')
+        ->where('id', $user->id)
+        ->update(['deleted' => 1]);
 
-        return Redirect::to('/');
-    }
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return Redirect::to('/');
+}
+
+
 }

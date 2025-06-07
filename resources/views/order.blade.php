@@ -22,9 +22,9 @@
           <input type="date" id="end_date" name="end_date" class="form-control"
               value="{{ request('end_date') }}">
       </div>
-      <div class="col-auto d-flex align-items-end">
+      {{-- <div class="col-auto d-flex align-items-end">
           <button type="submit" class="btn btn-filter">Filter</button>
-      </div>
+      </div> --}}
 </form>
 
 <form method="GET" action="{{ route('order') }}" id="searchForm" class="d-flex align-items-end gap-2 flex-wrap" style="margin-bottom: 20px">
@@ -216,7 +216,7 @@
     max-height: 1000px;
   }
 
- .pagination {
+       .pagination {
         display: flex;
         justify-content: end;
         gap: 6px;
@@ -235,12 +235,6 @@
         border-radius: 4px;
     }
 
-    .pagination li.active span {
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-
         .pagination-wrapper {
         display: flex;
         justify-content: space-between;
@@ -254,9 +248,28 @@
     }
     .form-select-sm {
         font-size: 0.875rem;
-        /* padding: 0.25rem 0.5rem; */
+        /* padding: 0.25rem 
+        0.5rem; */
+    }
+    
+  .pagination li.active a {
+      background-color: #444 !important;
+      color: white !important;
+      border-color: #444 !important;
+      transition: background-color 0.3s ease;
+  }
+
+  .pagination li.active a:hover {
+      background-color: black !important;
+      color: white !important;
+  }
+.nav-link {
+      color: black;
     }
 
+    .nav-link:hover {
+      color: black;
+    }
 </style>
 @endpush
 
@@ -266,7 +279,19 @@
 
 <script>
 $(document).ready(function () {
-    // Toggle detail pesanan (sama kaya kamu)
+    // ==========================
+    // Variabel global
+    // ==========================
+    let currentStatus = "{{ request('status') ?? '' }}";
+    let currentPage = 1;
+    let currentSearch = $('#search').val() || '';
+    let currentStartDate = $('#start_date').val() || '';
+    let currentEndDate = $('#end_date').val() || '';
+    let currentEntries = parseInt($('#entries').val()) || 5;
+
+    // ==========================
+    // Toggle dropdown detail pesanan
+    // ==========================
     function toggleDropdown(e) {
         const btn = e.currentTarget;
         const orderCard = btn.closest('.order-card');
@@ -293,114 +318,124 @@ $(document).ready(function () {
         });
     }
 
-    // Fungsi AJAX load orders
-    function fetchOrders(params = '', pushState = true) {
+    // ==========================
+    // AJAX Fetch Orders
+    // ==========================
+    function fetchOrders(params = {}) {
+        let data = {
+            status: currentStatus,
+            page: currentPage,
+            search: currentSearch,
+            start_date: currentStartDate,
+            end_date: currentEndDate,
+            entries: currentEntries
+        };
+
+        data = {...data, ...params};
+
+        Object.keys(data).forEach(key => {
+            if (!data[key]) delete data[key];
+        });
+
         $.ajax({
-            url: "{{ route('order') }}?" + params,
-            headers: { 'X-Requested-With': 'XMLHttpRequest' },
+            url: "{{ route('order') }}",
             type: "GET",
+            data: data,
+            headers: { 'X-Requested-With': 'XMLHttpRequest' },
             success: function (response) {
                 $('#paginationWrapper').remove();
                 $('#orderResults').html(response);
                 bindDropdownToggle();
-
-                // Update URL browser supaya query param sinkron
-                if(pushState) {
-                    const newUrl = window.location.pathname + '?' + params;
-                    history.pushState(null, '', newUrl);
-                }
+                bindTabAndPagination();
+                bindEntriesDropdown();
             },
             error: function () {
-                alert('Failed to load orders.');
+                alert('Gagal memuat data pesanan.');
             }
         });
     }
 
-    // Pagination klik
-    $(document).on('click', '.pagination a', function (e) {
-        e.preventDefault();
-        const url = $(this).attr('href');
-        const params = url.split('?')[1];
+    function bindTabAndPagination() {
+        $('#orderStatusTabs .nav-link').off('click').on('click', function (e) {
+            e.preventDefault();
+            currentStatus = $(this).data('status') || '';
+            currentPage = 1;
 
-        fetchOrders(params, true); // update URL browser
-    });
+            $('#orderStatusTabs .nav-link').removeClass('active');
+            $(this).addClass('active');
 
-    // Ganti jumlah entries
-    window.changeEntries = function (newEntries) {
-        const url = new URL(window.location.href);
-        newEntries = parseInt(newEntries);
+            fetchOrders();
+        });
 
-        // Ambil parameter page dari URL (yang sudah terupdate saat klik pagination)
-        let currentPage = parseInt(url.searchParams.get('page') || 1);
+        $('#orderResults').find('.pagination a').off('click').on('click', function (e) {
+            e.preventDefault();
+            const url = new URL($(this).attr('href'));
+            const params = Object.fromEntries(url.searchParams.entries());
+            currentPage = parseInt(params.page) || 1;
+            fetchOrders(params);
+        });
+    }
 
-        // Ambil total order dari elemen di halaman
-        const totalOrders = parseInt($('#total-orders').text() || 0);
+    // ==========================
+    // Entry dropdown dengan validasi halaman
+    // ==========================
+    function bindEntriesDropdown() {
+        $('#entries').off('change').on('change', function () {
+            const newEntries = parseInt($(this).val()) || 5;
 
-        const maxPage = Math.max(1, Math.ceil(totalOrders / newEntries));
+            // Ambil total orders dari elemen #total-orders
+            const totalOrders = parseInt($('#total-orders').text()) || 0;
 
-        // Jika currentPage melebihi maxPage, set ke maxPage
-        if (currentPage > maxPage) currentPage = maxPage;
+            const newMaxPage = Math.ceil(totalOrders / newEntries);
+            if (currentPage > newMaxPage) {
+                currentPage = newMaxPage;
+            }
 
-        // Update URL param entries dan page
-        url.searchParams.set('entries', newEntries);
-        url.searchParams.set('page', currentPage);
+            currentEntries = newEntries;
+            fetchOrders();
+        });
+    }
 
-        // Ambil filter lain jika ada
-        const search = $('#search').val();
-        const start = $('#start_date').val();
-        const end = $('#end_date').val();
-
-        if (search) url.searchParams.set('search', search);
-        if (start) url.searchParams.set('start_date', start);
-        if (end) url.searchParams.set('end_date', end);
-
-        // Fetch data dan update URL browser
-        fetchOrders(url.searchParams.toString(), true);
-    };
-
-    // Submit filter form (sama seperti kamu)
+    // ==========================
+    // Filter form & search input
+    // ==========================
     $('#filterForm').on('submit', function (e) {
         e.preventDefault();
-
-        const params = new URLSearchParams();
-        const search = $('#search').val();
-        const start = $('#start_date').val();
-        const end = $('#end_date').val();
-
-        if (search) params.append('search', search);
-        if (start) params.append('start_date', start);
-        if (end) params.append('end_date', end);
-
-        fetchOrders(params.toString(), true);
+        currentSearch = $('#search').val();
+        currentStartDate = $('#start_date').val();
+        currentEndDate = $('#end_date').val();
+        currentPage = 1;
+        fetchOrders();
     });
 
-    // Search dengan debounce (sama seperti kamu)
     let debounceTimeout;
     $('#search').on('input', function () {
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(() => {
-            $('#filterForm').submit();
+            currentSearch = $(this).val();
+            currentPage = 1;
+            fetchOrders();
         }, 300);
     });
 
-    // Tab status order (sama seperti kamu)
-    $('#orderStatusTabs .nav-link').on('click', function (e) {
-        e.preventDefault();
-
-        $('#orderStatusTabs .nav-link').removeClass('active');
-        $(this).addClass('active');
-
-        const status = $(this).data('status');
-        const params = new URLSearchParams();
-        params.set('status', status);
-
-        fetchOrders(params.toString(), true);
+    $('#start_date, #end_date').on('change', function () {
+        currentStartDate = $('#start_date').val();
+        currentEndDate = $('#end_date').val();
+        currentPage = 1;
+        fetchOrders();
     });
 
-    // Initial bind
+    // ==========================
+    // Inisialisasi awal
+    // ==========================
     bindDropdownToggle();
+    bindTabAndPagination();
+    bindEntriesDropdown();
+    fetchOrders();
 });
-
 </script>
 @endpush
+
+
+
 

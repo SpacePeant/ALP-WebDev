@@ -1772,11 +1772,11 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
           <img src="{{ asset('image/sepatu/kiri/' . $related->image_kiri) }}"
             alt="{{ $related->product_name }}">
           <h3>{{ $related->product_name }}</h3>
-          <p>Rp {{ number_format($related->price, 0, ',', '.') }}</p>
+          <p>Rp. {{ number_format($related->price, 0, ',', '.') }}</p>
         </div>
       </a>
     @empty
-      <p>Tidak ada rekomendasi produk.</p>
+      <p>No product recommendations available.</p>
     @endforelse
   </div>
 </div>
@@ -2124,15 +2124,39 @@ document.querySelectorAll('.wishlist-btn').forEach(button => {
 <script>
 document.querySelectorAll('.add-cart').forEach(button => {
     button.addEventListener('click', function() {
-        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-        cartModal.show();
+      const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
+    const selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
+        if (!selectedSize || !selectedColorCode) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please select',
+        text: 'Please select both size and color before adding to cart.',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+    cartModal.show();
     });
 });
 
 document.querySelectorAll('.mobile-add-cart').forEach(button => {
     button.addEventListener('click', function() {
-        const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
-        cartModal.show();
+        const selectedSize = document.querySelector('.size-btn.selected')?.dataset.size;
+    const selectedColorCode = document.querySelector('.color-circle.selected')?.dataset.colorCode;
+        if (!selectedSize || !selectedColorCode) {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Please select',
+        text: 'Please select both size and color before adding to cart.',
+        confirmButtonText: 'OK'
+      });
+      return;
+    }
+
+    const cartModal = new bootstrap.Modal(document.getElementById('cartModal'));
+    cartModal.show();
     });
 });
 
@@ -2302,12 +2326,15 @@ if (confirmAddToCartBtn) {
       title: isStockError ? 'Insufficient stock!' : 'Failed!',
       text: data.message || 'An error occurred while adding to cart',
       confirmButtonColor: '#d33',
-      confirmButtonText: 'Try Again'
+      confirmButtonText: 'Cancel'
     });
   }
 })
     .catch(err => {
       console.error('Fetch Error:', err);
+
+      document.getElementById("loader").style.display = "none";
+
       Swal.fire({
         icon: 'error',
         title: 'Error!',

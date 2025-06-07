@@ -604,22 +604,15 @@ input[type="range"]::-webkit-slider-thumb {
     flex-direction: column;
 }
 
-
-
-
-
-
-.pagination {
+      .pagination {
         display: flex;
         justify-content: end;
         gap: 6px;
     }
 
-
     .pagination li {
         list-style: none;
     }
-
 
     .pagination li a,
     .pagination li span {
@@ -629,14 +622,6 @@ input[type="range"]::-webkit-slider-thumb {
         color: #333;
         border-radius: 4px;
     }
-
-
-    .pagination li.active span {
-        background-color: #007bff;
-        color: white;
-        border-color: #007bff;
-    }
-
 
         .pagination-wrapper {
         display: flex;
@@ -652,8 +637,22 @@ input[type="range"]::-webkit-slider-thumb {
     }
     .form-select-sm {
         font-size: 0.875rem;
-        /* padding: 0.25rem 0.5rem; */
+        /* padding: 0.25rem 
+        0.5rem; */
     }
+    
+  .pagination li.active a {
+      background-color: #444 !important;
+      color: white !important;
+      border-color: #444 !important;
+      transition: background-color 0.3s ease;
+  }
+
+  .pagination li.active a:hover {
+      background-color: black !important;
+      color: white !important;
+  }
+
   </style>
 </head>
 <body>
@@ -722,7 +721,7 @@ input[type="range"]::-webkit-slider-thumb {
 
     </div>
   </div>
-  <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="margin-bottom:70px;">
+  {{-- <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev" style="margin-bottom:70px;">
     <span class="carousel-control-prev-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Previous</span>
   </button>
@@ -731,7 +730,7 @@ input[type="range"]::-webkit-slider-thumb {
   <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next" style="margin-bottom:70px;">
     <span class="carousel-control-next-icon" aria-hidden="true"></span>
     <span class="visually-hidden">Next</span>
-  </button>
+  </button> --}}
 </div>
 
 
@@ -750,7 +749,7 @@ input[type="range"]::-webkit-slider-thumb {
 
     <div class="select-wrapper">
         <select name="sort" id="sortSelect" class="select">
-            <option class="sort" value="">Sort By</option>
+            <option class="sort" value="">Sort by</option>
             <option value="newest">Newest</option>
             <option value="price_asc">Price: Low to High</option>
             <option value="price_desc">Price: High to Low</option>
@@ -761,8 +760,8 @@ input[type="range"]::-webkit-slider-thumb {
     <div class="price-filter">
     <label>Price</label>
     <div class="slider-values">
-      <span>Rp <span id="minPriceVal">{{ $minPrice }}k</span></span>
-      <span>Rp <span id="maxPriceVal">{{ $maxPrice }}k</span></span>
+      <span>Rp. <span id="minPriceVal">{{ $minPrice }}k</span></span>
+      <span>Rp. <span id="maxPriceVal">{{ $maxPrice }}k</span></span>
     </div>
     <div class="slider-container">
       <input type="range" name="min" id="minPrice" min="{{ $minPrice }}" max="{{ $maxPrice }}" value="{{ $minPrice }}" step="100">

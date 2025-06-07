@@ -163,7 +163,7 @@
     border-color: #d6d8db;
     }
 
-     .pagination {
+      .pagination {
         display: flex;
         justify-content: end;
         gap: 6px;
@@ -186,7 +186,7 @@
         background-color: #007bff;
         color: white;
         border-color: #007bff;
-    }
+    } */
 
         .pagination-wrapper {
         display: flex;
@@ -201,7 +201,28 @@
     }
     .form-select-sm {
         font-size: 0.875rem;
-        /* padding: 0.25rem 0.5rem; */
+        /* padding: 0.25rem 
+        0.5rem; */
+    }
+
+  .pagination li.active a {
+      background-color: #444 !important;
+      color: white !important;
+      border-color: #444 !important;
+      transition: background-color 0.3s ease;
+  }
+
+  .pagination li.active a:hover {
+      background-color: black !important;
+      color: white !important;
+  }
+
+    .nav-link {
+      color: black;
+    }
+
+    .nav-link:hover {
+      color: black;
     }
 
   </style>
@@ -246,9 +267,9 @@
           <input type="date" id="end_date" name="end_date" class="form-control"
               value="{{ request('end_date') }}">
       </div>
-      <div class="col-auto d-flex align-items-end">
+      {{-- <div class="col-auto d-flex align-items-end">
           <button type="submit" class="btn btn-dark">Filter</button>
-      </div>
+      </div> --}}
 </form>
 
 <form method="GET" action="{{ route('admin.orders') }}" id="searchForm" class="d-flex align-items-end gap-2 flex-wrap" style="margin-bottom: 20px">
@@ -305,6 +326,41 @@ document.addEventListener('DOMContentLoaded', function () {
     let statusTabs = document.querySelectorAll('#orderStatusTabs .nav-link');
     let entriesSelect = document.getElementById('entries');
 
+    // currentPage dan totalOrders global
+    let currentPage = 1;
+    let totalOrders = 0;
+
+    // Helper function ambil semua parameter filter dari UI saat ini
+    function getFilterParams() {
+        const params = new URLSearchParams();
+
+        if (searchInput && searchInput.value.trim() !== '') {
+            params.set('search', searchInput.value.trim());
+        }
+        if (searchBy && searchBy.value) {
+            params.set('search_by', searchBy.value);
+        }
+        if (startDate && startDate.value) {
+            params.set('start_date', startDate.value);
+        }
+        if (endDate && endDate.value) {
+            params.set('end_date', endDate.value);
+        }
+        if (entriesSelect && entriesSelect.value) {
+            params.set('entries', entriesSelect.value);
+        }
+        if (currentPage && currentPage > 1) {
+            params.set('page', currentPage);
+        }
+
+        const activeTab = document.querySelector('#orderStatusTabs .nav-link.active');
+        if (activeTab && activeTab.getAttribute('data-status')) {
+            params.set('status', activeTab.getAttribute('data-status'));
+        }
+
+        return params;
+    }
+
     function toggleDropdown(e) {
         const btn = e.currentTarget;
         const orderCard = btn.closest('.order-card');
@@ -325,8 +381,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     function bindDropdownToggle() {
         document.querySelectorAll('.view-order-toggle').forEach(btn => {
-            btn.removeEventListener('click', toggleDropdown); // Unbind
-            btn.addEventListener('click', toggleDropdown);    // Rebind
+            btn.removeEventListener('click', toggleDropdown); // Unbind dulu
+            btn.addEventListener('click', toggleDropdown);    // Bind ulang
         });
     }
 
@@ -364,58 +420,46 @@ document.addEventListener('DOMContentLoaded', function () {
         })
         .then(res => res.text())
         .then(html => {
-    orderContainer.innerHTML = html;
+            orderContainer.innerHTML = html;
 
-    // 🔁 Update totalOrders dari elemen tersembunyi di HTML
-    const totalElement = document.getElementById('total-orders');
-    if (totalElement) totalOrders = parseInt(totalElement.textContent);
+            // Update totalOrders dari elemen tersembunyi di HTML
+            const totalElement = document.getElementById('total-orders');
+            if (totalElement) totalOrders = parseInt(totalElement.textContent);
 
-    // Rebind
-    entriesSelect = document.getElementById('entries');
-    bindDropdownToggle();
-    bindEntriesSelect();
-})
+            // Rebind event handlers setelah reload konten
+            bindDropdownToggle();
+            bindEntriesSelect();
+        })
         .catch(err => console.error('AJAX error:', err));
     }
 
+    // Handle pagination link clicks
     document.addEventListener('click', function(e) {
         if (e.target.matches('.pagination a')) {
             e.preventDefault();
             const url = new URL(e.target.href);
             currentPage = parseInt(url.searchParams.get('page')) || 1;
 
-            if (entriesSelect) url.searchParams.set('entries', entriesSelect.value);
-            if (searchInput) url.searchParams.set('search', searchInput.value);
-            if (searchBy) url.searchParams.set('search_by', searchBy.value);
-            if (startDate) url.searchParams.set('start_date', startDate.value);
-            if (endDate) url.searchParams.set('end_date', endDate.value);
-            const activeTab = document.querySelector('#orderStatusTabs .nav-link.active');
-            if (activeTab) url.searchParams.set('status', activeTab.getAttribute('data-status'));
-            fetchOrders(url.searchParams.toString());
+            fetchOrders(getFilterParams().toString());
         }
     });
 
+    // Filter form submit
     if (filterForm) {
         filterForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            const formData = new FormData(filterForm);
-            const params = new URLSearchParams(formData).toString();
-            fetchOrders(params);
+            currentPage = 1; // reset halaman 1
+            fetchOrders(getFilterParams().toString());
         });
     }
 
+    // Debounce untuk search input dan filter tanggal
     let debounceTimeout;
     function doSearch() {
         clearTimeout(debounceTimeout);
         debounceTimeout = setTimeout(() => {
-            const params = new URLSearchParams({
-                search: searchInput?.value || '',
-                search_by: searchBy?.value || '',
-                start_date: startDate?.value || '',
-                end_date: endDate?.value || ''
-            });
-            if (entriesSelect) params.set('entries', entriesSelect.value);
-            fetchOrders(params.toString());
+            currentPage = 1; // reset halaman 1
+            fetchOrders(getFilterParams().toString());
         }, 300);
     }
 
@@ -424,23 +468,27 @@ document.addEventListener('DOMContentLoaded', function () {
     if (startDate) startDate.addEventListener('change', doSearch);
     if (endDate) endDate.addEventListener('change', doSearch);
 
+    // Tab status click
     statusTabs.forEach(tab => {
         tab.addEventListener('click', function(e) {
             e.preventDefault();
             statusTabs.forEach(t => t.classList.remove('active'));
             this.classList.add('active');
-            const status = this.getAttribute('data-status');
-            const params = new URLSearchParams({ status });
-            if (entriesSelect) params.set('entries', entriesSelect.value);
-            fetchOrders(params.toString());
+            currentPage = 1; // reset halaman 1
+            fetchOrders(getFilterParams().toString());
         });
     });
 
-    // ✅ Initial setup
+    // Initial setup
     bindDropdownToggle();
     bindEntriesSelect();
+
+    const totalElement = document.getElementById('total-orders');
+    if (totalElement) totalOrders = parseInt(totalElement.textContent);
+    currentPage = 1;
 });
 </script>
+
 
 </body>
 </html>

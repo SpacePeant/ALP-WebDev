@@ -18,18 +18,29 @@
             <div class="row mb-3">
                 <div class="col">
                     <p>Name</p>
-                    <input type="text" name="cust_name" class="form-control" value="{{ old('cust_name', $customer->name) }}">
+                    <input type="text" name="cust_name" class="form-control" value="{{ old('cust_name', $customer->name) }}" required>
                 </div>
 
                 <div class="col">
-                    <p>Phone Number</p>
-                    <input type="text" name="cust_phone_number" class="form-control" value="{{ old('cust_phone_number', $customer->phone_number) }}">
-                </div>
+    <p>Phone Number</p>
+    <input
+        type="text"
+        name="cust_phone_number"
+        class="form-control"
+        value="{{ old('cust_phone_number', $customer->phone_number) }}"
+        inputmode="numeric"
+        pattern="[0-9]*"
+        oninput="this.value = this.value.replace(/[^0-9]/g, '')"
+        maxlength="15"
+        placeholder="Enter numbers only"
+        required
+    >
+</div>
             </div>
 
              <div class="mb-4">
                 <p>Address</p>
-                <input type="text" name="cust_address" class="form-control" value="{{ old('cust_address', $customer->address) }}">
+                <input type="text" name="cust_address" class="form-control" value="{{ old('cust_address', $customer->address) }}" required>
             </div>
 
             <h5>Products</h5><br>
@@ -66,7 +77,7 @@
                             </div>
                         </div>
                         <div class="text-end ms-3 price">
-                            Rp {{ number_format($item->price * $item->quantity, 0, ',', '.') }},00
+                            Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}
                         </div>
                     </div>
                 @empty
@@ -85,15 +96,15 @@
                     </div>
                     <div class="d-flex justify-content-between">
                         <span>Subtotal</span><span id="subtotal">
-                            Rp {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity), 0, ',', '.') }},00
+                            Rp. {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity), 0, ',', '.') }}
                         </span>
                     </div>
                     <div class="d-flex justify-content-between">
-                        <span>Shipping fee</span><span>Rp 30.000,00</span>
+                        <span>Shipping fee</span><span>Rp. 30.000</span>
                     </div>
                     <div class="d-flex justify-content-between" style ="margin-bottom: 20px;">
                         <strong>Total</strong><strong id="total">
-                            Rp {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity) + 30000, 0, ',', '.') }},00
+                            Rp. {{ number_format($cartItems->sum(fn($item) => $item->price * $item->quantity) + 30000, 0, ',', '.') }}
                         </strong>
                     </div>
                     <input type="hidden" name="payment_method" id="payment_method_input" value="cash">
@@ -121,7 +132,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", function () {
     function formatCurrency(num) {
-        return 'Rp ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.') + ',00';
+        return 'Rp. ' + num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, '.');
     }
 
     function updateSummary() {
