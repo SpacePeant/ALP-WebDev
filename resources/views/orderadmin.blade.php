@@ -19,6 +19,9 @@
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
   <style>
     body {
       font-family: 'Red Hat Display', sans-serif;
@@ -257,7 +260,8 @@
 
 <div class="d-flex justify-content-between flex-wrap">
 <form method="GET" action="{{ route('admin.orders') }}" id="filterForm" class="d-flex justify-content-end mb-4 gap-3 flex-wrap" style="margin-top: 50px;">
-      <div class="col-auto">
+  <div class="d-flex flex-wrap gap-2 align-items-end">    
+  <div class="col-auto">
           <label for="start_date" class="form-label">From</label>
           <input type="date" id="start_date" name="start_date" class="form-control"
               value="{{ request('start_date') }}">
@@ -267,6 +271,7 @@
           <input type="date" id="end_date" name="end_date" class="form-control"
               value="{{ request('end_date') }}">
       </div>
+    </div>
       {{-- <div class="col-auto d-flex align-items-end">
           <button type="submit" class="btn btn-dark">Filter</button>
       </div> --}}

@@ -5,6 +5,7 @@
 @php
     $user_id = $user_id ?? null;
 @endphp
+<meta name="viewport" content="width=device-width, initial-scale=1">
 
 <div class="container">
   <h1 class="text-center mb-4">Orders</h1>

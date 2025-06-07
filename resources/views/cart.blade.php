@@ -3,145 +3,13 @@
 @section('content')
 <head>
     <meta name="csrf-token" content="{{ csrf_token() }}">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
      <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-  </head>
-<div class="container my-5">
-  <h2 id="my-cart-title" class="mb-4"><strong>My Cart</strong></h2>
-  <div class="row">
-    <div class="col-lg-8">
-      <table class="table">
-        <thead>
-          <tr>
-            <th class="text-muted">Product</th>
-            <th class="text-muted">Price</th> 
-            <th class="text-muted">Qty</th>
-            <th id="total-column" class="text-muted">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          @if($cartItems->count() > 0)
-          @foreach($cartItems as $item)
-          <tr data-cart-id="{{ $item->id }}" data-stock="{{ $item->stock }}">
-              <td>
-                  <label class="custom-checkbox me-3">
-                      <input type="checkbox" {{ $item->is_pilih == 1 ? 'checked' : '' }}>
-                      <span class="checkmark"></span>
-                  </label>
-          
-                  <img src="{{ asset('image/sepatu/kiri/' . $item->image_kiri) }}" class="product-img me-3" alt="{{ $item->name }}">
-                  
-                  <div class="d-inline-block align-items-center">
-                      <p class="mb-1 fw-semibold">{{ $item->name }}</p>
-                      <small class="mb-1 text-muted">Size:</small>
-            @php
-                $currentSize = $item->size;
-            @endphp
-            <select 
-                class="form-select size-select"  
-                style="width: 100px; margin-bottom: 5px; display: inline-block; font-size: 14px;"
-                data-product-id="{{ $item->product_id }}"
-                data-color-id="{{ $item->product_color_id }}"
-                data-cart-id="{{ $item->id }}"
-                data-current-size="{{ $currentSize }}">
-
-                      @foreach($item->availableSizes as $variant)
-                        <option 
-                            value="{{ $variant->id }}" 
-                            data-stock="{{ $variant->stock }}"
-                            data-size="{{ $variant->size }}"
-                            {{ $variant->size == $item->currentSize ? 'selected' : '' }}
-                        >
-                            {{ $variant->size }}
-                        </option>
-                      @endforeach
-            </select>
-
-                  <br>
-                      <small class="mb-1 text-muted">Color: {{ $item->color_name }}</small>
-                  </div>
-              </td>
-              <td>Rp. {{ number_format($item->price, 0, ',', '.') }}</td>
-              <td>
-                  <div class="qty-container">
-  <div class="qty-btn">-</div>
-  <span 
-    class="qty-value item-qty" 
-    data-cart-id="{{ $item->id }}" 
-    contenteditable="true" 
-    style="
-      display: inline-block; 
-      min-width: 60px; 
-      max-width: 60px;
-      white-space: nowrap; 
-      overflow-x: hidden; 
-      text-overflow: clip; 
-      border: none; 
-      padding: 2px 6px; 
-      border-radius: 4px; 
-      user-select: text;
-      vertical-align: middle;
-    "
-  >{{ $item->quantity }}</span>
-  <div class="qty-btn">+</div>
-</div>
-              </td>
-              <td id="total-column">Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
-          </tr>
-          @endforeach
-          @else
-            <tr>
-              <td colspan="4">Your cart is empty.</td>
-            </tr>
-          @endif
-        </tbody>
-      </table>
-    </div>
-    <div class="col-lg-4">
-      <div class="summary-box">
-        <h6><strong>Order Summary</strong></h6>
-        <div class="d-flex justify-content-between">
-          <span>Items</span>
-          <span id="summary-items">0</span>
-        </div>
-        <div class="d-flex justify-content-between mb-3">
-          <span>Total</span>
-          <span id="summary-total">Rp. 0</span>
-        </div>
-        <a href="{{ url('checkout') }}" class="btn btn-black w-100" id="checkout-btn">Checkout</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div id="loader" class="loader-overlay" style="display: none">
-      <div class="loader"></div>
-  </div>
-<script>
-  document.querySelectorAll('.qty-value[contenteditable="true"]').forEach(span => {
-    span.addEventListener('keydown', function(e) {
-      // Cegah enter (baris baru)
-      if (e.key === 'Enter') {
-        e.preventDefault();
-      }
-    });
-
-    span.addEventListener('input', function(e) {
-      // Hanya izinkan angka saja
-      let clean = this.textContent.replace(/[^0-9]/g, '');
-      this.textContent = clean;
-
-      // Pindahkan kursor ke akhir setelah update textContent
-      const range = document.createRange();
-      const sel = window.getSelection();
-      range.selectNodeContents(this);
-      range.collapse(false);
-      sel.removeAllRanges();
-      sel.addRange(range);
-    });
-  });
-</script>
-
 <style>
   body { 
     font-family: 'Red Hat Text', sans-serif; 
@@ -292,6 +160,144 @@
       100% { transform: rotate(360deg); }
     }
 </style>
+  </head>
+<div class="container my-5">
+  <h2 id="my-cart-title" class="mb-4"><strong>My Cart</strong></h2>
+  <div class="row">
+    <div class="col-lg-8">
+      <table class="table">
+        <thead>
+          <tr>
+            <th class="text-muted">Product</th>
+            <th class="text-muted">Price</th> 
+            <th class="text-muted">Qty</th>
+            <th id="total-column" class="text-muted">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          @if($cartItems->count() > 0)
+          @foreach($cartItems as $item)
+          <tr data-cart-id="{{ $item->id }}" data-stock="{{ $item->stock }}">
+              <td>
+                  <label class="custom-checkbox me-3">
+                      <input type="checkbox" {{ $item->is_pilih == 1 ? 'checked' : '' }}>
+                      <span class="checkmark"></span>
+                  </label>
+          
+                  <img src="{{ asset('image/sepatu/kiri/' . $item->image_kiri) }}" class="product-img me-3" alt="{{ $item->name }}">
+                  
+                  <div class="d-inline-block align-items-center">
+                      <p class="mb-1 fw-semibold">{{ $item->name }}</p>
+                      <small class="mb-1 text-muted">Size:</small>
+            @php
+                $currentSize = $item->size;
+            @endphp
+            <select 
+                class="form-select size-select"  
+                style="width: 100px; margin-bottom: 5px; display: inline-block; font-size: 14px;"
+                data-product-id="{{ $item->product_id }}"
+                data-color-id="{{ $item->product_color_id }}"
+                data-cart-id="{{ $item->id }}"
+                data-current-size="{{ $currentSize }}">
+
+                      @foreach($item->availableSizes as $variant)
+                        <option 
+                            value="{{ $variant->id }}" 
+                            data-stock="{{ $variant->stock }}"
+                            data-size="{{ $variant->size }}"
+                            {{ $variant->size == $item->currentSize ? 'selected' : '' }}
+                        >
+                            {{ $variant->size }}
+                        </option>
+                      @endforeach
+            </select>
+
+                  <br>
+                      <small class="mb-1 text-muted">Color: {{ $item->color_name }}</small>
+                  </div>
+              </td>
+              <td>Rp. {{ number_format($item->price, 0, ',', '.') }}</td>
+              <td>
+                  <div class="qty-container">
+  <div class="qty-btn">-</div>
+  <span 
+    class="qty-value item-qty" 
+    data-cart-id="{{ $item->id }}" 
+    contenteditable="true" 
+    style="
+      display: inline-block; 
+      min-width: 60px; 
+      max-width: 60px;
+      white-space: nowrap; 
+      overflow-x: hidden; 
+      text-overflow: clip; 
+      border: none; 
+      padding: 2px 6px; 
+      border-radius: 4px; 
+      user-select: text;
+      vertical-align: middle;
+    "
+  >{{ $item->quantity }}</span>
+  <div class="qty-btn">+</div>
+</div>
+              </td>
+              <td id="total-column">Rp. {{ number_format($item->price * $item->quantity, 0, ',', '.') }}</td>
+          </tr>
+          @endforeach
+          @else
+            <tr>
+              <td colspan="4">Your cart is empty.</td>
+            </tr>
+          @endif
+        </tbody>
+      </table>
+    </div>
+    <div class="col-lg-4">
+      <div class="summary-box">
+        <h6><strong>Order Summary</strong></h6>
+        <div class="d-flex justify-content-between">
+          <span>Items</span>
+          <span id="summary-items">0</span>
+        </div>
+        <div class="d-flex justify-content-between mb-3">
+          <span>Total</span>
+          <span id="summary-total">Rp. 0</span>
+        </div>
+        <a href="{{ url('checkout') }}" class="btn btn-black w-100" id="checkout-btn">Checkout</a>
+      </div>
+    </div>
+  </div>
+</div>
+<div id="loader" class="loader-overlay" style="display: none">
+      <div class="loader"></div>
+  </div>
+<script>
+  document.querySelectorAll('.qty-value[contenteditable="true"]').forEach(span => {
+    span.addEventListener('keydown', function(e) {
+      // Cegah enter (baris baru)
+      if (e.key === 'Enter') {
+        e.preventDefault();
+      }
+    });
+
+    span.addEventListener('input', function(e) {
+      // Hanya izinkan angka saja
+      let clean = this.textContent.replace(/[^0-9]/g, '');
+      this.textContent = clean;
+
+      // Pindahkan kursor ke akhir setelah update textContent
+      const range = document.createRange();
+      const sel = window.getSelection();
+      range.selectNodeContents(this);
+      range.collapse(false);
+      sel.removeAllRanges();
+      sel.addRange(range);
+    });
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
 
 <script>
 function formatRupiah(number) {

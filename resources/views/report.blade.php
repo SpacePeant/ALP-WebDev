@@ -67,7 +67,7 @@
     </style>
 </head>
 <body class="p-6">
-
+<div class="container mx-auto px-4">
     <header class="flex justify-between items-center mb-6">
         <img src="{{ public_path('image/logo2.png') }}" alt="Logo" class="h-8" style="height: 30px;">
     </header>
@@ -117,6 +117,6 @@
             </tbody>
         </table>
     </div>
-
+</div>
 </body>
 </html>
