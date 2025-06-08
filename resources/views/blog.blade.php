@@ -126,6 +126,56 @@
         <div class="load-button">
           <button id="loadMoreBtn" data-offset="6">Load more</button>
         </div>
+
+        <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const loadMoreBtn = document.getElementById('loadMoreBtn');
+  const blogGrid = document.getElementById('blogGrid');
+
+  if (loadMoreBtn) {
+    loadMoreBtn.addEventListener('click', function () {
+      let offset = parseInt(loadMoreBtn.getAttribute('data-offset'));
+
+      fetch(`/load-more-blogs?offset=${offset}`)
+        .then(response => response.json())
+        .then(articles => {
+          if (articles.length === 0) {
+            loadMoreBtn.disabled = true;
+            loadMoreBtn.innerText = 'No more articles';
+            return;
+          }
+
+          articles.forEach(article => {
+            const articleElement = document.createElement('a');
+            articleElement.href = `/articles/${article.id}`;
+            articleElement.style.textDecoration = 'none';
+            articleElement.style.color = 'inherit';
+            articleElement.style.position = 'relative';
+            articleElement.innerHTML = `
+              <article>
+                <div class="dots-container" tabindex="0" aria-label="More options" role="button" title="More options">
+                  <div class="dots-menu" aria-hidden="true">⋮</div>
+                  <div class="popup-menu" role="menu">
+                    <button class="edit-btn" type="button" role="menuitem" onclick="event.stopPropagation(); alert('Edit article ${article.id}');">Edit</button>
+                    <button class="delete-btn" type="button" role="menuitem" onclick="event.stopPropagation(); alert('Delete article ${article.id}');">Delete</button>
+                  </div>
+                </div>
+                <img src="${article.image_url}" alt="${article.title}">
+                <h4>${article.title}</h4>
+                <p>${article.excerpt}</p>
+              </article>
+            `;
+
+            blogGrid.appendChild(articleElement);
+          });
+
+          loadMoreBtn.setAttribute('data-offset', offset + 6);
+        })
+        .catch(error => console.error('Error loading more blogs:', error));
+    });
+  }
+});
+</script>
       </section>
     </main>
 

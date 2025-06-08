@@ -3,10 +3,12 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
+use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReportController;
@@ -18,6 +20,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\Auth\GoogleController;
 
 // ==============================
 // GENERAL & LANDING PAGE ROUTES
@@ -228,5 +231,17 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
+// Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
+// Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
+// Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+// Route::get('/AW', function () {
+//     return Socialite::driver('google')->redirect();
+// });
+// Route::get('/clear-cache', function() {
+//     Artisan::call('config:clear');
+//     Artisan::call('cache:clear');
+//     Artisan::call('route:clear');
+//     return 'Cache cleared';
+// });
+
 require __DIR__.'/auth.php';
