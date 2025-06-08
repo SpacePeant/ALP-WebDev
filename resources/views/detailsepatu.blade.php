@@ -3,6 +3,9 @@
 @section('title', 'Home')
 
 @section('content') 
+@php
+    use Illuminate\Support\Facades\Session;
+@endphp
 
 @php
     $user_id = Session::get('user_id',1)
