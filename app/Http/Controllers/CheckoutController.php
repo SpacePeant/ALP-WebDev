@@ -119,7 +119,7 @@ public function processCheckout(Request $request)
 if ($cartItems->isEmpty()) {
     DB::rollBack(); 
     return back()->with([
-            'error' => "Keranjang belanja Anda kosong."
+            'error' => "Your cart is empty."
         ]);
 }
 
@@ -127,8 +127,8 @@ foreach ($cartItems as $item) {
     if ($item->quantity > $item->stock) {
         DB::rollBack(); 
         return back()->with([
-            'error' => "Stok tidak mencukupi untuk produk <strong>{$item->product_name}</strong> (Ukuran: {$item->size}, Warna: {$item->color_name}).<br>
-                    Stok tersedia: <strong>{$item->stock}</strong>, yang Anda pesan: <strong>{$item->quantity}</strong>."
+            'error' => "The stock for <strong>{$item->product_name}</strong> is insufficient (Size: {$item->size}, Color: {$item->color_name}).<br>
+                    Available Stock: <strong>{$item->stock}</strong>, Amount of Order: <strong>{$item->quantity}</strong>."
         ]);
     }
 }
@@ -172,7 +172,7 @@ $cartItems = CartItem::with('product')
         $email = trim(session('user_email', 'guest@example.com'));
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
             Log::error('Invalid email format: ' . $email);
-            return back()->with('error', 'Email Anda tidak valid. Mohon perbarui profil Anda.');
+            return back()->with('error', 'Email is invalid. Please update your profile.');
         }
 
         $user_name = session('user_name', 'Guest');
@@ -209,7 +209,7 @@ $cartItems = CartItem::with('product')
     } catch (\Exception $e) {
         DB::rollBack();
         Log::error('Midtrans error: ' . $e->getMessage());
-        return back()->with('error', 'Terjadi kesalahan saat memproses pembayaran.');
+        return back()->with('error', 'An error occurred while processing the payment.');
     }
 }
 

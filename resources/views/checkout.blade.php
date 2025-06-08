@@ -485,7 +485,7 @@ document.addEventListener("DOMContentLoaded", function () {
     <script>
         Swal.fire({
             icon: 'error',
-            title: 'Kesalahan!',
+            title: 'Error!',
             html: `{!! session('error') !!}`, // penting: pakai !! untuk HTML
             confirmButtonText: 'Oke'
         });
