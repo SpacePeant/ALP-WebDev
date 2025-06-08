@@ -494,14 +494,24 @@
       <p style="color: green;">{{ session('success') }}</p>
     @endif
   
-<img src="{{ asset($product->image_atas ? 'image/sepatu/atas/' . $product->image_atas : 'image/no_image.png') }}" class="main-image" id="mainImage" style="margin-top:20px;">
+
+
+@php
+  $imageAtasPath = 'image/sepatu/atas/' . $product->image_atas;
+  $imageKiriPath = 'image/sepatu/kiri/' . $product->image_kiri;
+  $imageKananPath = 'image/sepatu/kanan/' . $product->image_kanan;
+  $imageBawahPath = 'image/sepatu/bawah/' . $product->image_bawah;
+@endphp
+
+<img src="{{ file_exists(public_path($imageAtasPath)) && !empty($product->image_atas) ? asset($imageAtasPath) : asset('image/no_image.png') }}" class="main-image" id="mainImage" style="margin-top:20px;">
 
 <div class="thumbnails">
-  <img src="{{ asset($product->image_atas ? 'image/sepatu/atas/' . $product->image_atas : 'image/no_image.png') }}" class="active" onclick="setMainImage(this)">
-  <img src="{{ asset($product->image_kiri ? 'image/sepatu/kiri/' . $product->image_kiri : 'image/no_image.png') }}" onclick="setMainImage(this)">
-  <img src="{{ asset($product->image_kanan ? 'image/sepatu/kanan/' . $product->image_kanan : 'image/no_image.png') }}" onclick="setMainImage(this)">
-  <img src="{{ asset($product->image_bawah ? 'image/sepatu/bawah/' . $product->image_bawah : 'image/no_image.png') }}" onclick="setMainImage(this)">
+  <img src="{{ file_exists(public_path($imageAtasPath)) && !empty($product->image_atas) ? asset($imageAtasPath) : asset('image/no_image.png') }}" class="active" onclick="setMainImage(this)">
+  <img src="{{ file_exists(public_path($imageKiriPath)) && !empty($product->image_kiri) ? asset($imageKiriPath) : asset('image/no_image.png') }}" onclick="setMainImage(this)">
+  <img src="{{ file_exists(public_path($imageKananPath)) && !empty($product->image_kanan) ? asset($imageKananPath) : asset('image/no_image.png') }}" onclick="setMainImage(this)">
+  <img src="{{ file_exists(public_path($imageBawahPath)) && !empty($product->image_bawah) ? asset($imageBawahPath) : asset('image/no_image.png') }}" onclick="setMainImage(this)">
 </div>
+
   </div>
   
   <script>
