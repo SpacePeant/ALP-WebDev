@@ -101,7 +101,7 @@ class ArticleController extends Controller
     
     public function destroy($id) {
         Article::findOrFail($id)->delete();
-        return redirect()->route('articles.destroy')->with('success', 'Article deleted successfully');
+        return redirect()->route('showadmin')->with('success', 'Article deleted successfully');
     }
 
 }
