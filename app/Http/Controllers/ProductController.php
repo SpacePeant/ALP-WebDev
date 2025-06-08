@@ -341,7 +341,6 @@ foreach ($imageData as $index => $color) {
     return redirect()->route('productadmin')->with('success', 'Product saved successfully!');
     }
     catch(Exception $e){
-        Log::error('Gagal menyimpan produk: ' . $e->getMessage());
         return redirect()->route('addproduct')->with('error', 'Gagal insert product');
     }
 }
