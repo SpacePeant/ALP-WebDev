@@ -108,9 +108,6 @@
         </div>
       </div>
       <button type="submit" class="btn btn-black w-100">Log In</button>
-      <a href="{{ url('auth/google') }}" class="btn btn-danger">
-          <i class="fa fa-google"></i> Login with Google
-      </a>
 
     </form>
 

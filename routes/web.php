@@ -231,17 +231,17 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
-Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
-Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-Route::get('/AW', function () {
-    return Socialite::driver('google')->redirect();
-});
-Route::get('/clear-cache', function() {
-    Artisan::call('config:clear');
-    Artisan::call('cache:clear');
-    Artisan::call('route:clear');
-    return 'Cache cleared';
-});
+// Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
+// Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
+// Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+// Route::get('/AW', function () {
+//     return Socialite::driver('google')->redirect();
+// });
+// Route::get('/clear-cache', function() {
+//     Artisan::call('config:clear');
+//     Artisan::call('cache:clear');
+//     Artisan::call('route:clear');
+//     return 'Cache cleared';
+// });
 
 require __DIR__.'/auth.php';
