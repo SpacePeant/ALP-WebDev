@@ -18,6 +18,7 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
+use App\Http\Controllers\Auth\GoogleController;
 
 // ==============================
 // GENERAL & LANDING PAGE ROUTES
@@ -228,4 +229,6 @@ Route::middleware(['auth'])->group(function () {
 });
 
 Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
+Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
+Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 require __DIR__.'/auth.php';
