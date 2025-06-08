@@ -355,7 +355,19 @@
 </div>
         `;
       }
+function renderProductList(productStock) {
+        const tbody = document.getElementById('productList');
+        if (!tbody) return;
 
+        tbody.innerHTML = productStock.map(p => `
+          <tr onclick="fetchProductDetail('${p.id}')" style="cursor:pointer;">
+            <td class="d-flex justify-content-between align-items-center">
+              <span>${p.name}</span>
+              <span class="text-end">${p.total_stock}</span>
+            </td>
+          </tr>
+        `).join('');
+      }
       function renderSalesChart(labels, values) {
         const canvas = document.getElementById('salesChart');
         if (!canvas) return;
