@@ -173,6 +173,14 @@
     color: white !important; 
   }
 
+  #hexColor-0 {
+    width:130px;
+  }
+
+  #colorPicker-0 {
+    width:100px;
+  }
+
     @media (max-width: 1200px) {
   .main-container {
     flex-direction: column;
@@ -200,6 +208,14 @@
 
   .btn.mt-3 {
     width: 100%;
+  }
+
+      #hexColor-0 {
+    width:100%;
+  }
+
+  #colorPicker-0 {
+    width:100%;
   }
 }
 
@@ -255,6 +271,14 @@
   .size-options {
     grid-template-columns: repeat(2, 1fr);
   }
+
+    #hexColor-0 {
+    width:100%;
+  }
+
+  #colorPicker-0 {
+    width:100%;
+  }
 }
 
 /* <= 576px (small phones) */
@@ -278,6 +302,14 @@
   }
 
   .btn.mt-3 {
+    width: 100%;
+  }
+
+  #hexColor-0{
+    width: 100%;
+  }
+
+  #colorPicker-0{
     width: 100%;
   }
 }
@@ -425,11 +457,11 @@
           </div>
           <div style="margin-bottom: 10px;">
     <label>Color Code (Hex)</label>
-    <input type="text" name="color_code" id="hexColor-0" value="{{ $product->color_code }}" class="form-control" style="width:130px;" oninput="updateColorInfo(0)">
+    <input type="text" name="color_code" id="hexColor-0" value="{{ $product->color_code }}" class="form-control" oninput="updateColorInfo(0)">
           </div>
           <div>
     <label>Color Picker</label>
-    <input type="color" id="colorPicker-0" value="{{ $product->color_code }}" class="form-control form-control-color" style="width:100px;" onchange="syncPicker(0)">
+    <input type="color" id="colorPicker-0" value="{{ $product->color_code }}" class="form-control form-control-color" onchange="syncPicker(0)">
           </div>
         </div>
 
@@ -462,13 +494,13 @@
       <p style="color: green;">{{ session('success') }}</p>
     @endif
   
-    <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="main-image" id="mainImage" style="margin-top:20px;">
+<img src="{{ asset($product->image_atas ? 'image/sepatu/atas/' . $product->image_atas : 'image/no_image.png') }}" class="main-image" id="mainImage" style="margin-top:20px;">
 
 <div class="thumbnails">
-  <img src="{{ asset('image/sepatu/atas/' . $product->image_atas) }}" class="active" onclick="setMainImage(this)">
-  <img src="{{ asset('image/sepatu/kiri/' . $product->image_kiri) }}" onclick="setMainImage(this)">
-  <img src="{{ asset('image/sepatu/kanan/' . $product->image_kanan) }}" onclick="setMainImage(this)">
-  <img src="{{ asset('image/sepatu/bawah/' . $product->image_bawah) }}" onclick="setMainImage(this)">
+  <img src="{{ asset($product->image_atas ? 'image/sepatu/atas/' . $product->image_atas : 'image/no_image.png') }}" class="active" onclick="setMainImage(this)">
+  <img src="{{ asset($product->image_kiri ? 'image/sepatu/kiri/' . $product->image_kiri : 'image/no_image.png') }}" onclick="setMainImage(this)">
+  <img src="{{ asset($product->image_kanan ? 'image/sepatu/kanan/' . $product->image_kanan : 'image/no_image.png') }}" onclick="setMainImage(this)">
+  <img src="{{ asset($product->image_bawah ? 'image/sepatu/bawah/' . $product->image_bawah : 'image/no_image.png') }}" onclick="setMainImage(this)">
 </div>
   </div>
   
