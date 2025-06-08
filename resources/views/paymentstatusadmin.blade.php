@@ -1,4 +1,4 @@
-@extends('base.base1')
+@extends('base.baseadmin')
 
 @section('content')
 <!-- Google Fonts -->
