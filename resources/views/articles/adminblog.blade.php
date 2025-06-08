@@ -28,9 +28,9 @@
   margin-bottom: 40px;
   margin-top:100px;
   text-align: center;">All Articles</h1>
-        {{-- <h3 class="articles-title" style="margin-top: 100px">All Articles</h3> --}}
+        
          <div class="d-flex justify-content-start mb-4">
-            <button id = "button-add"class="btn btn-dark btn-lg px-4 shadow-sm rounded-0" data-bs-toggle="modal" data-bs-target="#createArticleModal">
+            <button id = "button-add"class="btn btn-dark btn-lg px-4 rounded-0" data-bs-toggle="modal" data-bs-target="#createArticleModal">
                 <i class="bi bi-plus-lg me-2"></i> Create Article
             </button>
           </div>
@@ -38,26 +38,66 @@
           <div class="grid" id="blogGrid">
             @foreach ($articles as $article)
               <div class="article-card">
-                {{-- Dropdown --}}
                 <div class="dropdown-container custom-dropdown">
-                  <button class="custom-dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(this)">
-                    <i class="bi bi-three-dots-vertical"></i>
-                  </button>
-                  <div class="custom-dropdown-menu">
-                   {{-- <button class="btn btn-lg px-5 shadow-sm" data-bs-toggle="modal" data-bs-target="#editArticleModal">Edit</button> --}}
-                    <button class="btn btn-lg px-5 shadow-sm" data-bs-toggle="modal" data-bs-target="#editArticleModal"
-                            data-id="{{ $article->id }}"
-                            data-title="{{ $article->title }}"
-                            data-description="{{ $article->description }}"
-                            data-article="{{ $article->article }}">
-                      Edit</button>
-                    <form action="{{ route('articles.destroy', ['id' => $article->id]) }}" method="POST" onsubmit="return confirm('Delete this article?');" style="display: inline;">
-                      @csrf
-                      @method('DELETE')
-                      <button type="submit" onclick="event.stopPropagation()" class="btn btn-danger btn-lg px-5 shadow-sm">Delete</button>
-                    </form>
-                  </div>
-                </div>
+  <button class="custom-dropdown-toggle" onclick="event.stopPropagation(); toggleDropdown(this)">
+    <i class="bi bi-three-dots-vertical"></i>
+  </button>
+  <div class="custom-dropdown-menu">
+    <button
+      class="custom-dropdown-button"
+      data-bs-toggle="modal"
+      data-bs-target="#editArticleModal"
+      data-id="{{ $article->id }}"
+      data-title="{{ $article->title }}"
+      data-description="{{ $article->description }}"
+      id = "edit"
+      data-article="{{ $article->article }}"
+      onclick="event.stopPropagation()">
+      
+      Edit
+    </button>
+    <form action="{{ route('articles.destroy', ['id' => $article->id]) }}" method="POST" onsubmit="return confirm('Delete this article?');" style="display: inline; ">
+      @csrf
+      @method('DELETE')
+      <button
+        type="submit"
+        class="custom-dropdown-button custom-dropdown-delete"
+        id = "delet"
+        onclick="event.stopPropagation()">
+        Delete
+      </button>
+    </form>
+  </div>
+</div>
+
+<style>
+
+/* Style the delete button red */
+.custom-dropdown-button #delet {
+  text-color:rgb(255, 0, 25);
+  background-color: rgb(255, 255, 255); /* Bootstrap danger color */
+  border: none;
+  align-items : center;
+}
+
+#delet {
+  color:rgb(255, 0, 25);
+  background-color: rgb(255, 255, 255); /* Bootstrap danger color */
+  border: none;
+  align-items : center;
+  text-align : center;
+}
+
+#edit{
+  align-items : center;
+  text-align : center;
+}
+
+.custom-dropdown-delete:hover {
+  background-color: #c82333;
+}
+</style>
+
               
                 {{-- Clickable article link --}}
                 <a href="{{ url('/admin/articles/' . $article->id) }}" style="text-decoration: none; color: inherit;">
@@ -102,8 +142,9 @@
                     </div>
                   </div>
                   <div class="modal-footer">
-                    <button type="submit" class="btn btn-primary">Submit</button>
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="submit" class="btn text-white bg-black border-0 rounded-0">Submit</button>
+                    <button type="button" class="btn text-white bg-black border-0 rounded-0" data-bs-dismiss="modal">Close</button>
+
                   </div>
                 </div>
               </form>
@@ -143,8 +184,8 @@
                   </div>
                 </div>
                 <div class="modal-footer">
-                  <button type="submit" class="btn btn-primary">Update</button>
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                  <button type="submit" class="btn text-white bg-black border-0 rounded-0">Update</button>
+                    <button type="button" class="btn text-white bg-black border-0 rounded-0" data-bs-dismiss="modal">Close</button>
                 </div>
               </div>
             </form>

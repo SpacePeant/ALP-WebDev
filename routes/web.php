@@ -3,12 +3,10 @@
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Artisan;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
-use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReportController;
@@ -20,7 +18,6 @@ use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\RegisterController;
 use App\Http\Controllers\WishlistController;
 use App\Http\Controllers\CollectionController;
-use App\Http\Controllers\Auth\GoogleController;
 
 // ==============================
 // GENERAL & LANDING PAGE ROUTES
@@ -34,66 +31,7 @@ Route::get('/forgotpassword', fn() => view('forgotpassword'));
 Route::get('/signup', [RegisterController::class, 'show'])->name('signup.form');
 Route::post('/signup', [RegisterController::class, 'register'])->name('signup.submit');
 
-require __DIR__.'/auth.php';
 
-// ==============================
-// PUBLIC PRODUCT & COLLECTION
-// ==============================
-Route::get('/product-list', [CollectionController::class, 'productList'])->name('product.list');
-Route::match(['get', 'post'], '/detail', [CollectionController::class, 'detail'])->name('detail');
-Route::get('/product-detail/{id}', function ($id) {
-    $details = DB::table('product as p')
-        ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')
-        ->join('product_color as pc', 'pv.color_id', '=', 'pc.id')
-        ->select('p.id as pid', 'p.name', 'pc.color_name', 'pv.size', 'pv.stock')
-        ->where('p.id', $id)
-        ->get();
-
-    return response()->json([
-        'productName' => $details->isNotEmpty() ? $details[0]->name : 'Produk tidak ditemukan',
-        'variants' => $details
-    ]);
-});
-
-// ==============================
-// BLOG & ARTICLE
-// ==============================
-Route::get('/blog', [BlogController::class, 'showBlogPage'])->name('blog');
-Route::get('/load-more-blogs', [BlogController::class, 'loadMoreBlogs']);
-Route::get('/articles/{id}', [ArticleController::class, 'show']);
-Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
-Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
-Route::put('/admin/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
-Route::post('/articles/store', [ArticleController::class, 'store'])->name('articles.store');
-Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');
-Route::get('/admin/articles/{id}', [ArticleController::class, 'adminArticle'])->name('adminArticle');
-
-// ==============================
-// PRODUCT (ADMIN & PUBLIC)
-// ==============================
-Route::prefix('products')->group(function () {
-    Route::get('/', [ProductController::class, 'index'])->name('productadmin');
-    Route::get('/create', [ProductController::class, 'create'])->name('addproduct');
-    Route::post('/store', [ProductController::class, 'store'])->name('addproduct.store');
-    Route::get('/delete/{id}', [ProductController::class, 'delete'])->name('productadmin.delete');
-});
-
-Route::get('/product/{id}/edit/{color_id}', [ProductController::class, 'edit'])->name('product.edit');
-Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
-Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
-Route::get('/product/{color_id}', [ProductController::class, 'getVariants']);
-Route::get('/product/{productId}', [ProductController::class, 'show'])->name('product.detail');
-Route::get('detail_sepatu/{id}', [ProductController::class, 'show'])->name('detail_sepatu.show');
-Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
-
-// ==============================
-// ORDER
-// ==============================
-Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
-Route::get('/order', [OrderController::class, 'index'])->name('order');
-Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
-Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
-Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
 
 // ==============================
 // ROUTES: USER AUTHENTICATED
@@ -152,20 +90,7 @@ Route::middleware(['auth'])->group(function () {
         // ==============================
         Route::get('/product-list', [CollectionController::class, 'productList'])->name('product.list');
         Route::match(['get', 'post'], '/detail', [CollectionController::class, 'detail'])->name('detail');
-        Route::get('/product-detail/{id}', function ($id) {
-            $details = DB::table('product as p')
-                ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')
-                ->join('product_color as pc', 'pv.color_id', '=', 'pc.id')
-                ->select('p.id as pid', 'p.name', 'pc.color_name', 'pv.size', 'pv.stock')
-                ->where('p.id', $id)
-                ->get();
-
-            return response()->json([
-                'productName' => $details->isNotEmpty() ? $details[0]->name : 'Produk tidak ditemukan',
-                'variants' => $details
-            ]);
-        });
-
+        
         // ==============================
         // BLOG & ARTICLE
         // ==============================
@@ -211,7 +136,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
         Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
         Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
-
+        Route::get('/payment/status/{id}', [PaymentController::class, 'checkStatus'])->name('payment.status');
+        Route::get('/payment/return/{id}', [PaymentController::class, 'handleReturn'])->name('payment.return');
         // ==============================
         // PRODUCT (ADMIN & PUBLIC)
         // ==============================
@@ -225,23 +151,11 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/product/{id}', [ProductController::class, 'update'])->name('product.update');
         Route::post('/product/update-gambar', [ProductController::class, 'update_gambar'])->name('product.update_gambar');
         Route::get('/product/{color_id}', [ProductController::class, 'getVariants']);
-        Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
         Route::get('/product/{productId}', [ProductController::class, 'show'])->name('product.detail');
         Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
     });
+    Route::get('/product-detail/{id}', [ChartController::class, 'dett']);
 });
 
-// Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
-// Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
-// Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
-// Route::get('/AW', function () {
-//     return Socialite::driver('google')->redirect();
-// });
-// Route::get('/clear-cache', function() {
-//     Artisan::call('config:clear');
-//     Artisan::call('cache:clear');
-//     Artisan::call('route:clear');
-//     return 'Cache cleared';
-// });
 
 require __DIR__.'/auth.php';

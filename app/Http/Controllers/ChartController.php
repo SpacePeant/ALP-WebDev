@@ -78,6 +78,21 @@ class ChartController extends Controller
     return view('dashboard', compact('data', 'balance', 'totalSold', 'stockAvailable', 'productStock', 'bestSellers'));
 }
 
+public function dett($id)
+    {
+        $details = DB::table('product as p')
+            ->join('product_variant as pv', 'p.id', '=', 'pv.product_id')
+            ->join('product_color as pc', 'pv.color_id', '=', 'pc.id')
+            ->select('p.id as pid', 'p.name', 'pc.color_name', 'pv.size', 'pv.stock')
+            ->where('p.id', $id)
+            ->get();
+dd($details);
+        return response()->json([
+            'productName' => $details->isNotEmpty() ? $details[0]->name : 'Produk tidak ditemukan',
+            'variants' => $details
+        ]);
+    }
+
 public function getData(Request $request)
 {
     $filter = $request->get('filter', 'week'); 
