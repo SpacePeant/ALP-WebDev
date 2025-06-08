@@ -12,15 +12,15 @@
           <div class="mb-1">
               Status:
               @if ($order->status == 'paid')
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-success">Paid</a>
+                  <a href="{{ route('payment.statuss', $order->id) }}" class="status-btn status-success">Paid</a>
               @elseif ($order->status == 'pending')
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-pending">Pending</a>
+                  <a href="{{ route('payment.statuss', $order->id) }}" class="status-btn status-pending">Pending</a>
               @elseif ($order->status == 'failed' || $order->status == 'cancelled')
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-failed">Failed</a>
+                  <a href="{{ route('payment.statuss', $order->id) }}" class="status-btn status-failed">Failed</a>
               @elseif ($order->status == 'expired')
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-failed">Expired</a>
+                  <a href="{{ route('payment.statuss', $order->id) }}" class="status-btn status-failed">Expired</a>
               @else
-                  <a href="{{ route('payment.status', $order->id) }}" class="status-btn status-unknown">{{ ucfirst($order->status) }}</a>
+                  <a href="{{ route('payment.statuss', $order->id) }}" class="status-btn status-unknown">{{ ucfirst($order->status) }}</a>
               @endif
           </div>
         </div>

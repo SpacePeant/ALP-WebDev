@@ -127,6 +127,7 @@ Route::middleware(['auth'])->group(function () {
         // BLOG & ARTICLE
         // ==============================
         Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');
+        Route::get('/admin/articles/{id}', [ArticleController::class, 'adminArticle'])->name('articles.showadmin');
         Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
         Route::put('/admin/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
         Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
@@ -136,9 +137,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
         Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
         Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
-        Route::get('/order', [OrderController::class, 'adminIndex'])->name('order');
-        Route::get('/payment/status/{id}', [PaymentController::class, 'checkStatusadmin'])->name('payment.status');
-        Route::get('/payment/return/{id}', [PaymentController::class, 'handleReturn'])->name('payment.return');
+        Route::get('/payment/statuss/{id}', [PaymentController::class, 'checkStatusadmin'])->name('payment.statuss');
         // ==============================
         // PRODUCT (ADMIN & PUBLIC)
         // ==============================

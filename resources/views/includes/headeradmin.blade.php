@@ -251,7 +251,7 @@
     </div>
 
     <nav class="menu-mobile" id="mobileMenu">
-      <a href="#">Dashboard</a>
+      <a href="{{ route('dashboard') }}">Dashboard</a>
       <a href="{{ route('orderadmin') }}">Order</a>
       <a href="{{ route('productadmin') }}">Product</a>
       <a href="{{ route('report') }}">Report</a>
