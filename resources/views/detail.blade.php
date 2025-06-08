@@ -1017,21 +1017,28 @@ $(document).ready(function () {
             method: 'GET',
             data: $('#filterForm').serialize(),
             success: function (response) {
-                $('#productResults').html(response);
+    $('#productResults').html(response);
 
-                const container = document.getElementById('productContainer');
-                let totalProducts = parseInt(container?.dataset.totalProducts || 0);
-                let maxPage = Math.ceil(totalProducts / currentEntries);
+    const container = document.getElementById('productContainer');
+    let totalProducts = parseInt(container?.dataset.totalProducts || 0);
+    let maxPage = Math.ceil(totalProducts / currentEntries);
 
-                if (forcePageCheck && currentPage > maxPage) {
-                    currentPage = maxPage;
-                    fetchData(null, false);
-                    return;
-                }
+    if (currentPage > maxPage) {
+        currentPage = maxPage || 1;
+        fetchData(null, false);
+        return;
+    }
 
-                attachPaginationEvents();
-                rebindProductEvents();
-            },
+    // Hanya sembunyikan pagination, bukan "show entries"
+if ($('#productResults .pagination').length === 0 || maxPage <= 1) {
+    $('#paginationWrapper .pagination').parent().hide(); // sembunyikan hanya bagian pagination <nav>
+} else {
+    $('#paginationWrapper .pagination').parent().show(); // tampilkan lagi
+}
+
+    attachPaginationEvents();
+    rebindProductEvents();
+},
             error: function () {
                 alert('Gagal memuat produk. Silakan coba lagi.');
             }
@@ -1096,6 +1103,7 @@ $(document).ready(function () {
     });
 
     $('#filterForm input, #filterForm select').on('input change', function () {
+        currentPage = 1;
         fetchData();
     });
 
