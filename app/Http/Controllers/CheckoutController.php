@@ -105,10 +105,13 @@ public function processCheckout(Request $request)
     ->join('product', 'product_variant.product_id', '=', 'product.id')
     ->join('product_color', 'product_variant.color_id', '=', 'product_color.id')
     ->select(
-        'cart_items.quantity',
-        'cart_items.product_variant_id',
+        'cart_items.*',
         'product_variant.stock',
         'product_variant.size',
+        'product_variant.id as product_variant_id',
+        'product.id as product_id',
+        'product_color.id as product_color_id',
+        'product.price',
         'product_color.color_name as color_name',
         'product.name as product_name'
     )
@@ -132,6 +135,10 @@ foreach ($cartItems as $item) {
         ]);
     }
 }
+
+    DB::table('product_variant')
+    ->where('id', $item->product_variant_id)
+    ->decrement('stock', $item->quantity);
 $cartItems = CartItem::with('product')
             ->where('user_id', $customerId)
             ->where('is_pilih', 1)

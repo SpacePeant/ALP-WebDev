@@ -684,7 +684,7 @@ function printColorImagesJSON() {
 </script>
 <script>
 function prepareImageData() {
-  const defaultImage = "http://alp-webdev-5.test/image/no_image.png";
+  const defaultImage = `${window.location.origin}/image/no_image.png`;
 
   for (let i = 0; i < colorImages.length; i++) {
     const color = colorImages[i];

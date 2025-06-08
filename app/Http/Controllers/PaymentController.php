@@ -115,7 +115,7 @@ public function checkStatusadmin($order_id)
         $order->payment_method = $status->payment_type;
         $order->save();
 
-        return view('paymentstatus', [
+        return view('paymentstatusadmin', [
             'order' => $order,
             'status_message' => 'Payment status checked manually.'
         ]);
