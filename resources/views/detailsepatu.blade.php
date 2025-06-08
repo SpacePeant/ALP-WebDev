@@ -414,6 +414,10 @@ body {
     display: none;
 }
 
+.product-card {
+  height: 350px;
+}
+
 .horizontal-scroll-wrapper {
   display: flex;
   gap: 100px;
