@@ -756,3 +756,5 @@
 #60 C:\\Program Files\\Herd\\resources\\app.asar.unpacked\\resources\\valet\\server.php(139): require('C:\\\\Users\\\\Bernar...')
 #61 {main}
 "} 
+[2025-06-08 15:26:16] local.INFO: Pay Now clicked by user ID: 10  
+[2025-06-08 15:26:16] local.INFO: Request data: {"_token":"nZ7zRfNlMEfeNpTX2zRJkjyoQNspwSNfdklvqsuS","cust_name":"Michelle","cust_phone_number":"081234567899","cust_address":"aaa","payment_method":"cash","pay_now":null} 
