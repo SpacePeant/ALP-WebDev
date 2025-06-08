@@ -87,4 +87,41 @@ public function checkStatus($order_id)
         return back()->with('error', 'Failed to check payment status: ' . $e->getMessage());
     }
 }
+public function checkStatusadmin($order_id)
+{
+    // Same as handleReturn logic
+    Config::$serverKey = config('midtrans.server_key');
+    Config::$isProduction = config('midtrans.is_production');
+
+    $id = (int) str_replace('ORDER-', '', $order_id);
+
+    $order = Order::findOrFail($id);
+
+    try {
+        /** @var object $status */
+        $status = Transaction::status('ORDER-' . $order->id);
+
+        if ($status->transaction_status == 'settlement' || $status->transaction_status == 'capture') {
+            $order->status = 'paid';
+        } elseif ($status->transaction_status == 'pending') {
+            $order->status = 'pending';
+        } elseif ($status->transaction_status == 'expire') {
+            $order->status = 'expired';
+        } elseif ($status->transaction_status == 'cancel') {
+            $order->status = 'cancelled';
+        } else {
+            $order->status = $status->transaction_status;
+        }
+        $order->payment_method = $status->payment_type;
+        $order->save();
+
+        return view('paymentstatus', [
+            'order' => $order,
+            'status_message' => 'Payment status checked manually.'
+        ]);
+
+    } catch (\Exception $e) {
+        return back()->with('error', 'Failed to check payment status: ' . $e->getMessage());
+    }
+}
 }

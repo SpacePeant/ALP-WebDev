@@ -136,7 +136,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/orderadmin', [OrderController::class, 'adminIndex'])->name('orderadmin');
         Route::get('/admin/orders', [OrderController::class, 'adminIndex'])->name('admin.orders');
         Route::get('/admin/orders/filter', [OrderController::class, 'filterAjax'])->name('admin.orders.filter');
-        Route::get('/payment/status/{id}', [PaymentController::class, 'checkStatus'])->name('payment.status');
+        Route::get('/payment/status/{id}', [PaymentController::class, 'checkStatusadmin'])->name('payment.status');
         Route::get('/payment/return/{id}', [PaymentController::class, 'handleReturn'])->name('payment.return');
         // ==============================
         // PRODUCT (ADMIN & PUBLIC)
