@@ -7,6 +7,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BlogController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\HomeController;
+use Laravel\Socialite\Facades\Socialite;
 use App\Http\Controllers\ChartController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ReportController;
@@ -232,4 +233,7 @@ Route::middleware(['auth'])->group(function () {
 Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
+Route::get('/AW', function () {
+    dd(Socialite::class);
+});
 require __DIR__.'/auth.php';
