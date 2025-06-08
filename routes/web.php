@@ -234,6 +234,6 @@ Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebh
 Route::get('auth/google', [GoogleController::class, 'redirectToGoogle']);
 Route::get('auth/google/callback', [GoogleController::class, 'handleGoogleCallback']);
 Route::get('/AW', function () {
-    dd(Socialite::class);
+    return Socialite::driver('google')->redirect();
 });
 require __DIR__.'/auth.php';
