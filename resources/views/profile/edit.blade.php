@@ -2,7 +2,7 @@
 
 @section('content')
 <meta name="viewport" content="width=device-width, initial-scale=1">
-
+<link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
 <style>
     .container {
         margin-top: 50px;

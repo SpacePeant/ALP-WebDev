@@ -3,6 +3,9 @@
 @section('title', 'Home')
 
 @section('content') 
+@php
+    use Illuminate\Support\Facades\Session;
+@endphp
 
 @php
     $user_id = Session::get('user_id',1)
@@ -20,6 +23,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <meta name="csrf-token" content="{{ csrf_token() }}">
+  <link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
   <title>Product Page - Air Jordan 1 Low</title>
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
@@ -408,6 +412,10 @@ body {
     }
     .overflow-x-auto::-webkit-scrollbar {
     display: none;
+}
+
+.product-card {
+  height: 350px;
 }
 
 .horizontal-scroll-wrapper {

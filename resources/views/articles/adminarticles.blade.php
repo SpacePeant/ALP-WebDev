@@ -1,5 +1,6 @@
 @extends('base.baseadmin')
 @section('content')
+<link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
 <div class="ki"></div>
 <a href="{{ route('showadmin') }}" class="back-to-collection" title="Kembali ke koleksi">
   <i data-feather="corner-down-left"></i>

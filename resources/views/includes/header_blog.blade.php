@@ -2,7 +2,7 @@
 use Illuminate\Support\Facades\Session;
 $user_name = Session::get('user_name', 'Guest');
 @endphp
-
+<link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
 <style>
   /* RESET dan dasar */
   * {
