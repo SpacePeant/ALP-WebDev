@@ -192,7 +192,7 @@ if (!$pil) {
     $stock = optional($cartItem->productVariant)->stock;
 
     if ($stock <= 0) {
-        return response()->json(['error' => 'Stok habis, tidak dapat dipilih'], 400);
+        return response()->json(['error' => 'Out of stock, cannot be selected'], 400);
     }
 }
 $updated = CartItem::where('id', $cartId)->update(['is_pilih' => $isPilih]);
