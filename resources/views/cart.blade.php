@@ -351,6 +351,7 @@ function checkIfCartIsEmpty() {
     }
 }
 document.addEventListener("DOMContentLoaded", function () {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
     // Inisialisasi row total & summary
     document.querySelectorAll("tbody tr").forEach(row => {
         updateRowTotal(row);
@@ -593,6 +594,8 @@ document.querySelectorAll('.item-qty[contenteditable="true"]').forEach(qtySpan =
                     }
                     option.setAttribute('data-stock', s.stock);
                     select.appendChild(option);
+
+                    console.log('option added:', option.textContent, 'disabled:', option.disabled, 'stock:', s.stock);
                 });
             });
 
