@@ -127,6 +127,7 @@ Route::middleware(['auth'])->group(function () {
         // BLOG & ARTICLE
         // ==============================
         Route::get('/admin/blogs', [ArticleController::class, 'showAdmin'])->name('showadmin');
+        Route::get('/admin/articles/{id}', [ArticleController::class, 'adminArticle'])->name('articles.showadmin');
         Route::get('/articles/{id}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
         Route::put('/admin/articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
         Route::delete('/articles/{id}', [ArticleController::class, 'destroy'])->name('articles.destroy');
