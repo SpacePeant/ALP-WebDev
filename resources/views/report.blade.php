@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
+    <link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
     <style>
         @font-face {
             font-family: 'Red Hat Text';

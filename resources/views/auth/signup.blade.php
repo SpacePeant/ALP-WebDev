@@ -10,6 +10,7 @@
       href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;700&display=swap"
       rel="stylesheet"
     />
+    <link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
   <style>
       body {
       background-color: #f8f9fa;

@@ -3,6 +3,7 @@
     $user_name = Session::get('user_name', 'Guest');
 @endphp
 <head>
+  <link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
 {{-- <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@500&family=Red+Hat+Text:wght@400;500&display=swap" rel="stylesheet"> --}}
 <style>
