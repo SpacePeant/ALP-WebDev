@@ -3,6 +3,7 @@
 @section('content')
 <meta name="csrf-token" content="{{ csrf_token() }}">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
 <div class="container py-5" id="HAH">
     
     <a href="{{ route('cart') }}" class="back-to-collection" title="Back to cart">

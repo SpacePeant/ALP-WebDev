@@ -1,5 +1,6 @@
 @extends('base.base1')
 @section('content')
+<link rel="icon" href="{{ asset('image/logg.png') }}" type="image/png">
 <div class="ki"></div>
 <a href="{{ route('blog') }}" class="back-to-collection" title="Kembali ke koleksi">
   <i data-feather="corner-down-left"></i>
