@@ -137,8 +137,9 @@ foreach ($cartItems as $item) {
 }
 
     DB::table('product_variant')
-    ->where('id', $item->product_variant_id)
-    ->decrement('stock', $item->quantity);
+    ->where('id', $item->product_variant_id);
+    // ->decrement('stock', $item->quantity);
+    
 $cartItems = CartItem::with('product')
             ->where('user_id', $customerId)
             ->where('is_pilih', 1)
