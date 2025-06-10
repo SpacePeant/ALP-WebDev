@@ -46,6 +46,7 @@ class ProductController extends Controller
         })
         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
         ->where('pc.status', 'active')
+        ->where('p.status', 'active')
         ->where('p.id', $id)
         ->first();
 
@@ -180,30 +181,52 @@ $averageRating = $totalReviews > 0
     }
 
 
-    public function delete($id)
+   public function delete($id)
 {
+    // Ambil data warna yang akan dihapus
     $color = DB::table('product_color')->where('id', $id)->first();
 
+    // Update status warna menjadi inactive dan non-primary
     DB::table('product_color')
         ->where('id', $id)
         ->update(['status' => 'inactive', 'is_primary' => 0]);
 
+    // Jika warna yang dihapus adalah primary
     if ($color->is_primary == 1) {
+        // Cari warna aktif lain untuk dijadikan primary baru
         $newPrimary = DB::table('product_color')
             ->where('product_id', $color->product_id)
             ->where('id', '!=', $id)
             ->where('status', 'active')
-            ->orderBy('id', 'asc') 
+            ->orderBy('id', 'asc')
             ->first();
 
         if ($newPrimary) {
+            // Set warna lain sebagai primary
             DB::table('product_color')
                 ->where('id', $newPrimary->id)
                 ->update(['is_primary' => 1]);
+        } else {
+            // Tidak ada warna aktif tersisa → update status produk jadi inactive
+            DB::table('product')
+                ->where('id', $color->product_id)
+                ->update(['status' => 'inactive']);
+        }
+    } else {
+        // Kalau yang dihapus bukan primary, tetap cek apakah semua warna sudah inactive
+        $activeColors = DB::table('product_color')
+            ->where('product_id', $color->product_id)
+            ->where('status', 'active')
+            ->count();
+
+        if ($activeColors === 0) {
+            DB::table('product')
+                ->where('id', $color->product_id)
+                ->update(['status' => 'inactive']);
         }
     }
 
-    return redirect()->route('productadmin');
+    return redirect()->route('productadmin')->with('success', 'Warna berhasil dinonaktifkan.');
 }
 
     public function create()
