@@ -159,5 +159,6 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/product-detail/{id}', [ChartController::class, 'dett']);
 });
 
+Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
 
 require __DIR__.'/auth.php';
