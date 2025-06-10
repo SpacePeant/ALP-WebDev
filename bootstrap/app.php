@@ -12,15 +12,15 @@ return Application::configure(basePath: dirname(__DIR__))
     )
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
-            'auth' => \App\Http\Middleware\Authenticate::class,
-            'role' => \App\Http\Middleware\RoleMiddleware::class,
-        ]);
-
-        // ✅ Tambahkan CSRF middleware ke global stack
-        $middleware->append(\App\Http\Middleware\VerifyCsrfToken::class);
+    'auth' => \App\Http\Middleware\Authenticate::class,
+    'role' => \App\Http\Middleware\RoleMiddleware::class,
+]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //
     })->create();
-
+    $app->middleware([
+    // Tambahan CSRF middleware
+    App\Http\Middleware\VerifyCsrfToken::class,
+]);
 
