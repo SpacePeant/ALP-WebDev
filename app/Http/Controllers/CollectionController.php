@@ -52,12 +52,14 @@ class CollectionController extends Controller
     ->leftJoin('product_color as pc', function ($join) {
         $join->on('p.id', '=', 'pc.product_id')
              ->where('pc.is_primary', true)
-             ->where('pc.status', 'active');
+             ->where('pc.status', 'active')
+              ->where('p.status', 'active');
     })
     ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
     ->leftJoin(DB::raw('(SELECT product_id, SUM(stock) as total_stock FROM product_variant GROUP BY product_id) as pv'), 'p.id', '=', 'pv.product_id')
     ->whereBetween('p.price', [$min, $max])
-    ->where('pv.total_stock', '>', 0);
+    ->where('pv.total_stock', '>', 0)
+            ->where('p.status', 'active');
 
 
     if (!empty($search)) {
@@ -157,7 +159,8 @@ public function productList(Request $request)
     ->leftJoin('product_color as pc_primary', function ($join) {
         $join->on('p.id', '=', 'pc_primary.product_id')
              ->where('pc_primary.is_primary', true)
-             ->where('pc_primary.status', 'active');
+             ->where('pc_primary.status', 'active')
+                     ->where('p.status', 'active');
     })
     ->leftJoin('product_color_image as pci', 'pc_primary.id', '=', 'pci.color_id')
     // LEFT JOIN ke subquery product_variant yang menjumlahkan stok
@@ -167,9 +170,11 @@ public function productList(Request $request)
         'c.name as category_name',
         'pc_primary.color_code', 'pc_primary.color_name', 'pc_primary.color_code_bg', 'pc_primary.color_font',
         'pci.image_kiri'
+        
     )
     ->whereBetween('p.price', [$min, $max])
-    ->where('pv.total_stock', '>', 0); // hanya ambil yang stoknya > 0
+    ->where('pv.total_stock', '>', 0)
+    ->where('p.status', 'active'); 
 
 
 if (!empty($colors)) {

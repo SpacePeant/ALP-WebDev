@@ -46,7 +46,6 @@ class ProductController extends Controller
         })
         ->leftJoin('product_color_image as pci', 'pc.id', '=', 'pci.color_id')
         ->where('pc.status', 'active')
-        ->where('p.status', 'active')
         ->where('p.id', $id)
         ->first();
 
