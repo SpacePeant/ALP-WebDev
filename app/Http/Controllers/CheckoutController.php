@@ -137,8 +137,7 @@ foreach ($cartItems as $item) {
 }
 
     DB::table('product_variant')
-    ->where('id', $item->product_variant_id)
-    ->decrement('stock', $item->quantity);
+    ->where('id', $item->product_variant_id);
 $cartItems = CartItem::with('product')
             ->where('user_id', $customerId)
             ->where('is_pilih', 1)
@@ -148,7 +147,6 @@ $cartItems = CartItem::with('product')
             return back()->with('error', 'Cart is empty.');
         }
         $totalAmount = $cartItems->sum(fn($item) => $item->quantity * $item->product->price) + 30000;
-
         $order = Order::create([
             // 'order_id' => $orderId, // hapus ini karena gak ada kolom order_id
             'user_id' => $customerId,
