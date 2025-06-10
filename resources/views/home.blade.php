@@ -298,7 +298,7 @@
 
 
 .kepo {
-  background-image: url("image/kepo.png");
+  background-image: url("image/Kepo.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
