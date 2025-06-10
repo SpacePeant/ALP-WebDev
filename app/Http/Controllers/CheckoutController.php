@@ -138,6 +138,11 @@ foreach ($cartItems as $item) {
 
     DB::table('product_variant')
     ->where('id', $item->product_variant_id);
+<<<<<<< HEAD
+=======
+    // ->decrement('stock', $item->quantity);
+    
+>>>>>>> 88f0a8226e997c9b97d713a8a0460be84f0505e9
 $cartItems = CartItem::with('product')
             ->where('user_id', $customerId)
             ->where('is_pilih', 1)
