@@ -155,6 +155,7 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/admin/products/search', [ProductController::class, 'search'])->name('admin.products.search');
     });
     Route::get('/product-detail/{id}', [ChartController::class, 'dett']);
+    Route::post('/midtrans/webhook', [CheckoutController::class, 'handleMidtransWebhook']);
 });
 
 
