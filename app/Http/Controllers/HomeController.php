@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class HomeController extends Controller
 {
@@ -12,6 +13,10 @@ class HomeController extends Controller
 
         if (!session()->has('user_id')) {
         return redirect('/login');
+        }
+
+        if (Auth::user()->role !== 'customer') {
+            return redirect()->route('dashboard');
         }
     
         $topProducts = DB::table('order_details as od')

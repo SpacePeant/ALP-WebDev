@@ -38,13 +38,7 @@ Route::post('/signup', [RegisterController::class, 'register'])->name('signup.su
 // ==============================
 Route::middleware(['auth'])->group(function () {
 
-    // Profile
-    Route::prefix('profile')->group(function () {
-        Route::get('/', [ProfileController::class, 'edit'])->name('profile.show');
-        Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
-        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
-        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    });
+    
 
     // Email Verified Required
     Route::middleware(['verified'])->group(function () {
@@ -56,6 +50,14 @@ Route::middleware(['auth'])->group(function () {
 
     // Role: Customer Only
     Route::middleware(['role:customer'])->group(function () {
+        // Profile
+    Route::prefix('profile')->group(function () {
+        Route::get('/', [ProfileController::class, 'edit'])->name('profile.show');
+        Route::get('/edit', [ProfileController::class, 'edit'])->name('profile.edit');
+        Route::patch('/', [ProfileController::class, 'update'])->name('profile.update');
+        Route::delete('/', [ProfileController::class, 'destroy'])->name('profile.destroy');
+    });
+        
         // Cart
         Route::prefix('cart')->group(function () {
             Route::get('/', [CartController::class, 'index'])->name('cart');
