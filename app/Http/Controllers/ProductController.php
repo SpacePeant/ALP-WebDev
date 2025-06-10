@@ -113,7 +113,6 @@ class ProductController extends Controller
         )
         ->orderBy('pv.size')
         ->get();
-
         $userId = Session::get('user_id', 1); // Ambil dari session
 
 
@@ -344,7 +343,6 @@ foreach ($imageData as $index => $color) {
         return redirect()->route('addproduct')->with('error', 'Gagal insert product');
     }
 }
-
 
     public function edit($id, $color_id)
     {

@@ -124,7 +124,7 @@ Route::middleware(['auth'])->group(function () {
             Route::get('/data', [ReportController::class, 'fetchSalesTable'])->name('report.sales.data');
         });
         Route::get('/reportt', [ReportController::class, 'getData']);
-
+        Route::get('/products/delete/{id}', [ProductController::class, 'delete'])->name('products.destroy');
          // ==============================
         // BLOG & ARTICLE
         // ==============================
